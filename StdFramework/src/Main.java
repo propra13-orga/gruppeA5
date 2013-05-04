@@ -1,7 +1,9 @@
 import java.awt.Color;
+import java.awt.event.KeyEvent;
 import java.util.Random;
 
 import Std.StdDraw;
+import Std.StdIO.KeyEventInfo;
 import Std.StdWin;
 //import Std.StdIO;
 import Std.StdIO;
@@ -50,6 +52,9 @@ public class Main {
 	 @SuppressWarnings("unused")
 	private static void program2(){
 		 		
+		 double upperBoxX = 400.0;
+		 double lowerBoxX = 400.0;
+		 		
 		 while(true){
 			 //Fülle das Fenster mit Weiß.
 			 StdDraw.clear();
@@ -76,6 +81,26 @@ public class Main {
 	    	 StdDraw.setPenColor(StdDraw.BLACK);
 	    	 StdDraw.text(40, 590, (int) x + " : " + (int) y);
 	    		
+	    	 while( StdIO.hasKeyEvents() ){
+	    		 KeyEventInfo ki = StdIO.pollKeyEvent();
+	    		 
+	    		 if( ki.mKeyCode == KeyEvent.VK_LEFT && ki.mKeyDown == true )
+	    			 upperBoxX -= 10;
+	    		 else if( ki.mKeyCode == KeyEvent.VK_RIGHT && ki.mKeyDown == true )
+	    			 upperBoxX += 10;
+	    	 }
+	    	 
+	    	 if( StdIO.isKeyPressed(KeyEvent.VK_A) )
+	    		 lowerBoxX -= 1;
+	    	 else if( StdIO.isKeyPressed(KeyEvent.VK_D) )
+	    		 lowerBoxX += 1;
+	    		
+	    	 StdDraw.textLeft(10, 350, "Pfeiltasten um zu bewegen.");
+	    	 StdDraw.textLeft(10, 400, "A und D um zu bewegen.");
+	    		
+	    	 StdDraw.filledSquareCentered(upperBoxX, 350, 15);
+	    	 StdDraw.filledSquareCentered(lowerBoxX, 400, 15);
+	    		
 	    	 //Rendere das Bild mit Framezeit von 10 Millisekunden.
 	    	 // Diese Methode braucht dann 10ms um ausgeführt zu werden. Dieser loop hier kann also
 	    	 //nur 100 mal pro Sekunde ausgeführt werden. Wir haben also 100 frames pro Sekunde.
@@ -90,7 +115,7 @@ public class Main {
 	 
 		 double currAngle = 0;
 		 Color currColor = Color.RED;
-	 
+		 
 		 while(true){
 			 //Fülle das Fenster mit Weiß.
 			 StdDraw.clear();
@@ -158,8 +183,8 @@ public class Main {
 		 
 		 //Wähle ein Beispielprogram aus:
 		 
-		 program1();
-		 //program2();
+		 //program1();
+		 program2();
 		 //program3();
    
     }
