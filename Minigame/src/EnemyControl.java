@@ -77,16 +77,16 @@ public class EnemyControl {
 		//Alle 1000 frames ( ca. alle 15 Sekunden ) wird die Spawngeschwindigkeit der Gegner erhöht
 		//Aber nur 3 mal. Dann spawn schon bei jedem frame ein Gegner. Das reicht. 
 		if(m_frameCounter == 1000){
-			System.out.println("Increase density to one enemy per " + m_frameCounter + "frames");
 			m_spawnInterval = 2;
+			System.out.println("Increase density to one enemy per " + m_spawnInterval + "frames");
 		}
 		if(m_frameCounter == 2000){
-			System.out.println("Increase density to one enemy per " + m_frameCounter + "frames");
 			m_spawnInterval = 1;
+			System.out.println("Increase density to one enemy per " + m_spawnInterval + "frames");
 		}
 		if(m_frameCounter == 3000){
-			System.out.println("Increase density to one enemy per " + m_frameCounter + "frames");
 			m_spawnInterval = 0;
+			System.out.println("Increase density to one enemy per " + m_spawnInterval + "frames");
 		}
 		
 		//Jetzt wird die Position aller Gegner geupdatet.
