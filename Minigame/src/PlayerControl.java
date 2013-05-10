@@ -1,6 +1,6 @@
-import Std.StdDraw;
-import Std.StdIO;
-import Std.StdWin;
+import std.StdDraw;
+import std.StdIO;
+import std.StdWin;
 
 
 public class PlayerControl {

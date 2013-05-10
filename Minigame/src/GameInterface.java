@@ -1,4 +1,4 @@
-import Std.StdDraw;
+import std.StdDraw;
 
 
 public class GameInterface {

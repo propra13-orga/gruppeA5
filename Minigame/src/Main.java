@@ -1,5 +1,5 @@
-import Std.StdDraw;
-import Std.StdWin;
+import std.StdDraw;
+import std.StdWin;
 
 
 public class Main {

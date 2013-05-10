@@ -2,11 +2,12 @@ import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.util.Random;
 
-import Std.StdDraw;
-import Std.StdIO.KeyEventInfo;
-import Std.StdWin;
+import std.StdDraw;
+import std.StdIO;
+import std.StdWin;
+import std.StdIO.KeyEventInfo;
+
 //import Std.StdIO;
-import Std.StdIO;
 
 
 public class Main {
@@ -49,7 +50,6 @@ public class Main {
 	     StdDraw.filledPolygon(x, y);
 	 }
 	 
-	 @SuppressWarnings("unused")
 	private static void program2(){
 		 		
 		 double upperBoxX = 400.0;
@@ -109,7 +109,6 @@ public class Main {
 	    	
 	 }
 	 
-	 @SuppressWarnings("unused")
 	 private static void program3(){
 		 final int FIELD_SIZE = 16; //Anzahl der Quadrate (Felder) in einer Reihe.
 	 

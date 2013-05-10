@@ -2,7 +2,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
-import Std.StdDraw;
+import std.StdDraw;
+
 
 
 public class EnemyControl {
