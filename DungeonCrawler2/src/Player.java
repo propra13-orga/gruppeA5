@@ -1,5 +1,7 @@
 import java.awt.event.KeyEvent;
 
+import map.CellInfo;
+import map.Coordinate;
 import map.Map;
 
 import std.StdDraw;
@@ -11,7 +13,7 @@ public class Player {
 	
 	double playerX, playerY; //Die Koordinaten des Spielers 
 	//Hitbox
-	double xMin = 9; 
+	double xMin = 6; 
 	double xMax = 23;
 	double yMin = 20;
 	double yMax = 29;
@@ -22,7 +24,21 @@ public class Player {
 	//Wird der Spieler verwundet wird ein Leben abgezogen
 	public boolean isAlive(){ return player_health > 0;}
 	public void isHit(){ player_health--;}
-	public void enterTeleporter(){}
+	
+	
+	//Beim Betreten eines Teleporterfelds wird die nächste Map geladen
+	//Der Spieler nimmt die in der MapDatei gespeicherte Position ein
+	public void enterTeleporter(Map map){
+		CellInfo ti = map.getCellInfo(map.getGridX(playerX+16),map.getGridY(playerY+16));
+		if (ti.mHasTeleporter){
+			String newMapName = ti.mNewMap;
+			Coordinate newMapPosition = ti.mNewPosition;
+			map.loadLevel(newMapName);
+			playerX = map.getCanvasX(newMapPosition.mX);
+			playerY = map.getCanvasY(newMapPosition.mY);
+		}
+	}
+	
 	
 	//Bei Tasteneingabe wird überprüft, ob das angestrebte Feld mit der Hitbox kollidiert
 	//Wenn nicht wird der Spieler auf das angestrebte Feld bewegt
@@ -33,7 +49,6 @@ public class Player {
 					&& map.isPathable(map.getGridX(playerX + xMax), map.getGridY(playerY-3 + yMin))){
 				playerY-=3;
 			}
-			
 		}
 		else if( StdIO.isKeyPressed(KeyEvent.VK_S)) {
 			if (map.isPathable(map.getGridX(playerX + xMin),map.getGridY(playerY+3 + yMax)) 
@@ -52,9 +67,9 @@ public class Player {
 					&& map.isPathable(map.getGridX(playerX+3 + xMax),map.getGridY(playerY + yMax))){
 				playerX +=3;
 			}
-		}
-		
+		}	
 	}
+	
 	
 	//Zeichnet den Spieler an die Stelle im Koordinatensystem
 	public void render(){
@@ -64,6 +79,5 @@ public class Player {
 		StdDraw.picture(playerX,playerY,"data/banded.png");
 		StdDraw.picture(playerX,playerY,"data/leg_armor03.png");
 	}
-	
 	
 }

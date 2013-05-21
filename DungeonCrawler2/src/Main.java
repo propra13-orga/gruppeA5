@@ -1,5 +1,7 @@
 import java.awt.event.KeyEvent;
 
+import map.CellInfo;
+import map.Coordinate;
 import map.Map;
 
 import std.StdDraw;
@@ -88,16 +90,17 @@ public class Main {
 			
 			Player p1 = new Player();			
 			
-			p1.playerX = map.getCanvasX(1);
-			p1.playerY = map.getCanvasY(0);
+			p1.playerX = map.getCanvasX(14);
+			p1.playerY = map.getCanvasY(2);
 			
 			while (p1.isAlive()){
-				p1.update(map);				
+				p1.update(map);
 				p1.render();
 				Input();
 				//Warte 16 frames, bevor das nächste Bild gerendert werden soll (=> 60 fps)
 				StdDraw.show(16);
 				map.render();
+				//p1.enterTeleporter(map);
 			}
 			
 			
