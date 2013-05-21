@@ -1,7 +1,6 @@
 import java.awt.event.KeyEvent;
 
 import map.Map;
-import map.CellInfo;
 
 import std.StdDraw;
 import std.StdIO;
@@ -87,46 +86,14 @@ public class Main {
 			//Fülle das Fenster mit Schwarz, dann zeichne die Map.
 			StdDraw.clear(StdDraw.BLACK);
 			
-			Player p1 = new Player();
-			Player p2 = new Player();
-			
-			//int x,y;
-			//Iteriert über das Spielfeld
-			//Wird ein Feld gefunden, das an den Spielfeldrand angrenzt und Pathable ist wird dieses Feld als Startfeld gewählt
-			//map.Coordinate spawnPoint = new map.Coordinate();
-			/*
-			for (x=0;x<144;x++){
-				for (y=0;y<144;y++){
-					if (map.isPathable(x,y) && (x==0 || y==0)){
-						p.playerX = (double) map.getCanvasX(x);
-						p.playerY = (double) map.getCanvasY(y);
-				}
-			}
-			*/
-			
+			Player p1 = new Player();			
 			
 			p1.playerX = map.getCanvasX(1);
 			p1.playerY = map.getCanvasY(0);
-			p2.playerX = map.getCanvasX(2);
-			p2.playerY = map.getCanvasY(0);
 			
 			while (p1.isAlive()){
-				p1.update1();
-				p2.update2();
-				//Iteriert über die Hitbox des Spielers
-				//Sollte die Hitbox auf eine Koordinate treffen, die nicht Pathable ist wird das Update rückgängig gemacht
-				/*
-				for (double x = p1.playerX+p1.xMin;x<p1.playerX+p1.xMax;x++){
-					for (double y = p1.playerY+p1.yMin;y<p1.playerY+p1.yMax;y++){
-						if (!map.isInsideMap((int) x, (int) y)){
-							p1.undo();
-						}
-					}
-				}
-				*/
-				
-				p1.render1();
-				p2.render2();
+				p1.update(map);				
+				p1.render();
 				Input();
 				//Warte 16 frames, bevor das nächste Bild gerendert werden soll (=> 60 fps)
 				StdDraw.show(16);
