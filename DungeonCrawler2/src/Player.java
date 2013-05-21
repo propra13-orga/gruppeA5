@@ -13,7 +13,7 @@ public class Player {
 	//Hitbox
 	double xMin = 9; 
 	double xMax = 23;
-	double yMin = 5;
+	double yMin = 20;
 	double yMax = 29;
 	
 	int player_health = 1; //Die Anzahl der Leben des Spielers
