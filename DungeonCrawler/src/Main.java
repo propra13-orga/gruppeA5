@@ -60,7 +60,7 @@ public class Main {
 			
 			map.render();
 			p1.render();
-			
+			ui.render();
 			//Warte 16 frames, before das nächste Bild gerendert werden soll (=> 60 fps)
 			StdDraw.show(16);
 			StdDraw.clear();

@@ -6,6 +6,10 @@ import map.Map;
 
 import std.StdDraw;
 import std.StdIO;
+import javax.swing.JOptionPane;
+import javax.swing.JOptionPane; 
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 
 public class Player {
 	
@@ -107,6 +111,20 @@ public class Player {
 		StdDraw.picture(playerX,playerY,"data/player/deep_elf_m.png");
 		StdDraw.picture(playerX,playerY,"data/player/banded.png");
 		StdDraw.picture(playerX,playerY,"data/player/leg_armor03.png");
+		StdDraw.picture(70, 10, "data/herz.png");	//Herz
+		StdDraw.picture(200, 10, "data/mana.png");	//Mana
+		StdDraw.picture(335, 10, "data/schwert.png"); //item
 	}
+	public void ui(){
+		//loadpics();
+		String hearts = JOptionPane.showInputDialog("Hallo mutiger Krieger. Willkommen bei deinem Abenteuer. Wie viele Herzen möchtest du haben? Umso weniger du wählst, desto schwerer wird es!");
+		JOptionPane.showMessageDialog(null, ("Hier sind noch 3 Manatränke"));
+		
+		//int hcounter = Integer.parseInt(hearts);
+		StdDraw.textLeft( 10, 20, "Leben:" );
+		StdDraw.textLeft( 150, 20, "Mana:" );
+		StdDraw.textLeft( 300, 20, "Item:");
+	}
+}
 	
 }
