@@ -20,3 +20,7 @@
 # Teleporters
 
 1 2 "data/map1.txt" 14 2
+
+# Events
+
+2 2 0

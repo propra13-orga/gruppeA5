@@ -210,17 +210,6 @@ class LevelLoader {
 			status = false;
 		}
 	
-		for(Entry<Coordinate, CellInfo> entry : m_tileInfo.entrySet()){
-			CellInfo ti = entry.getValue();
-			
-			if(ti.mHasEvent){
-				System.out.println("Event: " + ti.mEventID);
-			}
-			if(ti.mHasTeleporter){
-				System.out.println("Teleporter: " + ti.mNewMap + " - " + ti.mNewPosition.mX + " " + ti.mNewPosition.mY);
-			}
-		}
-	
 		return status;
 	}
 }

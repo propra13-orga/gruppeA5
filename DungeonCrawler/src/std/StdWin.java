@@ -1,6 +1,7 @@
 package std;
 
 
+import java.awt.Container;
 import java.awt.FileDialog;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -13,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
 public class StdWin {
@@ -39,6 +41,7 @@ public class StdWin {
 
     // the frame for drawing to the screen
     private static JFrame m_frame;
+    private static JLabel m_drawLabel;
 
     /*
      * Returns the current width of the canvas.
@@ -52,6 +55,14 @@ public class StdWin {
      */
     public static int getHeight(){
     	return m_height;
+    }
+    
+    public static void setContentPane(Container pane){
+    	if(pane == null){
+    		m_frame.setContentPane(m_drawLabel);
+    		init();	//TODO: KILL IT WITH FIRE!!!!
+    	}else
+    		m_frame.setContentPane(pane);
     }
 
     //Internal method, returns the window's JFrame
@@ -92,12 +103,12 @@ public class StdWin {
     
         m_frame = new JFrame();
 
-        JLabel draw = new JLabel();
+        m_drawLabel = new JLabel();
 
-        StdDraw.init(draw, m_frame);
-        StdIO.init(draw, m_frame);
+        StdDraw.init(m_drawLabel, m_frame);
+        StdIO.init(m_drawLabel, m_frame);
 
-        m_frame.setContentPane(draw);
+        m_frame.setContentPane(m_drawLabel);
         m_frame.setResizable(false);
         m_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);            // closes all windows
         // frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);      // closes only current window

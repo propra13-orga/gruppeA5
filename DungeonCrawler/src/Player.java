@@ -25,6 +25,9 @@ public class Player {
 	public boolean isAlive(){ return player_health > 0;}
 	public void isHit(){ player_health--;}
 	
+	public void setLives(int lives){
+		player_health = lives;
+	}
 	
 	//Beim Betreten eines Teleporterfelds wird die nächste Map geladen
 	//Der Spieler nimmt die in der MapDatei gespeicherte Position ein
@@ -50,6 +53,18 @@ public class Player {
 		}
 	}
 	
+	private void lookForEnemy(Map map) {
+		CellInfo ti = map.getCellInfo(map.getGridX(playerX+16),map.getGridY(playerY+16));
+		
+		if (ti != null && ti.mHasEvent){
+			if(ti.mEventID == 0){
+				isHit();
+			}else if(ti.mEventID == 1){
+				isHit();
+			}
+		}
+		
+	}
 	
 	//Bei Tasteneingabe wird überprüft, ob das angestrebte Feld mit der Hitbox kollidiert
 	//Wenn nicht wird der Spieler auf das angestrebte Feld bewegt
@@ -82,16 +97,16 @@ public class Player {
 		
 		//Suche nach einem Teleporter auf dem momentanen Feld.
 		enterTeleporter(map);
+		lookForEnemy(map);
 	}
-	
 	
 	//Zeichnet den Spieler an die Stelle im Koordinatensystem
 	public void render(){
-		StdDraw.picture(playerX,playerY,"data/red.png");
-		StdDraw.picture(playerX,playerY,"data/boromir.png");
-		StdDraw.picture(playerX,playerY,"data/deep_elf_m.png");
-		StdDraw.picture(playerX,playerY,"data/banded.png");
-		StdDraw.picture(playerX,playerY,"data/leg_armor03.png");
+		StdDraw.picture(playerX,playerY,"data/player/red.png");
+		StdDraw.picture(playerX,playerY,"data/player/boromir.png");
+		StdDraw.picture(playerX,playerY,"data/player/deep_elf_m.png");
+		StdDraw.picture(playerX,playerY,"data/player/banded.png");
+		StdDraw.picture(playerX,playerY,"data/player/leg_armor03.png");
 	}
 	
 }
