@@ -18,6 +18,7 @@ public class MainMenu extends JPanel implements ActionListener{
 	
 	public void showMenu(){
 		//Ordert StdWin dieses Menu anzuzeigen, anstelle der normalen Spiels
+		spielStarten = false;
 		StdWin.setContentPane(this);
 	}
 	public void hideMenu(){

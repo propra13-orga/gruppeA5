@@ -36,6 +36,7 @@ public class Main {
 		//Der game loop:
 		while(!s_shutdown){
 		
+			//Solange das Spiel nicht starten soll, brauchen wir auch den render loop nicht durchführen.
 			if(!menu.wantStartGame())
 				continue;
 		
@@ -44,6 +45,7 @@ public class Main {
 			
 			p1.update(map);
 			
+			//Falls der Spieler tot ist, game stoppen und Menü anzeigen.
 			if(p1.isAlive() == false){
 				menu.showMenu();
 				
