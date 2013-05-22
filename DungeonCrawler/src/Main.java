@@ -1,12 +1,6 @@
-import java.awt.event.KeyEvent;
-
 import map.Map;
-import map.CellInfo;
-
 import std.StdDraw;
-import std.StdIO;
 import std.StdWin;
-import std.StdIO.KeyEventInfo;
 
 
 
@@ -32,6 +26,8 @@ public class Main {
 		Player p1 = new Player();			
 		p1.playerX = map.getCanvasX(7);
 		p1.playerY = map.getCanvasY(0);
+		
+		GameInterface ui = new GameInterface();
 
 		//Der game loop:
 		while(!s_shutdown){
