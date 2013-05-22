@@ -1,0 +1,58 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+  public class frame extends JFrame implements ActionListener{
+
+		private JButton beenden;  /*2 Buttons zum Starten und Beenden*/
+		private JButton starten;
+		
+		public static void main(String[] args) {
+			
+	  frame frame = new frame ("Hauptmenü"); /*Neues Fenster fürs Hauptmenü*/
+	  frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); /*schliessbar*/
+		frame.setSize(400,400); /*Größe*/			
+		frame.setLayout(null);
+		frame.setVisible(true); /*sichtbar*/
+		}
+		
+	public frame(String title) {
+     
+		super(title);
+		
+		starten = new JButton ("Spiel starten"); /*Button wird erstellt auf der Oberfläche*/
+		starten.setBounds(120, 80, 160, 40);
+		starten.addActionListener(this);
+		add(starten);
+		
+		beenden = new JButton ("Spiel beenden"); /*Button wird erstellt auf der Oberfläche*/
+		beenden.setBounds(120, 180, 160, 40);
+		beenden.addActionListener(this);
+		add(beenden);
+	}
+	
+	public void actionPerformed(ActionEvent a) {
+		
+	    if (a.getSource() == starten) {
+			spielmenü();
+		}                               /*Wenn starten Button angeklickt wird das Programm gestartet: noch nicht fertig!!!*/
+		if (a.getSource() == beenden) { /*Wenn beenden Button angeklickt wird wird Hauptmenü geschlossen*/
+			System.exit(0);}
+		}
+		
+	public static void spielmenü(){
+			
+			
+			JFrame spielmenü = new JFrame("DungeonCrawler"); 
+			spielmenü.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); /*schliessbar*/
+			spielmenü.setSize(800,600); /*Größe des Spielfelds*/
+			spielmenü.setVisible(true); /*sichtbar*/
+			spielmenü.setLocationRelativeTo(null); /*Spielfeld wird in die Mitte des Bildschirms gesetzt*/
+		  spielmenü.add(new Main()); 
+		
+			
+	}
+	}
+	
+	
