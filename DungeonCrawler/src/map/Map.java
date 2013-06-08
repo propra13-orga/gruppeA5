@@ -1,7 +1,9 @@
 package map;
 import java.util.HashMap;
 
+
 import map.TileList;
+import monster.MonsterPool;
 
 import std.StdDraw;
 
@@ -19,10 +21,17 @@ public class Map {
 		
 	//Holds all the levels already loaded
 	private HashMap<String, Level> m_levels = new HashMap<String, Level>();
+	
+	private static Map m_this = null;
+
 	//Currently selected level
 	private Level m_currentLevel;
 	
 	private TileList m_tileList;
+	
+	public static Map getInstance(){
+		return m_this;
+	}
 	
 	/**
 	 * Loads (and displays) a level from a text file with the name levelName. Returns true if successful.
@@ -43,6 +52,10 @@ public class Map {
 		}
 		
 		return true;
+	}
+	
+	public MonsterPool getMonsterPool(){
+		return m_currentLevel.getMonsterPool();
 	}
 	
 	/**
@@ -115,12 +128,19 @@ public class Map {
 				StdDraw.picture(m_x + x*SIZE, m_y + y*SIZE, m_tileList.get(m_currentLevel.getCellType(x,y)).mFilePath, 32, 32);
 			}
 		}
+		
+		m_currentLevel.getMonsterPool().renderAll(this);
 	}
 	
 	/**
 	 * Constructs a map at position (x,y) and loads the corresponding TileList from tileListPath
 	 */
 	public Map(double x, double y, String tileListPath){
+		if(m_this != null)
+			System.out.println("Error! A second map instance was created.");
+	
+		m_this = this;
+	
 		m_tileList = new TileList();
 		
 		//TODO: Check if loading successful.

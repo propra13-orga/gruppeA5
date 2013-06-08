@@ -1,17 +1,9 @@
+package game;
 import std.StdDraw;
 
 
 public class GameInterface {
-/*
-	public void ui(){
-		//loadpics();
-		String hearts = JOptionPane.showInputDialog("Hallo mutiger Krieger. Willkommen bei deinem Abenteuer. Wie viele Herzen möchtest du haben? Umso weniger du wählst, desto schwerer wird es!");
-		JOptionPane.showMessageDialog(null, ("Hier sind noch 3 Manatränke"));
-		
-		//int hcounter = Integer.parseInt(hearts);
-		
-	}
-*/	
+
 	public void render(){
 		StdDraw.picture(70, 10, "data/herz.png");	//Herz
 		StdDraw.picture(200, 10, "data/mana.png");	//Mana

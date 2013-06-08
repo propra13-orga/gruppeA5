@@ -2,21 +2,156 @@ package std;
 
 
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.TreeSet;
 import javax.swing.*;
 
 public class StdIO{
 
-	public static class KeyEventInfo{
-		//See the class KeyEvent for a listing of all key codes.
-		public int mKeyCode;
+	public enum MouseEventType{
+		MouseClicked,
+		MousePressed,
+		MouseReleased,
+		MouseDragged,
+		MouseMoved;
 		
-		//'true' if the key was pressed down, 'false' if otherwise.
+		public final static int length = MouseEventType.values().length;
+	}
+	
+	public enum KeyEventType{
+		KeyTyped,
+		KeyPressed,
+		KeyReleased;
+		
+		public final static int length = KeyEventType.values().length;
+	}
+	
+	public interface IMouseListener{
+		void receiveEvent(MouseEvent e);
+	}
+	public interface IKeyListener{
+		void receiveEvent(KeyEvent e);
+	}
+	
+	private static ArrayList<ArrayList<IMouseListener>> m_mouseListeners = new ArrayList<ArrayList<IMouseListener>>(MouseEventType.length);
+	private static ArrayList<ArrayList<IKeyListener>> m_keyListeners = new ArrayList<ArrayList<IKeyListener>>(MouseEventType.length);
+	
+	private static class MouseEventData{
+		public MouseEvent mEvent;
+		public MouseEventType mEventType;
+		
+		public MouseEventData(MouseEvent evt, MouseEventType evtType){
+			mEvent = evt;
+			mEventType = evtType;
+		}
+	}
+	
+	private static class KeyEventData{
+		public KeyEvent mEvent;
+		public KeyEventType mEventType;
+		
+		public KeyEventData(KeyEvent evt, KeyEventType evtType){
+			mEvent = evt;
+			mEventType = evtType;
+		}
+	}
+	
+	private static ArrayList<MouseEventData> m_mouseEvents = new ArrayList<>();
+	private static ArrayList<KeyEventData> m_keyEvents = new ArrayList<>();
+	
+	private enum Action{ ADD, REMOVE }
+	private static class KeyEvtMod{
+		IKeyListener mKeyListener;
+		KeyEventType mType;
+		Action mAction;
+		
+		KeyEvtMod(IKeyListener kl , KeyEventType type, Action action){
+			mKeyListener = kl; mType = type; mAction = action;
+		}
+	}
+	private static class MouseEvtMod{
+		IMouseListener mMouseListener;
+		MouseEventType mType;
+		Action mAction;
+		
+		MouseEvtMod(IMouseListener kl , MouseEventType type, Action action){
+			mMouseListener = kl; mType = type; mAction = action;
+		}
+	}
+	
+	private static ArrayList<KeyEvtMod>   m_keyModQueue   = new ArrayList<>();
+	private static ArrayList<MouseEvtMod> m_mouseModQueue = new ArrayList<>();
+	
+	public static void addMouseListener(IMouseListener ml, MouseEventType type){
+		m_mouseModQueue.add( new MouseEvtMod(ml, type, Action.ADD) );
+		//m_mouseListeners.get(type.ordinal()).add(ml);
+	}
+	public static void addKeyListener(IKeyListener kl, KeyEventType type){
+		m_keyModQueue.add( new KeyEvtMod(kl, type, Action.ADD) );
+		//m_keyListeners.get(type.ordinal()).add(kl);
+	}
+	
+	public static void removeMouseListener(IMouseListener ml, MouseEventType type){
+		m_mouseModQueue.add( new MouseEvtMod(ml, type, Action.REMOVE) );
+		//m_mouseListeners.get(type.ordinal()).remove(ml);
+	}
+	public static void removeKeyListener(IKeyListener kl, KeyEventType type){
+		m_keyModQueue.add( new KeyEvtMod(kl, type, Action.REMOVE) );
+		//m_keyListeners.get(type.ordinal()).remove(kl);
+	}	
+	
+	private static void queueUpMouseEvent(MouseEvent evt, MouseEventType type){
+		m_mouseEvents.add( new MouseEventData(evt, type) );
+	}
+	private static void queueUpKeyEvent(KeyEvent evt, KeyEventType type){
+		m_keyEvents.add( new KeyEventData(evt, type) );
+	}
+	
+	private static void modifyEventQueues(){
+		for( MouseEvtMod mm : m_mouseModQueue ){
+			if(mm.mAction == Action.ADD)
+				m_mouseListeners.get(mm.mType.ordinal()).add(mm.mMouseListener);
+			else
+				m_mouseListeners.get(mm.mType.ordinal()).remove(mm.mMouseListener);
+		}
+		
+		for( KeyEvtMod mm : m_keyModQueue ){
+			if(mm.mAction == Action.ADD)
+				m_keyListeners.get(mm.mType.ordinal()).add(mm.mKeyListener);
+			else
+				m_keyListeners.get(mm.mType.ordinal()).remove(mm.mKeyListener);
+		}
+		
+		m_mouseModQueue.clear();
+		m_keyModQueue.clear();
+	}
+	
+	public static void sendAllEvents(){
+		modifyEventQueues();
+	
+		synchronized(mouseLock){
+			for( MouseEventData d : m_mouseEvents)
+				for( IMouseListener ml : m_mouseListeners.get(d.mEventType.ordinal()))
+					ml.receiveEvent(d.mEvent);
+					
+			m_mouseEvents.clear();
+		}	
+		
+		synchronized(keyLock){
+			for( KeyEventData d : m_keyEvents)
+				for( IKeyListener ml : m_keyListeners.get(d.mEventType.ordinal()))
+					ml.receiveEvent(d.mEvent);
+				
+			m_keyEvents.clear();
+		}
+		
+		
+	}
+
+	public static class KeyEventInfo{
+		public int mKeyCode;
 		public boolean mKeyDown;
 		
 		KeyEventInfo(int keyCode, boolean keyDown){
@@ -24,12 +159,8 @@ public class StdIO{
 			mKeyDown = keyDown;
 		}
 	}
-	
 	public static class MouseEventInfo{
-		//See the class MouseEvent for a listing of all button codes.
 		public int mButton;
-		
-		//'true' if the button was pressed down, 'false' if otherwise
 		public boolean mMouseDown;
 		
 		MouseEventInfo(int mouseCode, boolean mouseDown){
@@ -38,14 +169,17 @@ public class StdIO{
 		}
 	}
 
-	//Private listener class to collect input data from mouse and keyboard
-	private static class EventListenerImpl implements MouseListener, MouseMotionListener, KeyListener{
-	    public void mouseClicked(MouseEvent e) { }
+	private static class EventListenerImpl implements java.awt.event.MouseListener, MouseMotionListener, java.awt.event.KeyListener{
+	    public void mouseClicked(MouseEvent e) { 
+	    	queueUpMouseEvent(e, MouseEventType.MouseClicked);
+	    }
 	    public void mouseEntered(MouseEvent e) { }
 	    public void mouseExited(MouseEvent e) { }
 
 	    public void mousePressed(MouseEvent e) {
 	        synchronized (mouseLock) {
+	        	queueUpMouseEvent(e, MouseEventType.MousePressed);
+	        
 	        	int button = e.getButton();
 	        
 	        	if(button >= NUMBER_OF_MOUSE_BUTTONS)
@@ -53,27 +187,27 @@ public class StdIO{
 	        
 	            mouseX = StdDraw.userX(e.getX());
 	            mouseY = StdDraw.userY(e.getY());
-	            mousePressed[button] = true;
 	            
-	            mouseEvents.add( new MouseEventInfo(button, true) );
+	            mousePressed[button] = true;
 	        }
 	    }
 
 	    public void mouseReleased(MouseEvent e) {
 	        synchronized (mouseLock) {
+	        	queueUpMouseEvent(e, MouseEventType.MouseReleased);
+	        
 	        	int button = e.getButton();
 		        
 	        	if(button >= NUMBER_OF_MOUSE_BUTTONS)
 	        		return;
 	        
 	            mousePressed[button] = false;
-	            
-	            mouseEvents.add( new MouseEventInfo(button, false) );
 	        }
 	    }
 
 	    public void mouseDragged(MouseEvent e)  {
 	        synchronized (mouseLock) {
+	        	queueUpMouseEvent(e, MouseEventType.MouseDragged);
 	            mouseX = StdDraw.userX(e.getX());
 	            mouseY = StdDraw.userY(e.getY());
 	        }
@@ -81,6 +215,7 @@ public class StdIO{
 
 	    public void mouseMoved(MouseEvent e) {
 	        synchronized (mouseLock) {
+	        	queueUpMouseEvent(e, MouseEventType.MouseMoved);
 	            mouseX = StdDraw.userX(e.getX());
 	            mouseY = StdDraw.userY(e.getY());
 	        }
@@ -88,52 +223,47 @@ public class StdIO{
 	    
 	    public void keyTyped(KeyEvent e) {
 	        synchronized (keyLock) {
-	            //keysTyped.addFirst(e.getKeyChar());
+	        	queueUpKeyEvent(e, KeyEventType.KeyTyped);
 	        }
 	    }
 
 	    public void keyPressed(KeyEvent e) {
 	        synchronized (keyLock) {
-	        	
+	        	queueUpKeyEvent(e, KeyEventType.KeyPressed);
 	            keysDown.add(e.getKeyCode());
-	            keyEvents.add( new KeyEventInfo(e.getKeyCode(), true) );
-	            
 	        }
 	    }
 
 	    public void keyReleased(KeyEvent e) {
 	        synchronized (keyLock) {
-	        
+	        	queueUpKeyEvent(e, KeyEventType.KeyReleased);
 	            keysDown.remove(e.getKeyCode());
-	            keyEvents.add( new KeyEventInfo(e.getKeyCode(), false) );
-	            
 	        }
 	    }	
 	}
 
-	//Objects to synchronize mouse or keyboard functions
 	private static Object mouseLock = new Object();
     private static Object keyLock = new Object();
     
-    //Mouse data
     private static final int NUMBER_OF_MOUSE_BUTTONS = 4;
     private static boolean mousePressed[] = new boolean[NUMBER_OF_MOUSE_BUTTONS];
     private static double mouseX = 0;
     private static double mouseY = 0;
    
     
-    // queue of typed key characters
-    //private static LinkedList<Character> keysTyped = new LinkedList<Character>();
-    
-    //Queue of mouse and keyboard events.
-    private static LinkedList<KeyEventInfo> keyEvents = new LinkedList<KeyEventInfo>();
-    private static LinkedList<MouseEventInfo> mouseEvents = new LinkedList<MouseEventInfo>();
 
     // set of key codes currently pressed down
     private static TreeSet<Integer> keysDown = new TreeSet<Integer>();
     
-    //Will be called by StdWin, must be called once before StdIO methods can be used.
     static void init(JLabel draw, JFrame frame){
+    
+    	for(int i=0; i < MouseEventType.length; ++i){
+			m_mouseListeners.add( new ArrayList<IMouseListener>() );
+		}
+		for(int i=0; i < KeyEventType.length; ++i){
+			m_keyListeners.add( new ArrayList<IKeyListener>() );
+		}
+    
     	EventListenerImpl evtl = new EventListenerImpl();
     	
     	draw.addMouseListener(evtl);
@@ -165,6 +295,10 @@ public class StdIO{
 	        		
 	        }
 	    }
+	    
+	    public static boolean mousePressed(){
+	    	return mousePressed(1);
+	    }
 
 	    /**
 	     * What is the x-coordinate of the mouse?
@@ -186,49 +320,10 @@ public class StdIO{
 	        }
 	    }
 
-	    /**
-	     * Returns true if the mouse event queue is not empty
-	     */
-	    public static boolean hasMouseEvents(){
-	    	return !mouseEvents.isEmpty();
-	    }
-
-	    /**
-	     * Returns the next mouse event from the event queue.
-	     * Throws an exception if no mouse event is queued up.
-	     */
-	    public static MouseEventInfo pollMouseEvent(){
-	    	return mouseEvents.removeFirst();
-	    }
-	    
-
 	   /*************************************************************************
 	    *  Keyboard interactions.
 	    *************************************************************************/
 
-	    /**
-	     * Has the user typed a key?
-	     * @return true if the user has typed a key, false otherwise
-	     */
-	     /*
-	    public static boolean hasNextKeyTyped() {
-	        synchronized (keyLock) {
-	            return !keysTyped.isEmpty();
-	        }
-	    }
-*/
-	    /**
-	     * What is the next key that was typed by the user? This method returns
-	     * a Unicode character corresponding to the key typed (such as 'a' or 'A').
-	     * It cannot identify action keys (such as F1
-	     * and arrow keys) or modifier keys (such as control).
-	     * @return the next Unicode key typed
-	     */
-/*	    public static char nextKeyTyped() {
-	        synchronized (keyLock) {
-	            return keysTyped.removeLast();
-	        }
-	    }*/
 
 	    /**
 	     * Is the keycode currently being pressed? This method takes as an argument
@@ -242,21 +337,6 @@ public class StdIO{
 	        synchronized (keyLock) {
 	            return keysDown.contains(keycode);
 	        }
-	    }
-
-	    /**
-	     * Returns true if the keyboard event queue is not empty
-	     */
-	    public static boolean hasKeyEvents(){
-	    	return !keyEvents.isEmpty();
-	    }
-
-	    /**
-	     * Returns the next keyboard event from the event queue.
-	     * Throws an exception if no keyboard event is queued up.
-	     */
-	    public static KeyEventInfo pollKeyEvent(){
-	    	return keyEvents.removeFirst();
 	    }
 
 }

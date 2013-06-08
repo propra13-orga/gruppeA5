@@ -7,6 +7,10 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import monster.MonsterGroup;
+import monster.MonsterPool;
+
+
 /**
  * This class' sole purpose is to serve as a factory for Level objects.
  * The loading from a text file is a non-trivial task, so it has been outsourced
@@ -24,6 +28,9 @@ class LevelLoader {
 	private char[][] m_grid;
 	
 	private HashMap<Coordinate, CellInfo> m_tileInfo;
+	private MonsterPool m_monsterPool;
+	
+	private final Pattern m_argumentSplit = Pattern.compile("([^\"]\\S*|\".+?\")\\s*");
 	
 	/**
 	 * Returns the char[][] that holds the grid data.
@@ -49,7 +56,52 @@ class LevelLoader {
 			e.printStackTrace();
 		}
 	}
+	
+	private ArrayList<String> splitArguments(String line){
+		ArrayList<String> list = new ArrayList<String>();
+		Matcher m = m_argumentSplit.matcher(line);
 
+		while (m.find())
+		    list.add(m.group(1));
+		   
+		return list;
+	}
+
+	private boolean loadMonsterData(){
+	
+		while(true){
+			nextLine();
+			
+			if(m_line == null ||m_line.startsWith("#"))
+				break;
+			
+			ArrayList<String> list = splitArguments(m_line);
+			
+			if(list.size() != 3){
+				System.out.println("Error, bad teleporter line: " + m_line);
+				return false;
+			}
+			
+			try{
+				Map map = Map.getInstance();
+			
+				MonsterGroup monster = new MonsterGroup(	
+						map.getCanvasX( Integer.parseInt(list.get(0))) ,
+						map.getCanvasY( Integer.parseInt(list.get(1))) ,
+						list.get(2).replace("\"", "") 
+				);
+				
+				m_monsterPool.addMonster(monster);
+				
+			} catch(NumberFormatException e) {
+				System.out.println(e);
+				return false;
+			}
+		}
+
+		return true;
+	}
+	
 	private boolean loadMapData(){
 		int counter = 0;
 	
@@ -102,18 +154,17 @@ class LevelLoader {
 				c.mX = Integer.parseInt(ar[0]);
 				c.mY = Integer.parseInt(ar[1]);
 				
-				CellInfo ti;
+				CellInfo ci = m_tileInfo.get(c);
+				boolean found = ci != null;
 			
-				if(m_tileInfo.containsKey(c)){
-					ti = m_tileInfo.get(c);
-					ti.mHasEvent = true;
-					ti.mEventID = Integer.parseInt(ar[2]);
-				}else{
-					ti = new CellInfo();
-					ti.mHasEvent = true;
-					ti.mEventID = Integer.parseInt(ar[2]);
-					m_tileInfo.put(c, ti);
-				}
+				if(!found)
+					ci = new CellInfo();
+			
+				ci.mHasEvent = true;
+				ci.mEventID = Integer.parseInt(ar[2]);
+				
+				if(!found)
+					m_tileInfo.put(c, ci);
 				
 			} catch(NumberFormatException e) {
 				System.out.println(e);
@@ -125,19 +176,14 @@ class LevelLoader {
 	}
 	
 	private boolean loadTeleporters(){
-		Pattern regex = Pattern.compile("([^\"]\\S*|\".+?\")\\s*");
-		
+
 		while(true){
 			nextLine();
 			
 			if(m_line == null || m_line.startsWith("#"))
 				break;
-			
-			ArrayList<String> list = new ArrayList<String>();
-			Matcher m = regex.matcher(m_line);
-			
-			while (m.find())
-			    list.add(m.group(1));
+
+			ArrayList<String> list = splitArguments(m_line);
 			
 			if(list.size() != 5){
 				System.out.println("Error, bad teleporter line: " + m_line);
@@ -149,24 +195,21 @@ class LevelLoader {
 				c.mX = Integer.parseInt(list.get(0));
 				c.mY = Integer.parseInt(list.get(1));
 				
-				CellInfo ti;
-			
-				if(m_tileInfo.containsKey(c)){
-					ti = m_tileInfo.get(c);
-					ti.mHasTeleporter = true;
-					ti.mNewMap = list.get(2).replace("\"", "");
-					ti.mNewPosition = new Coordinate();
-					ti.mNewPosition.mX = Integer.parseInt(list.get(3));
-					ti.mNewPosition.mY = Integer.parseInt(list.get(4));
-				}else{
-					ti = new CellInfo();
-					ti.mHasTeleporter = true;
-					ti.mNewMap = list.get(2).replace("\"", "");
-					ti.mNewPosition = new Coordinate();
-					ti.mNewPosition.mX = Integer.parseInt(list.get(3));
-					ti.mNewPosition.mY = Integer.parseInt(list.get(4));
-					m_tileInfo.put(c, ti);
-				}
+				CellInfo ci = m_tileInfo.get(c);
+				boolean found = ci != null;
+				
+				if(!found)
+					ci = new CellInfo();
+					
+				ci.mHasTeleporter = true;
+				ci.mNewMap = list.get(2).replace("\"", "");
+				ci.mNewPosition = new Coordinate();
+				ci.mNewPosition.mX = Integer.parseInt(list.get(3));
+				ci.mNewPosition.mY = Integer.parseInt(list.get(4));
+				
+				if(!found)
+					m_tileInfo.put(c, ci);
+				
 			} catch(NumberFormatException e) {
 				System.out.println(e);
 				return false;
@@ -183,6 +226,7 @@ class LevelLoader {
 	public boolean load(String fileName){
 		m_grid = new char[MAP_LENGTH][MAP_HEIGHT];
 		m_tileInfo = new HashMap<Coordinate, CellInfo>();
+		m_monsterPool = new MonsterPool();
 		boolean status = true;
 		
 		try{
@@ -197,6 +241,8 @@ class LevelLoader {
 		        	status = status && loadEvents();
 		        } else if( m_line.equals("# Teleporters") ){
 		        	status = status && loadTeleporters();
+		        } else if( m_line.equals("# Monsters") ){
+		        	status = status && loadMonsterData();
 		        } else {
 		        	System.out.println("Error, unrecognized line: " + m_line);
 		        	break;
@@ -210,5 +256,9 @@ class LevelLoader {
 		}
 	
 		return status;
+	}
+
+	public MonsterPool getMonsterPool() {
+		return m_monsterPool;
 	}
 }

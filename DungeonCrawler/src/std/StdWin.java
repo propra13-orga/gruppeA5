@@ -1,6 +1,8 @@
 package std;
 
 
+import game.Constants;
+
 import java.awt.Container;
 import java.awt.FileDialog;
 import java.awt.Toolkit;
@@ -32,11 +34,9 @@ public class StdWin {
     }
 
     //Default window data
-    static final int DEFAULT_WINDOW_HEIGHT = 600;
-    static final int DEFAULT_WINDOW_WIDTH = 800;
     
-    private static int m_width  = DEFAULT_WINDOW_WIDTH;
-    private static int m_height = DEFAULT_WINDOW_HEIGHT;
+    private static int m_width  = Constants.WIN_WIDTH;
+    private static int m_height = Constants.WIN_HEIGHT;
 
     // the frame for drawing to the screen
     private static JFrame m_frame;

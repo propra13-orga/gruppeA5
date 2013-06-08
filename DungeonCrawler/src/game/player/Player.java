@@ -1,33 +1,69 @@
+package game.player;
 import java.awt.event.KeyEvent;
+import java.util.List;
+
+import entity.Companion;
+import game.GSTransition;
+import game.HitBox;
+import game.combat.GSCombat;
+import gamestate.GameStates;
+import gamestate.GlobalGameState;
 
 import map.CellInfo;
 import map.Coordinate;
 import map.Map;
+import monster.MonsterGroup;
+import monster.MonsterPool;
 
 import std.StdDraw;
 import std.StdIO;
 
 public class Player {
 	
-	boolean standsOnTeleporter = false;
+	private boolean standsOnTeleporter = false;
+	private boolean standsOnEvent = false;
 	
-	double playerX, playerY; //Die Koordinaten des Spielers 
+	private double playerX, playerY; //Die Koordinaten des Spielers 
 	//Hitbox
-	double xMin = 6; 
-	double xMax = 23;
-	double yMin = 2;
-	double yMax = 30;
+	private double xMin = 6; 
+	private double xMax = 23;
+	private double yMin = 2;
+	private double yMax = 30;
 	
-	int player_health = 1; //Die Anzahl der Leben des Spielers
+	private HitBox m_hitBox = new HitBox(4, 2, 26, 31);
+	
+	private List<Companion> m_companions = Companion.getDefaultCompanionList();
+	
+	public List<Companion> getCompanions(){
+		return m_companions;
+	}
+	
 	
 	//Der Spieler lebt solange er mindestens ein Leben hat
 	//Wird der Spieler verwundet wird ein Leben abgezogen
-	public boolean isAlive(){ return player_health > 0;}
-	public void isHit(){ player_health--;}
-	
-	public void setLives(int lives){
-		player_health = lives;
+	public boolean isAlive(){ 
+		//TODO: NYI
+		return true;
 	}
+	
+	public void setPosition(double x, double y){
+		playerX = x;
+		playerY = y;
+	}
+	
+	private static Player s_player = null;
+	
+	public static Player getInstance(){
+		return s_player;
+	}
+	
+	public Player(){
+		if(s_player != null)
+			System.out.println("Error! A second instance of Player was created");
+			
+		s_player = this;
+	}
+	
 	
 	//Beim Betreten eines Teleporterfelds wird die nächste Map geladen
 	//Der Spieler nimmt die in der MapDatei gespeicherte Position ein
@@ -53,42 +89,65 @@ public class Player {
 		}
 	}
 	
-	private void lookForEnemy(Map map) {
+	private void lookForEvents(Map map){
 		CellInfo ti = map.getCellInfo(map.getGridX(playerX+16),map.getGridY(playerY+16));
 		
 		if (ti != null && ti.mHasEvent){
-			if(ti.mEventID == 0){
-				isHit();
-			}else if(ti.mEventID == 1){
-				isHit();
+			
+			if(standsOnEvent == true)
+				return;
+			
+			standsOnEvent = true;
+			if(ti.mEventID == 2){
+				GlobalGameState.setActiveGameState( GameStates.SHOP );
 			}
+			if(ti.mEventID == 3){
+				GlobalGameState.setActiveGameState( GameStates.DIALOG );
+			}
+			
+		}else{
+			standsOnEvent = false;
 		}
+	}
+	
+	private void lookForEnemy(Map map) {
+	
+		MonsterPool mp = map.getMonsterPool();
 		
+		m_hitBox.setPosition(playerX, playerY);
+		MonsterGroup m = mp.collisionAt( m_hitBox );
+		
+		if(m == null)
+			return;
+		
+		GSCombat.getInstance().prepareEncounter(mp, m);
+		GSTransition.getInstace().prepareTransition( GameStates.COMBAT );
+		GlobalGameState.setActiveGameState(GameStates.TRANSITION);
 	}
 	
 	//Bei Tasteneingabe wird überprüft, ob das angestrebte Feld mit der Hitbox kollidiert
 	//Wenn nicht wird der Spieler auf das angestrebte Feld bewegt
 	public void update(Map map){
 		
-		if( StdIO.isKeyPressed(KeyEvent.VK_W)) {
+		if( StdIO.isKeyPressed(KeyEvent.VK_W) || StdIO.isKeyPressed(KeyEvent.VK_UP)) {
 			if (map.isPathable(map.getGridX(playerX + xMin),map.getGridY(playerY-3 + yMin)) 
 					&& map.isPathable(map.getGridX(playerX + xMax), map.getGridY(playerY-3 + yMin))){
 				playerY-=3;
 			}
 		}
-		else if( StdIO.isKeyPressed(KeyEvent.VK_S)) {
+		else if( StdIO.isKeyPressed(KeyEvent.VK_S) || StdIO.isKeyPressed(KeyEvent.VK_DOWN)) {
 			if (map.isPathable(map.getGridX(playerX + xMin),map.getGridY(playerY+3 + yMax)) 
 					&& map.isPathable(map.getGridX(playerX + xMax), map.getGridY(playerY+3 + yMax))){
 				playerY +=3;
 			}
 		}
-		if( StdIO.isKeyPressed(KeyEvent.VK_A)) {
+		if( StdIO.isKeyPressed(KeyEvent.VK_A) || StdIO.isKeyPressed(KeyEvent.VK_LEFT)) {
 			if (map.isPathable(map.getGridX(playerX-3 + xMin),map.getGridY(playerY + yMin)) 
 					&& map.isPathable(map.getGridX(playerX-3 + xMin),map.getGridY(playerY + yMax))){
 				playerX -=3;
 			}
 		}
-		else if( StdIO.isKeyPressed(KeyEvent.VK_D)) {
+		else if( StdIO.isKeyPressed(KeyEvent.VK_D) || StdIO.isKeyPressed(KeyEvent.VK_RIGHT)) {
 			if (map.isPathable(map.getGridX(playerX+3 + xMax),map.getGridY(playerY + yMin)) 
 					&& map.isPathable(map.getGridX(playerX+3 + xMax),map.getGridY(playerY + yMax))){
 				playerX +=3;
@@ -98,6 +157,7 @@ public class Player {
 		//Suche nach einem Teleporter auf dem momentanen Feld.
 		enterTeleporter(map);
 		lookForEnemy(map);
+		lookForEvents(map);
 	}
 	
 	//Zeichnet den Spieler an die Stelle im Koordinatensystem
@@ -107,6 +167,15 @@ public class Player {
 		StdDraw.picture(playerX,playerY,"data/player/deep_elf_m.png");
 		StdDraw.picture(playerX,playerY,"data/player/banded.png");
 		StdDraw.picture(playerX,playerY,"data/player/leg_armor03.png");
+		
+		Map map = Map.getInstance();
+		double x = map.getCanvasX(map.getGridX(playerX+16));
+		double y = map.getCanvasY(map.getGridY(playerY+16));
+		
+		StdDraw.setPenColor(StdDraw.YELLOW);
+		StdDraw.square(x, y, 32);
+		
+		m_hitBox.render();
 	}
 	
 }

@@ -33,3 +33,5 @@
 1 "Vines Wall" "data/dungeon/brick_brown-vines2.png"
 1 "Vines Wall" "data/dungeon/brick_brown-vines3.png"
 1 "Vines Wall" "data/dungeon/brick_brown-vines4.png"
+0 "Shop Icon" "data/unseen_item.png"
+0 "Talk Icon" "data/unseen_monster.png"

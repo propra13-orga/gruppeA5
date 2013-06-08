@@ -1,6 +1,8 @@
 package std;
 
 
+import game.Constants;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
@@ -63,9 +65,9 @@ public final class StdDraw{
 
     // boundary of drawing canvas
     private static final double DEFAULT_XMIN = 0.0;
-    private static final double DEFAULT_XMAX = StdWin.DEFAULT_WINDOW_WIDTH;
+    private static final double DEFAULT_XMAX = Constants.SIM_WIDTH;
     private static final double DEFAULT_YMIN = 0.0;
-    private static final double DEFAULT_YMAX = StdWin.DEFAULT_WINDOW_HEIGHT;
+    private static final double DEFAULT_YMAX = Constants.SIM_HEIGHT;
     private static double xmin, ymin, xmax, ymax;
 
 
@@ -126,12 +128,12 @@ public final class StdDraw{
     *************************************************************************/
 
     /**
-     * Set the x-scale to be the default (between 0.0 and 1.0).
+     * Set the x-scale to be the default.
      */
     public static void setXscale() { setXscale(DEFAULT_XMIN, DEFAULT_XMAX); }
 
     /**
-     * Set the y-scale to be the default (between 0.0 and 1.0).
+     * Set the y-scale to be the default.
      */
     public static void setYscale() { setYscale(DEFAULT_YMIN, DEFAULT_YMAX); }
 
@@ -216,6 +218,7 @@ public final class StdDraw{
         BasicStroke stroke = new BasicStroke(scaledPenRadius, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
         // BasicStroke stroke = new BasicStroke(scaledPenRadius);
         offscreen.setStroke(stroke);
+
     }
 
     /**
@@ -254,6 +257,11 @@ public final class StdDraw{
      * @param f the font to make text
      */
     public static void setFont(Font f) { font = f; }
+
+    public static void setAlpha(float alpha){
+    	alpha = Math.min( Math.max(alpha,0.f), 1.0f);	//clamp to [0, 1.0]
+    	offscreen.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+    }
 
 
    /*************************************************************************
@@ -558,8 +566,8 @@ public final class StdDraw{
      * @throws RuntimeException if halfWidth or halfHeight is negative
      */
     public static void filledRectangle(double x, double y, double width, double height) {
-        if (width  < 0) throw new RuntimeException("half width can't be negative");
-        if (height < 0) throw new RuntimeException("half height can't be negative");
+        if (width  < 0) throw new RuntimeException("width can't be negative");
+        if (height < 0) throw new RuntimeException("height can't be negative");
         double xs = scaleX(x);
         double ys = scaleY(y);
         double ws = factorX(width);
@@ -841,6 +849,17 @@ public final class StdDraw{
 
         draw();
     }
+    
+    public static void image(double x, double y, Image img){
+        double xs = scaleX(x);
+        double ys = scaleY(y);
+        int ws = img.getWidth(null);
+        int hs = img.getHeight(null);
+        if (ws < 0 || hs < 0) throw new RuntimeException("image object is corrupt");
+
+        offscreen.drawImage(img, (int) Math.round(xs), (int) Math.round(ys), null);
+        draw();
+    }
 
 
    /*************************************************************************
@@ -956,6 +975,16 @@ public final class StdDraw{
         StdWin.getFrame().repaint();
     }
 
+    static BufferedImage deepCopy(BufferedImage bi) {
+    	 ColorModel cm = bi.getColorModel();
+    	 boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+    	 WritableRaster raster = bi.copyData(null);
+    	 return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+    }
+
+    public static Image getSnapshot(){
+    	return deepCopy(onscreenImage);
+    }
 
    /*************************************************************************
     *  Save drawing to a file.

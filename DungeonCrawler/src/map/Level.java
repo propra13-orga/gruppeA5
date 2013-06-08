@@ -1,10 +1,14 @@
 package map;
 import java.util.HashMap;
 
+import monster.MonsterPool;
+
+
 class Level {
 
 	private char [][] m_grid;
 	private HashMap<Coordinate, CellInfo> m_tileInfo;
+	private MonsterPool m_monsterPool;
 	
 	/**
 	 * Returns the char value of the cell at (x,y)
@@ -18,6 +22,10 @@ class Level {
 	 */
 	public void setCell(int x, int y, char c){
 		m_grid[x][y] = c;
+	}
+	
+	public MonsterPool getMonsterPool(){
+		return m_monsterPool;
 	}
 	
 	/**
@@ -41,6 +49,7 @@ class Level {
 			
 		m_grid = lvl.getGrid();
 		m_tileInfo = lvl.getCellData();
+		m_monsterPool = lvl.getMonsterPool();
 	
 		return true;
 	}

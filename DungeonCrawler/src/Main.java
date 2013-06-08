@@ -1,7 +1,17 @@
-import map.Map;
+import game.Constants;
+import game.GSGame;
+import game.GSMainMenu;
+import game.GSTransition;
+import game.combat.GSCombat;
+import game.dialog.GSDialog;
+import game.shop.GSShop;
+import gamestate.GameStates;
+import gamestate.GlobalGameState;
+import gamestate.IGameState;
 import std.StdDraw;
+import std.StdIO;
 import std.StdWin;
-
+import std.anim.GlobalAnimQueue;
 
 
 public class Main {
@@ -11,54 +21,32 @@ public class Main {
 		//Initialisiert ein Fenster mit der Standardgröße von 800x600 pixel.
 		StdWin.init();
 		
-		MainMenu menu = new MainMenu("");
+		//Erstelle alle game states
+		GlobalGameState.associateGameState( GameStates.MAIN_MENU, new GSMainMenu()	 );
+		GlobalGameState.associateGameState( GameStates.GAME, 	  new GSGame() 		 );
+		GlobalGameState.associateGameState( GameStates.COMBAT, 	  new GSCombat() 	 );
+		GlobalGameState.associateGameState( GameStates.TRANSITION,new GSTransition() );
+		GlobalGameState.associateGameState( GameStates.SHOP,	  new GSShop() 		 );
+		GlobalGameState.associateGameState( GameStates.DIALOG,	  new GSDialog()	 );
 		
-		//Erstellt die Map an der Position 144,44 (von oben links gesehen).
-		//Die Zahlen sind so gewählt, dass die Map genau in der Mitte des Fensters ist.
-		Map map = new Map(144,44, "data/tiles.txt");
-		
-		//Lädt das erste Level aus einer Textdatei. Wenn das laden fehlschlägt, soll einfach
-		//das Program beendet werden.
-		if( !map.loadLevel("data/outside.txt") )
-			s_shutdown = true;
-
-
-		Player p1 = new Player();			
-		p1.playerX = map.getCanvasX(7);
-		p1.playerY = map.getCanvasY(0);
-		
-		GameInterface ui = new GameInterface();
+		GlobalGameState.initiateGlobalGameState( GameStates.MAIN_MENU );
 
 		//Der game loop:
 		while(!s_shutdown){
-		
-			//Solange das Spiel nicht starten soll, brauchen wir auch den render loop nicht durchführen.
-			if(!menu.wantStartGame())
-				continue;
-		
-			//Fülle das Fenster mit Schwarz, dann zeichne die Map.
 			StdDraw.clear(StdDraw.BLACK);
+			StdIO.sendAllEvents();
+		
+			IGameState igs = GlobalGameState.getActiveGameState();
 			
-			p1.update(map);
+			igs.update();
+			GlobalAnimQueue.update();
 			
-			//Falls der Spieler tot ist, game stoppen und Menü anzeigen.
-			if(p1.isAlive() == false){
-				menu.showMenu();
-				
-				//Vorbereiten für Neustart.
-				p1.setLives(1);
-				p1.playerX = map.getCanvasX(7);
-				p1.playerY = map.getCanvasY(0);
-				if( !map.loadLevel("data/outside.txt") )
-					s_shutdown = true;
-				
-			}
+			igs.render();
+			GlobalAnimQueue.render();
+		
 			
-			map.render();
-			p1.render();
-			ui.render();
 			//Warte 16 frames, before das nächste Bild gerendert werden soll (=> 60 fps)
-			StdDraw.show(16);
+			StdDraw.show( Constants.FRAME_TIME );
 			StdDraw.clear();
 		}
 		
