@@ -7,9 +7,9 @@ public class DamageSkill extends Skill {
 	
 	@Override
 	public String applyEffect(IEntity source, IEntity target){
-		target.doDamage(m_damageAmount);
+		int dmg = target.doDamage(m_damageAmount);
 		//TODO: Use String builder? Investigate.
-		return source.getName() + " dealt " + m_damageAmount + " damage to " + target.getName() + ".";
+		return source.getName() + " dealt " + dmg + " damage to " + target.getName() + ".";
 	}
 	
 	public DamageSkill(String name, int damage){

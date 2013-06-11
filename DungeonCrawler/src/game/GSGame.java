@@ -1,5 +1,9 @@
 package game;
+import java.awt.event.KeyEvent;
+
 import std.StdDraw;
+import std.StdIO;
+import std.StdIO.KeyEventType;
 import game.player.Player;
 import gamestate.GameStates;
 import gamestate.GlobalGameState;
@@ -7,7 +11,7 @@ import gamestate.IGameState;
 import map.Map;
 
 
-public class GSGame implements IGameState {
+public class GSGame implements IGameState, StdIO.IKeyListener {
 	Player m_player;
 	Map m_map;
 	GameInterface m_ui;
@@ -63,16 +67,21 @@ public class GSGame implements IGameState {
 		resetPlayer();
 	}
 
+
 	@Override
 	public void onEnter() {
-		// TODO Auto-generated method stub
-		
+		StdIO.addKeyListener(this, KeyEventType.KeyReleased);
 	}
 
 	@Override
 	public void onExit() {
-		// TODO Auto-generated method stub
-		
+		StdIO.removeKeyListener(this, KeyEventType.KeyReleased);
 	}
 
+	@Override
+	public void receiveEvent(KeyEvent e) {
+		if(e.getKeyCode() == KeyEvent.VK_I){
+			GlobalGameState.setActiveGameState(GameStates.INVENTORY);
+		}
+	}
 }

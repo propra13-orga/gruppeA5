@@ -6,6 +6,7 @@ import entity.Companion;
 import game.GSTransition;
 import game.HitBox;
 import game.combat.GSCombat;
+import game.inventory.Inventory;
 import gamestate.GameStates;
 import gamestate.GlobalGameState;
 
@@ -32,10 +33,16 @@ public class Player {
 	
 	private HitBox m_hitBox = new HitBox(4, 2, 26, 31);
 	
+	//TODO: Get rid of those two default methods ... eventually..
 	private List<Companion> m_companions = Companion.getDefaultCompanionList();
 	
 	public List<Companion> getCompanions(){
 		return m_companions;
+	}
+	
+	private Inventory m_inventory = Inventory.getDefaultInventoryAndPopulateItemList();
+	public Inventory getInventory(){
+		return m_inventory;
 	}
 	
 	
@@ -162,12 +169,14 @@ public class Player {
 	
 	//Zeichnet den Spieler an die Stelle im Koordinatensystem
 	public void render(){
-		StdDraw.picture(playerX,playerY,"data/player/red.png");
-		StdDraw.picture(playerX,playerY,"data/player/boromir.png");
-		StdDraw.picture(playerX,playerY,"data/player/deep_elf_m.png");
-		StdDraw.picture(playerX,playerY,"data/player/banded.png");
-		StdDraw.picture(playerX,playerY,"data/player/leg_armor03.png");
+		Companion c = m_companions.get(0);
 		
+		if(c == null){
+			System.out.println("Error! No companion found to render in Player.java!");
+			return;
+		}
+		c.render(playerX, playerY);
+
 		Map map = Map.getInstance();
 		double x = map.getCanvasX(map.getGridX(playerX+16));
 		double y = map.getCanvasY(map.getGridY(playerY+16));

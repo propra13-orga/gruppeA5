@@ -10,10 +10,8 @@ import monster.MonsterPool;
 import std.StdDraw;
 import std.StdIO;
 import std.StdIO.KeyEventType;
-import std.anim.GIFAnim;
 import std.anim.GlobalAnimQueue;
 import std.anim.FadeAnim;
-import game.player.DamageSkill;
 import game.player.Player;
 import gamestate.GameStates;
 import gamestate.GlobalGameState;
@@ -98,8 +96,7 @@ public class GSCombat implements IGameState, StdIO.IKeyListener {
 	private EnemyTurn m_enemyTurn = new EnemyTurn();
 	private class EnemyTurn{
 		private boolean firstEnemy = false;
-		private DamageSkill damageSkill = new DamageSkill("Attack", 12);
-		
+
 		public void onEnter(){
 			m_currState = State.ENEMY_ACTION;
 			
@@ -119,9 +116,9 @@ public class GSCombat implements IGameState, StdIO.IKeyListener {
 				exitCombat();
 				return;
 			}
-			message = damageSkill.applyEffect( m_enemies.getCurrentHighlighted(), m_allies.getCurrentTargeted() );
-			m_allies.updateGroup();
 			
+			message = m_enemies.getCurrentHighlighted().getBasicAttack().applyEffect( m_enemies.getCurrentHighlighted(), m_allies.getCurrentTargeted() );
+			m_allies.updateGroup();
 				
 			if( firstEnemy || m_enemies.highlightNext() ){
 				firstEnemy = false;

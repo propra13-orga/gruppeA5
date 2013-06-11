@@ -1,5 +1,6 @@
 package std.anim;
 
+
 import std.StdDraw;
 
 public class FadeAnim extends AnimBase {

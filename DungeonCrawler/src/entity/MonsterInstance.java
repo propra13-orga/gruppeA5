@@ -1,5 +1,6 @@
 package entity;
 
+import game.player.Skill;
 import monster.MonsterType;
 import std.StdDraw;
 
@@ -18,8 +19,9 @@ public class MonsterInstance implements IEntity {
 	public boolean isDead(){
 		return m_currentLife == 0;
 	}
-	public void doDamage(int dmg){
+	public int doDamage(int dmg){
 		m_currentLife = Math.max(m_currentLife - dmg, 0);
+		return dmg;
 	}
 	public MonsterType getType(){
 		return m_type;
@@ -41,5 +43,10 @@ public class MonsterInstance implements IEntity {
 	@Override
 	public int getMaxHealth() {
 		return  m_type.getMaxHealth();
+	}
+
+	@Override
+	public Skill getBasicAttack() {
+		return m_type.getBasicAttack();
 	}
 }

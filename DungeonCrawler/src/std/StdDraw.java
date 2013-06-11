@@ -902,6 +902,27 @@ public final class StdDraw{
     }
 
 
+    public static void textLeftFmt(double x, double y, String s){
+    
+    	offscreen.setFont(font);
+        FontMetrics metrics = offscreen.getFontMetrics();
+        double xs = scaleX(x);
+        int hs = metrics.getDescent();
+        
+        String[] arr = s.split("\\n");
+        
+        for(String l : arr){
+        	offscreen.drawString(l, (float) (xs), (float) (scaleY(y) + hs));
+        	y += metrics.getHeight();
+        }
+        
+        //offscreen.drawString(s, (float) (xs), (float) (ys + hs));
+        
+        
+        draw();
+        
+    }
+
     /**
      * Write the given text string in the current font, left-aligned at (x, y).
      * @param x the x-coordinate of the text

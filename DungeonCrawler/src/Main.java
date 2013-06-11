@@ -4,6 +4,7 @@ import game.GSMainMenu;
 import game.GSTransition;
 import game.combat.GSCombat;
 import game.dialog.GSDialog;
+import game.inventory.GSInventory;
 import game.shop.GSShop;
 import gamestate.GameStates;
 import gamestate.GlobalGameState;
@@ -13,6 +14,14 @@ import std.StdIO;
 import std.StdWin;
 import std.anim.GlobalAnimQueue;
 
+/*
+ * http://opengameart.org/content/dungeon-crawl-32x32-tiles
+ * http://www.photoshopstar.com/web-design/war-game-style-navigation/
+ * http://corrupteddevelopment.com/old-curled-paper-texture/
+ * http://archnophobia.deviantart.com/art/Free-Background-psd-72672793
+ * http://forum.unity3d.com/threads/60284-Free-2d-sprite-animations
+ * 
+ */
 
 public class Main {
 	static boolean s_shutdown=false;
@@ -27,6 +36,7 @@ public class Main {
 		GlobalGameState.associateGameState( GameStates.COMBAT, 	  new GSCombat() 	 );
 		GlobalGameState.associateGameState( GameStates.TRANSITION,new GSTransition() );
 		GlobalGameState.associateGameState( GameStates.SHOP,	  new GSShop() 		 );
+		GlobalGameState.associateGameState( GameStates.INVENTORY, new GSInventory()	 );
 		GlobalGameState.associateGameState( GameStates.DIALOG,	  new GSDialog()	 );
 		
 		GlobalGameState.initiateGlobalGameState( GameStates.MAIN_MENU );

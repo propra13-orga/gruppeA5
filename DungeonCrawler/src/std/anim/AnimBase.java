@@ -1,5 +1,6 @@
 package std.anim;
 
+
 public abstract class AnimBase {
 	protected AnimAction m_runWhenDone = null;
 	protected boolean m_isRunning = false;

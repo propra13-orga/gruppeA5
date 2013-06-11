@@ -1,5 +1,6 @@
 package std.anim;
 
+
 import java.awt.Image;
 
 import std.StdDraw;

@@ -6,5 +6,6 @@ public enum GameStates{
 	COMBAT,
 	SHOP,
 	DIALOG, //?
+	INVENTORY,
 	TRANSITION
 }

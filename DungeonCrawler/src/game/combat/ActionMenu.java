@@ -80,7 +80,7 @@ public class ActionMenu {
 				if(m_state == State.SELECT_SUBACTION)
 					m_selectedSkill = m_companion.getSkillList().get(m_currSelected);
 				else
-					m_selectedSkill = m_companion.getAttackSkill();
+					m_selectedSkill = m_companion.getBasicAttack();
 			
 				m_state = State.SELECTED;
 			}else{
