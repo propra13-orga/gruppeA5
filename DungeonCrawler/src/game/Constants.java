@@ -5,8 +5,8 @@ public class Constants {
 	public static final int 	MAP_WIDTH  	= 16;
 	public static final int 	MAP_HEIGHT	= 16;
 	
-	public static final int 	FRAME_TIME 	= 16;
-	public static final double 	FPS 		= 1000.f / FRAME_TIME;
+	public static final double 	FPS 		= 60;
+	public static final int 	FRAME_TIME 	= (int) (1000.f / FPS);
 	
 	public static final int 	WIN_WIDTH 	= 800;
 	public static final int 	WIN_HEIGHT 	= 600;

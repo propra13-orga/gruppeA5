@@ -13,6 +13,12 @@ public class Inventory {
 	private static final int MAX_SIZE = SIZE_Y * SIZE_X;
 	private ArrayList<ItemInstance> m_items = new ArrayList<>(MAX_SIZE);
 	
+	public int getHeight(){
+		return SIZE_Y;
+	}
+	public int getWidth(){
+		return SIZE_X;
+	}
 	
 	public void addItem(ItemInstance it){
 		for(int i=0; i < MAX_SIZE; i++){
@@ -47,8 +53,8 @@ public class Inventory {
 		ItemType a = new ItemType("data/items/ruby.png", "Health Potion", "Restores 100 health upon use.").makeUsable();
 		ItemType b = new ItemType("data/items/brilliant_blue.png", "Mana Potion", "Restores 100 mana upon use.").makeUsable();
 
-		ItemType c = new ItemType("data/items/ankus.png", "Weapon", "A simple staff.\nDamage: 45")
-						.makeEquipable(EquipSlot.HAND, "data/player/sceptre.png", new EquipEffectBasicAttack(45) );
+		ItemType c = new ItemType("data/items/ankus.png", "Weapon", "A simple staff.\nDamage: 60")
+						.makeEquipable(EquipSlot.HAND, "data/player/sceptre.png", new EquipEffectBasicAttack(60) );
 
 		ItemType d = new ItemType("data/items/leather_armour2.png", "Leather Armor", "A sturdy leather armor.\nArmor: +15")
 						.makeEquipable(EquipSlot.TORSO, "data/player/leather2.png", new EquipEffectArmor(15) ); 

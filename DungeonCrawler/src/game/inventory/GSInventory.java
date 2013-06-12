@@ -3,6 +3,7 @@ import java.awt.event.KeyEvent;
 import java.util.List;
 
 import entity.Companion;
+import entity.UnitStats;
 
 import std.StdDraw;
 import std.StdIO;
@@ -82,7 +83,8 @@ public class GSInventory implements IGameState, StdIO.IKeyListener {
 
 
 		//Draw health bar
-		double healthRatio = c.getCurrHealth() / (double)c.getMaxHealth();
+		final UnitStats s = c.getStats();
+		double healthRatio = s.mCurrHealth / (double)s.mMaxHealth;
 		double healthBarLength = 32. * healthRatio;
 
 		StdDraw.setPenColor(StdDraw.GREEN);
@@ -127,13 +129,13 @@ public class GSInventory implements IGameState, StdIO.IKeyListener {
 	@Override
 	public void receiveEvent(KeyEvent e) {
 		switch(e.getKeyCode()){ 
-		case KeyEvent.VK_DOWN: m_selY 	= mod(m_selY+1, 4); break;
-		case KeyEvent.VK_UP: m_selY  	= mod(m_selY-1, 4); break;
-		case KeyEvent.VK_RIGHT: m_selX  = mod(m_selX+1, 4); break;
-		case KeyEvent.VK_LEFT: m_selX  	= mod(m_selX-1, 4); break;
+		case KeyEvent.VK_DOWN: m_selY 	= mod(m_selY+1, m_inv.getHeight() ); break;
+		case KeyEvent.VK_UP: m_selY  	= mod(m_selY-1, m_inv.getHeight() ); break;
+		case KeyEvent.VK_RIGHT: m_selX  = mod(m_selX+1, m_inv.getWidth()  ); break;
+		case KeyEvent.VK_LEFT: m_selX  	= mod(m_selX-1, m_inv.getWidth()  ); break;
 		}
 	
-		if( e.getKeyCode() == KeyEvent.VK_ESCAPE ){
+		if( e.getKeyCode() == KeyEvent.VK_ESCAPE || e.getKeyCode() == KeyEvent.VK_I ){
 			GlobalGameState.setActiveGameState( GameStates.GAME );
 		}
 		if( e.getKeyCode() == KeyEvent.VK_ENTER ){

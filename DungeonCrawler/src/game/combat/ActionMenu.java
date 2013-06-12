@@ -22,15 +22,24 @@ public class ActionMenu {
 		final double STEP = 20.0;
 		StdDraw.setPenColor(StdDraw.WHITE);
 
-		double i = 0;
+		double y = 0;
+		int i = 0;
 		for(String e : m_entries){
-			StdDraw.textLeft(460, 400+i, e);
-			i += STEP;
+			if(m_currSelected==i)
+				StdDraw.setPenColor(StdDraw.RED);
+			StdDraw.textLeft(460, 400+y, e);
+			if(m_currSelected==i)
+				StdDraw.setPenColor(StdDraw.WHITE);
+			y += STEP;
+			i += 1;
 		}
+
+		StdDraw.setPenColor(StdDraw.RED);
 		StdDraw.textLeft(450,400 + (m_currSelected*STEP), ">");
 			
+		StdDraw.setPenColor(StdDraw.WHITE);
 		StdDraw.rectangle(550, 390, 180, 140);
-		StdDraw.textLeft(555, 400, m_companion.getName() );
+		StdDraw.textLeft(555, 405, m_companion.getName() );
 	}
 	
 	public void setCompanion(Companion c){

@@ -4,6 +4,7 @@ import java.awt.event.KeyEvent;
 import std.StdDraw;
 import std.StdIO;
 import std.StdIO.KeyEventType;
+import game.checkpoint.Checkpoint;
 import game.player.Player;
 import gamestate.GameStates;
 import gamestate.GlobalGameState;
@@ -12,11 +13,16 @@ import map.Map;
 
 
 public class GSGame implements IGameState, StdIO.IKeyListener {
-	Player m_player;
-	Map m_map;
-	GameInterface m_ui;
+	private Player m_player;
+	private Map m_map;
+	private GameInterface m_ui;
+	private static GSGame m_this;
 	
 	boolean s_shutdown = false;
+
+	public static GSGame getInstance(){
+		return m_this;
+	}
 
 	@Override
 	public void render() {	
@@ -37,11 +43,13 @@ public class GSGame implements IGameState, StdIO.IKeyListener {
 		
 		m_player.update(m_map);
 		
+		Map.getInstance().getMonsterPool().updateAll();
+		Map.getInstance().getMonsterPool().issueRandomWanderOrders();
+		
 		if(m_player.isAlive() == false){
-			GlobalGameState.setActiveGameState(GameStates.MAIN_MENU);
-			
-			resetPlayer();
+			System.out.println("Error! Player alive check not passed in GSGame.");
 		}
+		
 	}
 
 	private void resetPlayer(){
@@ -54,9 +62,8 @@ public class GSGame implements IGameState, StdIO.IKeyListener {
 		m_player.setPosition( m_map.getCanvasX(7), m_map.getCanvasY(0) );
 		
 	}
-
-	public GSGame(){
 	
+	public void startGame(){
 		m_ui = new GameInterface();
 		m_player = new Player();
 		
@@ -65,6 +72,11 @@ public class GSGame implements IGameState, StdIO.IKeyListener {
 		m_map = new Map(44,44, "data/tiles.txt");
 				
 		resetPlayer();
+		Checkpoint.save();
+	}
+
+	public GSGame(){
+		m_this = this;
 	}
 
 

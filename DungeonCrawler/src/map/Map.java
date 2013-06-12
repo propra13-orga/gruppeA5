@@ -26,6 +26,7 @@ public class Map {
 
 	//Currently selected level
 	private Level m_currentLevel;
+	private String m_currentLevelName;
 	
 	private TileList m_tileList;
 	
@@ -49,9 +50,14 @@ public class Map {
 			}
 			m_levels.put(levelName, lvl);
 			m_currentLevel = lvl;
+			m_currentLevelName = levelName;
 		}
 		
 		return true;
+	}
+	
+	public String getCurrentLevelname(){
+		return m_currentLevelName;
 	}
 	
 	public MonsterPool getMonsterPool(){
@@ -136,9 +142,6 @@ public class Map {
 	 * Constructs a map at position (x,y) and loads the corresponding TileList from tileListPath
 	 */
 	public Map(double x, double y, String tileListPath){
-		if(m_this != null)
-			System.out.println("Error! A second map instance was created.");
-	
 		m_this = this;
 	
 		m_tileList = new TileList();

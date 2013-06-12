@@ -33,4 +33,4 @@
 # Monsters
 
 7 3 "data/monsters/redback.png"
-6 3 "data/monsters/redback.png"
+10 10 "data/monsters/redback.png"

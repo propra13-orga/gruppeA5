@@ -7,8 +7,7 @@ public interface IEntity {
 	int doDamage(int dmg);
 	boolean isDead();
 	
-	int getCurrHealth();
-	int getMaxHealth();
+	UnitStats getStats();
 	
 	public String getName();
 	

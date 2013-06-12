@@ -6,21 +6,22 @@ import std.StdDraw;
 
 public class MonsterInstance implements IEntity {
 	private MonsterType m_type;
-	private int m_currentLife;
+	private UnitStats m_stats;
 	
 	public int getCurrHealth(){
-		return m_currentLife;
+		return m_stats.mCurrHealth;
 	}
 	
 	public void setCurrHealth(int hp){
-		m_currentLife = hp;
+		m_stats.mCurrHealth = hp;
 	}
 	
 	public boolean isDead(){
-		return m_currentLife == 0;
+		return m_stats.mCurrHealth == 0;
 	}
 	public int doDamage(int dmg){
-		m_currentLife = Math.max(m_currentLife - dmg, 0);
+		//TODO: Calculate-in armor. Same as Companion
+		m_stats.mCurrHealth = Math.max(m_stats.mCurrHealth - dmg, 0);
 		return dmg;
 	}
 	public MonsterType getType(){
@@ -37,12 +38,12 @@ public class MonsterInstance implements IEntity {
 	
 	public MonsterInstance(MonsterType type){
 		m_type = type;
-		m_currentLife = type.getMaxHealth();
+		m_stats = type.getFreshMonsterStats();
 	}
 
 	@Override
-	public int getMaxHealth() {
-		return  m_type.getMaxHealth();
+	public UnitStats getStats(){
+		return m_stats;
 	}
 
 	@Override

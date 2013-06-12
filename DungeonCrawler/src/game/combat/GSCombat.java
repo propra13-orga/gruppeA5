@@ -12,6 +12,8 @@ import std.StdIO;
 import std.StdIO.KeyEventType;
 import std.anim.GlobalAnimQueue;
 import std.anim.FadeAnim;
+import game.GSTransition;
+import game.checkpoint.Checkpoint;
 import game.player.Player;
 import gamestate.GameStates;
 import gamestate.GlobalGameState;
@@ -49,6 +51,14 @@ public class GSCombat implements IGameState, StdIO.IKeyListener {
 
 	@Override
 	public void render() {
+	
+		StdDraw.picture(0,0, "data/ui/background.png");
+		
+		StdDraw.setAlpha(0.5f);
+		StdDraw.setPenColor(StdDraw.BLACK);
+		StdDraw.filledRectangle(0,0,800,600);
+		StdDraw.setAlpha(1.0f);
+	
 		m_enemies.render(/*m_currState == State.TARGET_ENEMY, m_currState == State.ENEMY_ACTION*/);
 		m_allies.render(/*m_currState == State.TARGET_ALLY, m_currState != State.ENEMY_ACTION*/);
 		
@@ -57,8 +67,9 @@ public class GSCombat implements IGameState, StdIO.IKeyListener {
 		
 		//Show message box
 		if(m_currState == State.MESSAGE){	
+			StdDraw.setPenColor(StdDraw.WHITE);
 			StdDraw.rectangle(25, 390, 400, 140);
-			StdDraw.textLeft(25, 400, message);
+			StdDraw.textLeft(30, 405, message);
 		}
 	}
 
@@ -112,16 +123,20 @@ public class GSCombat implements IGameState, StdIO.IKeyListener {
 		public void onStep(){
 			m_currState = State.ENEMY_ACTION;
 			
-			if( m_allies.isDefeated() || m_enemies.isDefeated() ){
-				exitCombat();
+			if( m_allies.isDefeated() ){
+				exitCombatPlayerDefeat();
+				return;
+			}else if( m_enemies.isDefeated() ){
+				exitCombatPlayerVictory();
 				return;
 			}
-			
-			message = m_enemies.getCurrentHighlighted().getBasicAttack().applyEffect( m_enemies.getCurrentHighlighted(), m_allies.getCurrentTargeted() );
-			m_allies.updateGroup();
-				
+
 			if( firstEnemy || m_enemies.highlightNext() ){
 				firstEnemy = false;
+				
+				message = m_enemies.getCurrentHighlighted().getBasicAttack().applyEffect( m_enemies.getCurrentHighlighted(), m_allies.getCurrentTargeted() );
+				m_allies.updateGroup();
+				
 				m_messageTurn.prepare(MessageTurn.ENEMY);
 				m_messageTurn.onEnter();
 			}else{
@@ -150,8 +165,11 @@ public class GSCombat implements IGameState, StdIO.IKeyListener {
 		public void onStep(){
 			m_currState = State.PLAYER_ACTION;
 
-			if( m_allies.isDefeated() || m_enemies.isDefeated() ){
-				exitCombat();
+			if( m_allies.isDefeated() ){
+				exitCombatPlayerDefeat();
+				return;
+			}else if( m_enemies.isDefeated() ){
+				exitCombatPlayerVictory();
 				return;
 			}
 
@@ -266,7 +284,15 @@ public class GSCombat implements IGameState, StdIO.IKeyListener {
 		}
 	}
 
-	public void exitCombat(){
+	private void exitCombatPlayerDefeat(){
+		//Activate last check point
+		Checkpoint.load();
+		//GlobalGameState.setActiveGameState(GameStates.DEFEAT);
+		GSTransition.getInstace().prepareTransition( GameStates.DEFEAT );
+		GlobalGameState.setActiveGameState(GameStates.TRANSITION);
+	}
+
+	private void exitCombatPlayerVictory(){
 		m_encounterPool.removeMonster(m_encounter);
 		FadeAnim anim = new FadeAnim(m_encounter.getX(),m_encounter.getY(), m_encounter.mPath);
 		GlobalAnimQueue.playAnimation( anim );

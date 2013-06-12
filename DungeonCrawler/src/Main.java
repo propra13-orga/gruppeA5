@@ -1,4 +1,5 @@
 import game.Constants;
+import game.GSDefeat;
 import game.GSGame;
 import game.GSMainMenu;
 import game.GSTransition;
@@ -38,6 +39,7 @@ public class Main {
 		GlobalGameState.associateGameState( GameStates.SHOP,	  new GSShop() 		 );
 		GlobalGameState.associateGameState( GameStates.INVENTORY, new GSInventory()	 );
 		GlobalGameState.associateGameState( GameStates.DIALOG,	  new GSDialog()	 );
+		GlobalGameState.associateGameState( GameStates.DEFEAT,	  new GSDefeat()	 );
 		
 		GlobalGameState.initiateGlobalGameState( GameStates.MAIN_MENU );
 

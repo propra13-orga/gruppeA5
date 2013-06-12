@@ -34,4 +34,4 @@ FIH0IA0I0I0IIG01
 # Monsters
 
 7 3 "data/monsters/shining_eye.png"
-7 2 "data/monsters/shining_eye.png"
+8 13 "data/monsters/shining_eye.png"

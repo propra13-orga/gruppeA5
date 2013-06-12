@@ -26,6 +26,7 @@ public class GSMainMenu implements IGameState {
 		}
 	
 		if( StdIO.isKeyPressed( KeyEvent.VK_ENTER ) ){
+			GSGame.getInstance().startGame();
 			GlobalGameState.setActiveGameState(GameStates.GAME);
 		}
 	}

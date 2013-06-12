@@ -53,7 +53,7 @@ public class GSTransition implements IGameState {
 	public void prepareTransition( GameStates nextGS ){
 		m_nextGameState = nextGS;
 		
-		if(nextGS == GameStates.COMBAT )
+		if(nextGS == GameStates.COMBAT || nextGS == GameStates.DEFEAT )
 			m_anim = new BGFadeAnim();
 		else
 			System.out.println("Error! No suitable animation for this transition found.");

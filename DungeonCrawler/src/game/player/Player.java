@@ -5,6 +5,7 @@ import java.util.List;
 import entity.Companion;
 import game.GSTransition;
 import game.HitBox;
+import game.checkpoint.Checkpoint;
 import game.combat.GSCombat;
 import game.inventory.Inventory;
 import gamestate.GameStates;
@@ -57,6 +58,12 @@ public class Player {
 		playerX = x;
 		playerY = y;
 	}
+	public double getX(){
+		return playerX;
+	}
+	public double getY(){
+		return playerY;
+	}
 	
 	private static Player s_player = null;
 	
@@ -65,9 +72,6 @@ public class Player {
 	}
 	
 	public Player(){
-		if(s_player != null)
-			System.out.println("Error! A second instance of Player was created");
-			
 		s_player = this;
 	}
 	
@@ -111,6 +115,9 @@ public class Player {
 			if(ti.mEventID == 3){
 				GlobalGameState.setActiveGameState( GameStates.DIALOG );
 			}
+			if(ti.mEventID == 4){
+				Checkpoint.save();
+			}
 			
 		}else{
 			standsOnEvent = false;
@@ -136,6 +143,7 @@ public class Player {
 	//Wenn nicht wird der Spieler auf das angestrebte Feld bewegt
 	public void update(Map map){
 		
+		//TODO: Use HitBox for that
 		if( StdIO.isKeyPressed(KeyEvent.VK_W) || StdIO.isKeyPressed(KeyEvent.VK_UP)) {
 			if (map.isPathable(map.getGridX(playerX + xMin),map.getGridY(playerY-3 + yMin)) 
 					&& map.isPathable(map.getGridX(playerX + xMax), map.getGridY(playerY-3 + yMin))){

@@ -20,7 +20,7 @@ public class Companion implements IEntity {
 	
 	private ArrayList<Skill> m_skillNames = new ArrayList<>();
 	private Equipment m_equipment = new Equipment(this);
-	private CompanionStats m_stats = new CompanionStats();
+	private UnitStats m_stats = new UnitStats();
 	
 	public Skill getBasicAttack(){
 		return m_attackSkill;
@@ -46,10 +46,6 @@ public class Companion implements IEntity {
 	
 	public Equipment getEquipment(){
 		return m_equipment;
-	}
-	
-	public CompanionStats getStats(){
-		return m_stats;
 	}
 	
 	private void renderLayer(double x, double y, ItemInstance ii){
@@ -81,7 +77,9 @@ public class Companion implements IEntity {
 		c.m_attackSkill = new DamageSkill("Attack", 35);
 		c.m_skillNames.add( new DamageSkill("Strike", 50) );
 		c.m_skillNames.add( new DamageSkill("Fireball", 100) );
-		
+		c.m_stats.mMaxHealth = 100;
+		c.m_stats.mMaxMana = 100;
+		c.restoreToFull();
 		list.add(c);
 		
 		c = new Companion();
@@ -89,9 +87,17 @@ public class Companion implements IEntity {
 		c.m_baseAppearance = "data/player/dwarf_m.png";
 		c.m_attackSkill = new DamageSkill("Attack", 35);
 		c.m_skillNames.add( new DamageSkill("DUNK!", 65) );
+		c.m_stats.mMaxHealth = 100;
+		c.m_stats.mMaxMana = 100;
+		c.restoreToFull();
 		list.add(c);
 		
 		return list;
+	}
+
+	public void restoreToFull(){
+		m_stats.mCurrHealth = m_stats.mMaxHealth;
+		m_stats.mCurrMana = m_stats.mMaxMana;
 	}
 
 	@Override
@@ -111,13 +117,8 @@ public class Companion implements IEntity {
 	}
 
 	@Override
-	public int getCurrHealth() {
-		return m_stats.mCurrHealth;
-	}
-
-	@Override
-	public int getMaxHealth() {
-		return m_stats.mMaxHealth;
+	public UnitStats getStats(){
+		return m_stats;
 	}
 
 

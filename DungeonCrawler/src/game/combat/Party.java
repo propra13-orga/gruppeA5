@@ -1,6 +1,8 @@
 package game.combat;
 
 import entity.IEntity;
+import entity.UnitStats;
+
 import java.util.List;
 
 import std.StdDraw;
@@ -14,23 +16,46 @@ public abstract class Party {
 	protected boolean m_renderTarget = false;
 
 	private void renderIcon(double x, double y, IEntity c, int index, boolean showTarget, boolean showHighlight){
-		double healthRatio = c.getCurrHealth() / (double)c.getMaxHealth();
+		final UnitStats s = c.getStats();
+
+		//RENDER MANA BAR
+		if( s.mMaxMana > 0){
+			double manaRatio = s.mCurrMana / (double)s.mMaxMana;
+			double manaBarLength = 32. * manaRatio;
+	
+			StdDraw.setPenColor(StdDraw.BLUE);
+			StdDraw.filledRectangle(x,y,manaBarLength,4);
+			
+			StdDraw.setPenColor(StdDraw.GRAY);
+			StdDraw.rectangle(x,y,32,4);
+			y -= 6;
+		}
+		
+		//RENDER HEALTH BAR
+		double healthRatio = s.mCurrHealth / (double)s.mMaxHealth;
 		double healthBarLength = 32. * healthRatio;
 
-		StdDraw.setPenColor(StdDraw.GREEN);
+		StdDraw.setPenColor(StdDraw.RED);
 		StdDraw.filledRectangle(x,y,healthBarLength,4);
 		
-		StdDraw.setPenColor(StdDraw.RED);
+		StdDraw.setPenColor(StdDraw.GRAY);
 		StdDraw.rectangle(x,y,32,4);
 		
+		if( s.mMaxMana > 0){
+			y += 6;
+		}
+		
+		//RENDER REST
 		c.render(x,y+8);
+		
 		
 		if(showTarget && m_currTargeted == index)
 			StdDraw.picture(x, y+26, "data/arrow.png");
 			
-		if(showHighlight && m_currHighlighted == index)
+		if(showHighlight && m_currHighlighted == index){
+			StdDraw.setPenColor(StdDraw.RED);
 			StdDraw.rectangle(x,y+8,32,32);
-			
+		}
 		
 	}
 

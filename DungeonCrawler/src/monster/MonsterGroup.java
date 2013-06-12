@@ -16,6 +16,24 @@ public class MonsterGroup {
 	
 	private ArrayList<MonsterType> m_monsters = new ArrayList<>();
 	
+	private static final double MOVE_SPEED = 0.5;
+	public static class MonsterOrder{
+		public enum OrderType{STOP, MOVE}
+		OrderType m_currentOrder = OrderType.STOP;
+		double m_x;
+		double m_y;
+	}
+	MonsterOrder m_order = new MonsterOrder();
+	
+	public MonsterOrder.OrderType getCurrentOrder(){
+		return m_order.m_currentOrder;
+	}
+	public void issueOrder(double x, double y){
+		m_order.m_currentOrder = MonsterOrder.OrderType.MOVE;
+		m_order.m_x = x;
+		m_order.m_y = y;
+	}
+	
 	public void setPosition(double x, double y){
 		m_x = x;
 		m_y = y;
@@ -30,9 +48,43 @@ public class MonsterGroup {
 		return m_y;
 	}
 	
+	public void update(){
+		if(m_order.m_currentOrder != MonsterOrder.OrderType.MOVE)
+			return;
+	
+		double diffX = m_x - m_order.m_x;
+		double diffY = m_y - m_order.m_y;
+		boolean stillMoving = false;
+		
+		if( Math.abs(diffX) > 2.0 ){
+			diffX = (diffX<0) ? MOVE_SPEED : -MOVE_SPEED;
+			stillMoving = true;
+		}else{
+			diffX = 0;
+		}
+		if( Math.abs(diffY) > 2.0 ){
+			diffY = (diffY<0) ? MOVE_SPEED : -MOVE_SPEED;
+			stillMoving = true;
+		}else{
+			diffY = 0;
+		}
+		
+		
+		
+		if(stillMoving)
+			setPosition(m_x + diffX, m_y + diffY);
+		else
+			m_order.m_currentOrder = MonsterOrder.OrderType.STOP;
+		
+	}
+	
 	public void render(Map map){
 		StdDraw.picture(m_x, m_y, mPath);
 		
+		if(m_order.m_currentOrder == MonsterOrder.OrderType.MOVE){
+			StdDraw.setPenColor(StdDraw.YELLOW);
+			StdDraw.line(m_x+16, m_y+16, m_order.m_x+16, m_order.m_y+16);
+		}
 		
 		m_hitBox.render();
 	}
