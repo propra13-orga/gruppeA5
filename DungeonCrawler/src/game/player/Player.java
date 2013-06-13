@@ -186,11 +186,11 @@ public class Player {
 		c.render(playerX, playerY);
 
 		Map map = Map.getInstance();
-		double x = map.getCanvasX(map.getGridX(playerX+16));
-		double y = map.getCanvasY(map.getGridY(playerY+16));
+		//double x = map.getCanvasX(map.getGridX(playerX+16));
+		//double y = map.getCanvasY(map.getGridY(playerY+16));
 		
-		StdDraw.setPenColor(StdDraw.YELLOW);
-		StdDraw.square(x, y, 32);
+		//StdDraw.setPenColor(StdDraw.YELLOW);
+		//StdDraw.square(x, y, 32);
 		
 		m_hitBox.render();
 	}
