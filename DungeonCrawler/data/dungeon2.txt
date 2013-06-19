@@ -19,16 +19,17 @@ FDAF11EC11C1D1EC
 
 # Events
 
-5 6 0
-8 11 0
-7 9 0
-12 1 1
-12 3 0
-6 12 0
-9 9 0
-9 4 0
-12 10 0
+7 1 4
 
 # Teleporters
 
 7 0 "data/dungeon1.txt" 7 15
+12 1 "data/dungeon3.txt" 13 15
+
+# MonsterGroups
+8 11 "data/monsters/shining_eye.png" ShiningEye && UnseenHorror && ShiningEye
+12 2 "data/monsters/swamp_dragon.png" BlackSpider && GreenDragon && BlackSpider
+
+# Pickups
+4 3 HealthPotion
+6 10 HealthPotion

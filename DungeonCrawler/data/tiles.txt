@@ -35,3 +35,5 @@
 1 "Vines Wall" "data/dungeon/brick_brown-vines4.png"
 0 "Shop Icon" "data/unseen_item.png"
 0 "Talk Icon" "data/unseen_monster.png"
+0 "Grass North-East" "data/grass/grass_ne.png"
+0 "Grass North-West" "data/grass/grass_nw.png"

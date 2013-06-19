@@ -1,0 +1,35 @@
+# Map
+
+1111A11ED@CD1D11
+1000000000000001
+1000000000000001
+E00000000000000F
+@000DE@111BE0001
+A000EDA100010001
+D0001D200001000D
+10001111000@000@
+A00011AA000F000E
+1000DA1A0001000B
+B00011@100010001
+100011B1000F0001
+@0000000000100S1
+1000000000010001
+100000000001000A
+DC1111C11CB1121B
+
+# Events
+
+14 12 2
+13 14 4
+
+# Teleporters
+
+13 15 "data/dungeon2.txt" 12 1
+6 6 "data/dungeon4.txt" 6 6
+
+# MonsterGroups
+13 4 "data/monsters/shining_eye.png" ShiningEye && ShiningEye && ShiningEye
+14 7 "data/monsters/shining_eye.png" ShiningEye && ShiningEye && ShiningEye
+12 11 "data/monsters/shining_eye.png" ShiningEye && ShiningEye && ShiningEye
+10 3 "data/monsters/shining_eye.png" ShiningEye && ShiningEye && ShiningEye
+5 3 "data/monsters/shining_eye.png" ShiningEye && ShiningEye && ShiningEye

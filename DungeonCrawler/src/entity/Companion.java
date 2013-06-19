@@ -3,8 +3,8 @@ package entity;
 import game.inventory.EquipSlot;
 import game.inventory.Equipment;
 import game.item.ItemInstance;
-import game.player.DamageSkill;
-import game.player.Skill;
+import game.skill.SingleTargetDmgSkill;
+import game.skill.Skill;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ public class Companion implements IEntity {
 	private String m_baseAppearance;
 	
 	private Skill m_attackSkill;
-	private static final Skill m_defaultAttackSkill = new DamageSkill("Punch", 25);
+	private static final Skill m_defaultAttackSkill = new SingleTargetDmgSkill("Punch", "", 25, 0);
 	
 	private ArrayList<Skill> m_skillNames = new ArrayList<>();
 	private Equipment m_equipment = new Equipment(this);
@@ -34,6 +34,10 @@ public class Companion implements IEntity {
 	
 	public List<Skill> getSkillList(){
 		return m_skillNames;
+	}
+
+	public boolean canCastSkill(Skill e){
+		return e.getManaCost() <= m_stats.mCurrMana;
 	}
 
 	public String getName(){
@@ -74,9 +78,11 @@ public class Companion implements IEntity {
 		c = new Companion();
 		c.m_name = "John";
 		c.m_baseAppearance = "data/player/deep_elf_m.png";
-		c.m_attackSkill = new DamageSkill("Attack", 35);
-		c.m_skillNames.add( new DamageSkill("Strike", 50) );
-		c.m_skillNames.add( new DamageSkill("Fireball", 100) );
+		c.m_attackSkill = new SingleTargetDmgSkill("Attack", "", 35, 0);
+		
+		c.m_skillNames.add( Skill.getSkill("Strike") );
+		c.m_skillNames.add( Skill.getSkill("Fireball") );
+
 		c.m_stats.mMaxHealth = 100;
 		c.m_stats.mMaxMana = 100;
 		c.restoreToFull();
@@ -85,8 +91,11 @@ public class Companion implements IEntity {
 		c = new Companion();
 		c.m_name = "Bob";
 		c.m_baseAppearance = "data/player/dwarf_m.png";
-		c.m_attackSkill = new DamageSkill("Attack", 35);
-		c.m_skillNames.add( new DamageSkill("DUNK!", 65) );
+		c.m_attackSkill = new SingleTargetDmgSkill("Attack", "", 35, 0);
+		
+		c.m_skillNames.add( Skill.getSkill("Smite") );
+		c.m_skillNames.add( Skill.getSkill("LayOnHands") );
+
 		c.m_stats.mMaxHealth = 100;
 		c.m_stats.mMaxMana = 100;
 		c.restoreToFull();
@@ -110,6 +119,12 @@ public class Companion implements IEntity {
 		
 		return adjustedDmg;
 	}
+	
+	@Override
+	public int doHeal(int heal) {
+		m_stats.mCurrHealth = Math.min(m_stats.mCurrHealth + heal, m_stats.mMaxHealth);
+		return heal;
+	}
 
 	@Override
 	public boolean isDead() {
@@ -120,6 +135,7 @@ public class Companion implements IEntity {
 	public UnitStats getStats(){
 		return m_stats;
 	}
+
 
 
 }

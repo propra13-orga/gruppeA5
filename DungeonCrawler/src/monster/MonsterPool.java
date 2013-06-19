@@ -50,9 +50,9 @@ public class MonsterPool {
 		}
 	}
 	
-	public void renderAll(Map map){
+	public void renderAll(){
 		for( MonsterGroup m : m_monsters ) {
-			m.render(map);
+			m.render();
 		}
 	}
 	

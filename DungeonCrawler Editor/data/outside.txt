@@ -1,24 +1,26 @@
 # Map
 
 =;=;=;;:6ML;=;M;
-=;==;;=:6;;=;=7K
+=;==;;=:6;S=;=7K
 ;=;;;M;:6M====OJ
-;O;ONL;:6M7JM;O;
-;O<;;7;:6;LJ;=N=
+;O;ONL;:6M7JT;O;
+;OKK;7;:6;LJ;=N=
 =;=;;;;:6K;=7;MM
 ;NO=NO;:6K;=;==7
 =;KJ7J;:67==O;;;
 ;=;M=OJ:6M=;;7==
-;;=7;;L:6L;<==;;
+;;=7;;L:6L;7==;;
 =O7;O=;:6LM;;;==
 ;N;=7;7:677MO7;=
 =;;=;;3983;=;;NO
-=;=;=<P22Q;==7;=
+=;=;=MP22Q;==7;=
 =;O;;3Q3PRP;===;
 =O;=QR3QRQ33=;;;
 
 # Events
 
+10 1 2
+12 3 3
 11 9 0
 2 4 0
 5 13 0
@@ -27,3 +29,8 @@
 
 7 13 "data/dungeon1.txt" 7 0
 8 13 "data/dungeon1.txt" 8 0
+
+# MonsterGroups
+
+7 3 "data/monsters/redback.png" BlackSpider && BlackSpider && BlackSpider
+10 10 "data/monsters/redback.png" BlackSpider && BlackSpider && BlackSpider

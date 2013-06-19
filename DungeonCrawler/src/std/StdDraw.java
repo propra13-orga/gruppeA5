@@ -909,18 +909,14 @@ public final class StdDraw{
         double xs = scaleX(x);
         int hs = metrics.getDescent();
         
-        String[] arr = s.split("\\n");
+        String[] arr = s.split("\\n|\\\\n");
         
         for(String l : arr){
         	offscreen.drawString(l, (float) (xs), (float) (scaleY(y) + hs));
         	y += metrics.getHeight();
         }
-        
-        //offscreen.drawString(s, (float) (xs), (float) (ys + hs));
-        
-        
-        draw();
-        
+
+        draw(); 
     }
 
     /**

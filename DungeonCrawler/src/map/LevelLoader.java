@@ -1,4 +1,7 @@
 package map;
+import game.item.PickupPool;
+import game.item.PickupableItem;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -29,6 +32,8 @@ class LevelLoader {
 	
 	private HashMap<Coordinate, CellInfo> m_tileInfo;
 	private MonsterPool m_monsterPool;
+	private PickupPool m_pickupPool;
+	
 	
 	private final Pattern m_argumentSplit = Pattern.compile("([^\"]\\S*|\".+?\")\\s*");
 	
@@ -68,6 +73,7 @@ class LevelLoader {
 	}
 
 	private boolean loadMonsterData(){
+		Map map = Map.getInstance();
 	
 		while(true){
 			nextLine();
@@ -77,19 +83,26 @@ class LevelLoader {
 			
 			ArrayList<String> list = splitArguments(m_line);
 			
-			if(list.size() != 3){
-				System.out.println("Error, bad teleporter line: " + m_line);
+			if(list.size() < 4){
+				System.out.println("Error, bad monster line: " + m_line);
 				return false;
 			}
-			
 			try{
-				Map map = Map.getInstance();
-			
 				MonsterGroup monster = new MonsterGroup(	
 						map.getCanvasX( Integer.parseInt(list.get(0))) ,
 						map.getCanvasY( Integer.parseInt(list.get(1))) ,
 						list.get(2).replace("\"", "") 
 				);
+				
+				//Add first monster
+				monster.addMonsterTypeByString( list.get(3) );
+				
+				//look for additional monsters
+				int count = 6;
+				while( list.size() >= count && list.get(count-2).equals("&&") ){
+					monster.addMonsterTypeByString( list.get(count-1) );
+					count += 2;
+				}
 				
 				m_monsterPool.addMonster(monster);
 				
@@ -132,6 +145,42 @@ class LevelLoader {
 			return false;
 		}
 		
+		return true;
+	}
+
+	private boolean loadPickups(){
+		while(true){
+			nextLine();
+			
+			if(m_line == null ||m_line.startsWith("#"))
+				break;
+			
+			String[] ar = m_line.split(" ");
+			
+			if(ar.length != 3){
+				System.out.println("Error, bad event line: " + m_line);
+				return false;
+			}
+			
+			try{
+				int x = Integer.parseInt(ar[0]);
+				int y = Integer.parseInt(ar[1]);
+				
+				PickupableItem pi = new PickupableItem(x, y, ar[2]);
+				
+				if(pi.getItemType() != null)
+					m_pickupPool.addPickupable( pi );
+				else{
+					System.out.println("Error! Unrecognized ItemType in LevelFile.");
+					return false;
+				}
+				
+			} catch(NumberFormatException e) {
+				System.out.println(e);
+				return false;
+			}
+		}
+
 		return true;
 	}
 
@@ -227,6 +276,7 @@ class LevelLoader {
 		m_grid = new char[MAP_LENGTH][MAP_HEIGHT];
 		m_tileInfo = new HashMap<Coordinate, CellInfo>();
 		m_monsterPool = new MonsterPool();
+		m_pickupPool = new PickupPool();
 		boolean status = true;
 		
 		try{
@@ -241,8 +291,10 @@ class LevelLoader {
 		        	status = status && loadEvents();
 		        } else if( m_line.equals("# Teleporters") ){
 		        	status = status && loadTeleporters();
-		        } else if( m_line.equals("# Monsters") ){
+		        } else if( m_line.equals("# MonsterGroups") ){
 		        	status = status && loadMonsterData();
+		        } else if( m_line.equals("# Pickups") ){
+		        	status = status && loadPickups();
 		        } else {
 		        	System.out.println("Error, unrecognized line: " + m_line);
 		        	break;
@@ -260,5 +312,10 @@ class LevelLoader {
 
 	public MonsterPool getMonsterPool() {
 		return m_monsterPool;
+	}
+
+	public PickupPool getPickupablePool() {
+		// TODO Auto-generated method stub
+		return m_pickupPool;
 	}
 }

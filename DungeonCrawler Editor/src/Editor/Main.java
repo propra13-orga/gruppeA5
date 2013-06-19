@@ -18,7 +18,7 @@ public class Main {
 	private static Toolbar s_toolbar;
 	
 	public static void main(String[] args) {
-	
+
 		StdWin.init();
 		StdWin.setTitle("No level loaded.");
 		

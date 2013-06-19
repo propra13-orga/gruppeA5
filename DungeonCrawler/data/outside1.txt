@@ -1,0 +1,35 @@
+# Map
+
+=ON=ONOO7ON==NKL
+ONON7NNO==N;NM=;
+O7MLJO=NLO7ON;OK
+NJJ=J;;KJOMO=ON7
+=J;=LJMLK7JOL==;
+O;L=SLLVUKLJ7MNN
+N=MJONM:6=K;MNNO
+OOKOJNN:6OLOJ=OM
+ONM7K==:6MJNO=NN
+=;N;L=J:6OMOL7KK
+=;;LKNL:6K;KN7==
+OLJLM=O:6OLMM;=N
+=MLLM=N:6OJ==7O;
+ONJL;7=:6OL;O7N=
+N=O==O=:6ONNNL=7
+==NN=N;:67NOO=O=
+
+# Events
+
+4 5 2
+
+# Teleporters
+
+8 15 "data/outside2.txt" 8 0
+7 15 "data/outside2.txt" 7 0
+
+# MonsterGroups
+
+8 12 "data/monsters/redback.png" BlackSpider && BlackSpider
+
+# Pickups
+5 5 HealthPotion
+6 5 ManaPotion

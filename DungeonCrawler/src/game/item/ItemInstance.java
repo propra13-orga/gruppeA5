@@ -23,7 +23,15 @@ public class ItemInstance {
 	}
 	
 	public String getDescription(){
-		return m_type.m_description;
+		String desc = m_type.m_description;
+		
+		if(m_type.m_useInfo != null)
+			desc += "\n\nOn use:\n " + m_type.m_useInfo.getSkill().getDescription();
+		
+		if(m_type.m_equipInfo != null)
+			desc += "\n\nOn equip:\n " + m_type.m_equipInfo.getEquipEffect().getDescription();
+	
+		return desc;
 	}
 	
 	public ItemInstance(ItemType type){

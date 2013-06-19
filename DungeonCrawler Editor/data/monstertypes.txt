@@ -1,0 +1,27 @@
+# MonsterType BlackSpider
+icon = "data/monsters/redback.png"
+name = "Black Spider"
+damage = 15
+health = 70
+mana = 0
+
+# MonsterType ShiningEye
+icon = "data/monsters/shining_eye.png"
+name = "Shining Eye"
+damage = 18
+health = 100
+mana = 0
+
+# MonsterType UnseenHorror
+icon = "data/monsters/unseen_horror.png"
+name = "Unseen Horror"
+damage = 22
+health = 150
+mana = 50
+
+# MonsterType GreenDragon
+icon = "data/monsters/swamp_dragon.png"
+name = "Green Dragon"
+damage = 45
+health = 260
+mana = 0

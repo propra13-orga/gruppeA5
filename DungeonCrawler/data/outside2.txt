@@ -1,0 +1,38 @@
+# Map
+
+7L;MM=N:6NNONONN
+M;==O=;:6M;J7=OO
+NO;KNJ7:6;NL;K;O
+NO=L=LL:6;NMJLLO
+7N=KNKK:67KO=7M=
+;NN=ONM98===OJKO
+N=K=M==OO=7L;JMO
+NNNONO=O=OMJJNNL
+JNOJOLMVUNN;7NN7
+M=N;ONJ:67OKMOON
+KN7OM77:6N=MLOOO
+K;;JO;L:6K=MMJOO
+NNN==N;:6JM=M;=O
+N=NO;=7:6=J7JMO=
+NLN=MO;:6OOJK==L
+=ONMOK=:6ONONNNJ
+
+# Events
+
+8 1 4
+7 1 4
+
+# Teleporters
+
+8 15 "data/outside3.txt" 8 0
+7 15 "data/outside3.txt" 7 0
+7 0 "data/outside1.txt" 7 15
+8 0 "data/outside1.txt" 8 15
+
+# MonsterGroups
+
+8 4 "data/monsters/tarantella.png" BlackSpider && VenomSpider && BlackSpider
+11 10 "data/monsters/redback.png" BlackSpider && BlackSpider && BlackSpider && BlackSpider
+
+# Pickups
+11 6 Staff

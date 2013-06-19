@@ -6,9 +6,10 @@ import gamestate.IGameState;
 import java.awt.event.KeyEvent;
 import std.StdDraw;
 import std.StdIO;
+import std.StdIO.KeyEventType;
 
 
-public class GSMainMenu implements IGameState {
+public class GSMainMenu implements IGameState, StdIO.IKeyListener {
 
 	@Override
 	public void render() {
@@ -20,25 +21,26 @@ public class GSMainMenu implements IGameState {
 
 	@Override
 	public void update() {
-	
-		if( StdIO.isKeyPressed( KeyEvent.VK_ESCAPE ) ){
-			System.exit(0);
-		}
-	
-		if( StdIO.isKeyPressed( KeyEvent.VK_ENTER ) ){
-			GSGame.getInstance().startGame();
-			GlobalGameState.setActiveGameState(GameStates.GAME);
-		}
 	}
 
 	@Override
 	public void onEnter() {
+		StdIO.addKeyListener(this, KeyEventType.KeyReleased);
 	}
 
 	@Override
 	public void onExit() {
-		// TODO Auto-generated method stub
-		
+		StdIO.removeKeyListener(this, KeyEventType.KeyReleased);
+	}
+
+	@Override
+	public void receiveEvent(KeyEvent e) {
+		if(e.getKeyCode() == KeyEvent.VK_ENTER){
+			GSGame.getInstance().startGame();
+			GlobalGameState.setActiveGameState(GameStates.GAME);
+		}else if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
+			System.exit(0);
+		}
 	}
 
 }

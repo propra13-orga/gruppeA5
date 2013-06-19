@@ -41,13 +41,27 @@ public class GSInventory implements IGameState, StdIO.IKeyListener {
 		
 		if(ii == null) return;
 		
+		
+		StdDraw.setPenColor(StdDraw.BLACK);
+		StdDraw.rectangle(baseX-5, baseY-12, 250, 200);
+		
+		StdDraw.setAlpha(0.15f);
+		StdDraw.filledRectangle(baseX-5, baseY-12, 250, 200);
+		StdDraw.setAlpha(1.0f);
+		
 		StdDraw.setPenColor(StdDraw.WHITE);
 		StdDraw.textLeft(baseX, baseY, 		ii.getName());
+		
+		if( ii.isEquipable() ){
+			StdDraw.setPenColor(StdDraw.RED);
+			StdDraw.textRight(baseX+240, baseY, ii.getEquipInfo().getEquipSlot().toString());
+		}
+		
 		StdDraw.setPenColor(StdDraw.BLACK);
 		StdDraw.textLeftFmt(baseX, baseY + 20, ii.getDescription());
 		
-		StdDraw.textLeft(baseX, baseY + 90, (ii.isUsable() ? "Can" : "Cannot") + " be used.");
-		StdDraw.textLeft(baseX, baseY + 110, (ii.isEquipable() ? "Can" : "Cannot") + " be equipped.");
+		//StdDraw.textLeft(baseX, baseY + 90, (ii.isUsable() ? "Can" : "Cannot") + " be used.");
+		//StdDraw.textLeft(baseX, baseY + 110, (ii.isEquipable() ? "Can" : "Cannot") + " be equipped.");
 	}
 	
 	private void renderEquipmentSlot(double x, double y, Equipment eq, EquipSlot slot){

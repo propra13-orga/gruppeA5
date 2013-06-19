@@ -1,0 +1,50 @@
+# Set "Dungeon"
+	# Subset "Pathables"
+		0 "Cobblestone Floor" "data/dungeon/cobble_blood1.png" =
+			0 10 "data/dungeon/cobble_blood1.png" &&
+			23 10 "data/dungeon/cobble_blood2.png" &&
+			24 5 "data/dungeon/cobble_blood3.png" &&
+			25 10 "data/dungeon/cobble_blood4.png"
+		2 0 "Closed Door" "data/dungeon/dngn_closed_door.png"
+		14 0 "Open Door" "data/dungeon/dngn_open_door.png"
+	# Subset "Unpathables"
+		1 "Brick Wall" "data/dungeon/brick_brown0.png" =
+			1 100 "data/dungeon/brick_brown0.png" &&
+			16 10 "data/dungeon/brick_brown1.png" &&
+			17 10 "data/dungeon/brick_brown2.png" &&
+			18 10 "data/dungeon/brick_brown3.png" &&
+			19 10 "data/dungeon/brick_brown4.png" &&
+			20 10 "data/dungeon/brick_brown5.png" &&
+			21 10 "data/dungeon/brick_brown6.png" &&
+			22 10 "data/dungeon/brick_brown7.png"
+		1 "Vines Wall" "data/dungeon/brick_brown-vines1.png" =
+			3 1 "data/dungeon/brick_brown-vines1.png" &&
+			32 1 "data/dungeon/brick_brown-vines2.png" &&
+			33 1 "data/dungeon/brick_brown-vines3.png" &&
+			34 1 "data/dungeon/brick_brown-vines4.png"
+	# Subset "Creatures & Demons"
+		4 0 "Hobo Gobo" "data/dungeon/hobogobo.png"
+		5 0 "Shining Eye" "data/dungeon/shining_eye.png"
+		15 0 "Dragon" "data/dungeon/dragon.png"
+# Set "Grassland"
+	# Subset "Pathables"
+		35 0 "Shop Icon" "data/unseen_item.png"
+		36 0 "Talk Icon" "data/unseen_monster.png"
+		6 0 "Grass East" "data/grass/grass_e.png"
+		8 0 "Grass South-East" "data/grass/grass_se.png"
+		9 0 "Grass South-West" "data/grass/grass_sw.png"
+		10 0 "Grass West" "data/grass/grass_w.png"
+		0 "Grass" "data/grass/grass0.png" = 
+			11 10 "data/grass/grass0.png" &&
+			7 10 "data/grass/grass_flowers_yellow2.png" &&
+			26 10 "data/grass/grass_flowers_yellow1.png" &&
+			27 10 "data/grass/grass_flowers_yellow3.png" &&
+			28 10 "data/grass/grass1.png" &&
+			29 10 "data/grass/grass2.png"
+	# Subset "Unpathables"
+		1 "Trees Autumn" "data/grass/tree1.png" = 
+			13 1 "data/grass/tree1.png" &&
+			30 1 "data/grass/tree2.png" &&
+			31 1 "data/grass/tree3.png"
+	# Subset "Wild Monsters"
+		12 0 "Spider" "data/grass/spider.png"

@@ -26,10 +26,10 @@ public class EditorMap extends Map {
 	public String getCurrentLevelName(){
 		return m_currentLevelName;
 	}
-	
+
 	public boolean loadLevel(String levelName){
 		boolean b =  super.loadLevel(levelName);
-		
+	
 		if(b){
 			m_currentLevelName = levelName;
 			StdWin.setTitle("Level: " + levelName);

@@ -1,10 +1,13 @@
 package entity;
 
-import game.player.Skill;
+import game.skill.Skill;
 
 public interface IEntity {
 	void render(double x, double y);
+	
 	int doDamage(int dmg);
+	int doHeal(int heal);
+	
 	boolean isDead();
 	
 	UnitStats getStats();

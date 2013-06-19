@@ -21,16 +21,17 @@
 
 10 1 2
 12 3 3
-11 9 0
-2 4 0
-5 13 0
 
 # Teleporters
 
 7 13 "data/dungeon1.txt" 7 0
 8 13 "data/dungeon1.txt" 8 0
 
-# Monsters
+# MonsterGroups
 
-7 3 "data/monsters/redback.png"
-10 10 "data/monsters/redback.png"
+7 3 "data/monsters/redback.png" BlackSpider && BlackSpider && BlackSpider
+10 10 "data/monsters/redback.png" BlackSpider && BlackSpider && BlackSpider
+7 11 "data/monsters/wolf_spider.png" WolfSpider
+
+# Pickups
+1 7 HealthPotion

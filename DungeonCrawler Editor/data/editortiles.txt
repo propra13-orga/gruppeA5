@@ -28,9 +28,13 @@
 		15 0 "Dragon" "data/dungeon/dragon.png"
 # Set "Grassland"
 	# Subset "Pathables"
+		35 0 "Shop Icon" "data/unseen_item.png"
+		36 0 "Talk Icon" "data/unseen_monster.png"
 		6 0 "Grass East" "data/grass/grass_e.png"
 		8 0 "Grass South-East" "data/grass/grass_se.png"
 		9 0 "Grass South-West" "data/grass/grass_sw.png"
+		37 0 "Grass North-East" "data/grass/grass_ne.png"
+		38 0 "Grass North-West" "data/grass/grass_nw.png"
 		10 0 "Grass West" "data/grass/grass_w.png"
 		0 "Grass" "data/grass/grass0.png" = 
 			11 10 "data/grass/grass0.png" &&

@@ -5,6 +5,7 @@ import game.GSMainMenu;
 import game.GSTransition;
 import game.combat.GSCombat;
 import game.dialog.GSDialog;
+import game.interaction.GSInteraction;
 import game.inventory.GSInventory;
 import game.shop.GSShop;
 import gamestate.GameStates;
@@ -40,6 +41,7 @@ public class Main {
 		GlobalGameState.associateGameState( GameStates.INVENTORY, new GSInventory()	 );
 		GlobalGameState.associateGameState( GameStates.DIALOG,	  new GSDialog()	 );
 		GlobalGameState.associateGameState( GameStates.DEFEAT,	  new GSDefeat()	 );
+		GlobalGameState.associateGameState( GameStates.INTERACT,  new GSInteraction());
 		
 		GlobalGameState.initiateGlobalGameState( GameStates.MAIN_MENU );
 

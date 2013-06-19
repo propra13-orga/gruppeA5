@@ -1,4 +1,6 @@
 package map;
+import game.item.PickupPool;
+
 import java.util.HashMap;
 
 import monster.MonsterPool;
@@ -9,6 +11,7 @@ class Level {
 	private char [][] m_grid;
 	private HashMap<Coordinate, CellInfo> m_tileInfo;
 	private MonsterPool m_monsterPool;
+	private PickupPool m_pickupPool;
 	
 	/**
 	 * Returns the char value of the cell at (x,y)
@@ -26,6 +29,10 @@ class Level {
 	
 	public MonsterPool getMonsterPool(){
 		return m_monsterPool;
+	}
+	
+	public PickupPool getPickupPool(){
+		return m_pickupPool;
 	}
 	
 	/**
@@ -50,6 +57,7 @@ class Level {
 		m_grid = lvl.getGrid();
 		m_tileInfo = lvl.getCellData();
 		m_monsterPool = lvl.getMonsterPool();
+		m_pickupPool = lvl.getPickupablePool();
 	
 		return true;
 	}

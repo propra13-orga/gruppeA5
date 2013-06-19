@@ -7,7 +7,11 @@ import game.GSTransition;
 import game.HitBox;
 import game.checkpoint.Checkpoint;
 import game.combat.GSCombat;
+import game.interaction.GSInteraction;
 import game.inventory.Inventory;
+import game.item.ItemInstance;
+import game.item.PickupPool;
+import game.item.PickupableItem;
 import gamestate.GameStates;
 import gamestate.GlobalGameState;
 
@@ -17,7 +21,6 @@ import map.Map;
 import monster.MonsterGroup;
 import monster.MonsterPool;
 
-import std.StdDraw;
 import std.StdIO;
 
 public class Player {
@@ -41,9 +44,21 @@ public class Player {
 		return m_companions;
 	}
 	
-	private Inventory m_inventory = Inventory.getDefaultInventoryAndPopulateItemList();
+	private Inventory m_inventory = new Inventory();
 	public Inventory getInventory(){
 		return m_inventory;
+	}
+	
+	private int m_gold = 600;
+	
+	public int getGold(){
+		return m_gold;
+	}
+	public void addGold(int gold){
+		m_gold += gold;
+	}
+	public void removeGold(int gold){
+		m_gold = Math.max(0, m_gold-gold);
 	}
 	
 	
@@ -118,6 +133,9 @@ public class Player {
 			if(ti.mEventID == 4){
 				Checkpoint.save();
 			}
+			if(ti.mEventID == 5){
+				GlobalGameState.setActiveGameState(GameStates.MAIN_MENU);
+			}
 			
 		}else{
 			standsOnEvent = false;
@@ -137,6 +155,28 @@ public class Player {
 		GSCombat.getInstance().prepareEncounter(mp, m);
 		GSTransition.getInstace().prepareTransition( GameStates.COMBAT );
 		GlobalGameState.setActiveGameState(GameStates.TRANSITION);
+	}
+	
+	public void attempInteraction(){
+		Map map = Map.getInstance();
+		PickupPool pp = map.getPickupPool();
+		int x = map.getGridX(playerX + 11);
+		int y = map.getGridY(playerY + 15);
+		
+		PickupableItem pi = pp.PickupableAt( x, y );
+		
+		if(pi != null){
+			if(m_inventory.isFull())
+				GSInteraction.setText("You have found a " + pi.getItemType().getName() + ", but\nyour inventory is full.");
+			else{
+				m_inventory.addItem( new ItemInstance(pi.getItemType()) );
+				pp.removePickupable(pi);
+				GSInteraction.setText("You have found a " + pi.getItemType().getName() + "!");
+			}
+			GlobalGameState.setActiveGameState(GameStates.INTERACT);
+		}
+	
+		
 	}
 	
 	//Bei Tasteneingabe wird überprüft, ob das angestrebte Feld mit der Hitbox kollidiert
@@ -175,6 +215,7 @@ public class Player {
 		lookForEvents(map);
 	}
 	
+	
 	//Zeichnet den Spieler an die Stelle im Koordinatensystem
 	public void render(){
 		Companion c = m_companions.get(0);
@@ -185,7 +226,7 @@ public class Player {
 		}
 		c.render(playerX, playerY);
 
-		Map map = Map.getInstance();
+		//Map map = Map.getInstance();
 		//double x = map.getCanvasX(map.getGridX(playerX+16));
 		//double y = map.getCanvasY(map.getGridY(playerY+16));
 		

@@ -11,7 +11,7 @@ import gamestate.GlobalGameState;
 import gamestate.IGameState;
 
 public class GSDefeat implements IGameState, StdIO.IKeyListener {
-	private static final int STARTING_LIVES = 1;
+	private static final int STARTING_LIVES = 3;
 	private int m_numOfLives = STARTING_LIVES;
 
 	@Override

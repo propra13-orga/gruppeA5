@@ -54,12 +54,12 @@ public class GSGame implements IGameState, StdIO.IKeyListener {
 
 	private void resetPlayer(){
 	
-		if( !m_map.loadLevel("data/outside.txt") ){
+		if( !m_map.loadLevel("data/outside1.txt") ){
 			s_shutdown = true;
 			return;
 		}
 		
-		m_player.setPosition( m_map.getCanvasX(7), m_map.getCanvasY(0) );
+		m_player.setPosition( m_map.getCanvasX(3), m_map.getCanvasY(11) );
 		
 	}
 	
@@ -94,6 +94,8 @@ public class GSGame implements IGameState, StdIO.IKeyListener {
 	public void receiveEvent(KeyEvent e) {
 		if(e.getKeyCode() == KeyEvent.VK_I){
 			GlobalGameState.setActiveGameState(GameStates.INVENTORY);
+		}else if(e.getKeyCode() == KeyEvent.VK_ENTER){
+			m_player.attempInteraction();
 		}
 	}
 }

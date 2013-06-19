@@ -1,4 +1,6 @@
 package map;
+import game.item.PickupPool;
+
 import java.util.HashMap;
 
 
@@ -62,6 +64,10 @@ public class Map {
 	
 	public MonsterPool getMonsterPool(){
 		return m_currentLevel.getMonsterPool();
+	}
+	
+	public PickupPool getPickupPool(){
+		return m_currentLevel.getPickupPool();
 	}
 	
 	/**
@@ -135,7 +141,8 @@ public class Map {
 			}
 		}
 		
-		m_currentLevel.getMonsterPool().renderAll(this);
+		m_currentLevel.getMonsterPool().renderAll();
+		m_currentLevel.getPickupPool().renderAll(this);
 	}
 	
 	/**

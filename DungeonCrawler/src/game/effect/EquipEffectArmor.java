@@ -18,4 +18,9 @@ public class EquipEffectArmor implements IEquipEffect {
 	public EquipEffectArmor(int armorRating){
 		m_armorRating = armorRating;
 	}
+	
+	@Override
+	public String getDescription(){
+		return "Increases armor by " + m_armorRating + ".";
+	}
 }

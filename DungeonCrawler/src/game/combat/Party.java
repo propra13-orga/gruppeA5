@@ -2,6 +2,7 @@ package game.combat;
 
 import entity.IEntity;
 import entity.UnitStats;
+import game.Point;
 
 import java.util.List;
 
@@ -15,8 +16,19 @@ public abstract class Party {
 	protected boolean m_renderHighlight = false;
 	protected boolean m_renderTarget = false;
 
+	public Point getLocOfEntityByIndex(int i){
+		double distance = 400. / (m_entities.size()+2);
+		return new Point(50 + distance*(i+1), m_y);
+	}
+	
+	public Point getLocOfEntity(IEntity e){
+		return getLocOfEntityByIndex( m_entities.indexOf( e ) );
+	}
+
 	private void renderIcon(double x, double y, IEntity c, int index, boolean showTarget, boolean showHighlight){
 		final UnitStats s = c.getStats();
+
+		y -= 8;
 
 		//RENDER MANA BAR
 		if( s.mMaxMana > 0){
@@ -58,17 +70,23 @@ public abstract class Party {
 		}
 		
 	}
+	
+	public List<? extends IEntity> getListOfEntities(){
+		return m_entities;
+	}
 
 	public void updateGroup(){
 		//TASDASDASDASD
+		//TODO: Whut?
 	}
 
 	public void render(){
-		double distance = 400. / (m_entities.size()+2);
+		//double distance = 400. / (m_entities.size()+2);
 		
 		for(int i = 0; i < m_entities.size(); i++){
 			IEntity c = m_entities.get(i);
-			renderIcon(50 + distance*(i+1), m_y, c, i, m_renderTarget, m_renderHighlight );
+			Point p = getLocOfEntityByIndex(i);
+			renderIcon(p.x, p.y, c, i, m_renderTarget, m_renderHighlight );
 		}
 		
 		//StdDraw.setFont( new Font( "Verdana", Font.BOLD, 20 ) );

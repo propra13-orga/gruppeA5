@@ -1,8 +1,7 @@
 package monster;
 
 import entity.UnitStats;
-import game.player.DamageSkill;
-import game.player.Skill;
+import game.skill.Skill;
 
 import java.util.HashMap;
 
@@ -38,7 +37,7 @@ public class MonsterType {
 		return s;
 	}
 	
-	private MonsterType(int maxHP, int maxMana, String path, String name, Skill basicAttack){
+	MonsterType(int maxHP, int maxMana, String path, String name, Skill basicAttack){
 		m_maxHealth = maxHP;
 		m_maxMana = maxMana;
 		m_path = path;
@@ -52,9 +51,13 @@ public class MonsterType {
 		return s_monsterTypes.get(name);
 	}
 	
+	private static void loadMonsterTypes(){
+		MonsterTypeLoader mtl = new MonsterTypeLoader();
+		mtl.load("data/monstertypes.txt");
+		s_monsterTypes = mtl.getMonsterTypes();
+	}
+	
 	static{
-		s_monsterTypes.put("Spider", new MonsterType( 70,0, "data/monsters/redback.png", "Black Spider", new DamageSkill("Attack", 15) ) );
-		s_monsterTypes.put("ShiningEye", new MonsterType( 100,0, "data/monsters/shining_eye.png", "Shining Eye", new DamageSkill("Attack", 18) ) );
-		s_monsterTypes.put("UnseenHorror", new MonsterType( 150,50, "data/monsters/unseen_horror.png", "Unseen Horror", new DamageSkill("Attack", 22) ) );
+		loadMonsterTypes();
 	}
 }

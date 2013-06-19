@@ -14,7 +14,10 @@ import std.anim.GlobalAnimQueue;
 import std.anim.FadeAnim;
 import game.GSTransition;
 import game.checkpoint.Checkpoint;
+import game.item.ItemInstance;
 import game.player.Player;
+import game.skill.Skill;
+import game.skill.TargetType;
 import gamestate.GameStates;
 import gamestate.GlobalGameState;
 import gamestate.IGameState;
@@ -46,8 +49,7 @@ public class GSCombat implements IGameState, StdIO.IKeyListener {
 	private Party m_enemies;
 	private Party m_allies;
 	private ActionMenu m_actionMenu = new ActionMenu();
-
-	private String message = "";
+	private CombatLog m_combatLog = new CombatLog(); //recreated in onEnter()?
 
 	@Override
 	public void render() {
@@ -59,17 +61,15 @@ public class GSCombat implements IGameState, StdIO.IKeyListener {
 		StdDraw.filledRectangle(0,0,800,600);
 		StdDraw.setAlpha(1.0f);
 	
-		m_enemies.render(/*m_currState == State.TARGET_ENEMY, m_currState == State.ENEMY_ACTION*/);
-		m_allies.render(/*m_currState == State.TARGET_ALLY, m_currState != State.ENEMY_ACTION*/);
+		m_enemies.render();
+		m_allies.render();
 		
 		if(m_currState == State.PLAYER_ACTION )
 			m_actionMenu.render();
 		
 		//Show message box
 		if(m_currState == State.MESSAGE){	
-			StdDraw.setPenColor(StdDraw.WHITE);
-			StdDraw.rectangle(25, 390, 400, 140);
-			StdDraw.textLeft(30, 405, message);
+			m_combatLog.render();
 		}
 	}
 
@@ -81,7 +81,7 @@ public class GSCombat implements IGameState, StdIO.IKeyListener {
 	@Override
 	public void onEnter() {
 		m_enemies = EnemyParty.fromMonsterGroup(130, m_encounter);
-		m_allies = new AllyParty( 300, Player.getInstance().getCompanions() ); //TODO: currently deletes companions :D
+		m_allies = new AllyParty( 300, Player.getInstance().getCompanions() );
 			
 		m_allyTurn.onEnter();
 		m_actionMenu.setCompanion( (Companion) m_allies.getCurrentHighlighted() );
@@ -114,6 +114,7 @@ public class GSCombat implements IGameState, StdIO.IKeyListener {
 			m_enemies.resetHighlight();
 			m_enemies.setRenderTarget(false);
 			m_enemies.setRenderHighlight(true);
+			
 			m_allies.setRenderTarget(true);
 			m_allies.setRenderHighlight(false);
 			
@@ -134,10 +135,10 @@ public class GSCombat implements IGameState, StdIO.IKeyListener {
 			if( firstEnemy || m_enemies.highlightNext() ){
 				firstEnemy = false;
 				
-				message = m_enemies.getCurrentHighlighted().getBasicAttack().applyEffect( m_enemies.getCurrentHighlighted(), m_allies.getCurrentTargeted() );
+				m_enemies.getCurrentHighlighted().getBasicAttack().applyEffect(m_enemies.getCurrentHighlighted(), m_allies, m_combatLog);
 				m_allies.updateGroup();
 				
-				m_messageTurn.prepare(MessageTurn.ENEMY);
+				m_messageTurn.prepare(NextTurn.ENEMY);
 				m_messageTurn.onEnter();
 			}else{
 				m_allyTurn.onEnter();
@@ -150,6 +151,8 @@ public class GSCombat implements IGameState, StdIO.IKeyListener {
 	
 	private AllyTurn m_allyTurn = new AllyTurn();
 	private class AllyTurn{
+		private Party m_targetParty;
+	
 		public void onEnter(){
 			m_currState = State.PLAYER_ACTION;
 			m_mode = SELECT_ACTION;
@@ -157,6 +160,7 @@ public class GSCombat implements IGameState, StdIO.IKeyListener {
 			m_allies.resetHighlight();
 			m_allies.setRenderHighlight(true);
 			m_allies.setRenderTarget(false);
+			
 			m_enemies.setRenderHighlight(false);
 						
 			m_actionMenu.resetMenu();
@@ -181,21 +185,88 @@ public class GSCombat implements IGameState, StdIO.IKeyListener {
 				m_mode = SELECT_ACTION;
 			}else{
 				m_enemyTurn.onEnter();
-				m_messageTurn.prepare(MessageTurn.ENEMY);
+				m_messageTurn.prepare(NextTurn.ENEMY);
 			}
 		
 		}
 		
 		private int m_mode;
+		private Skill m_selectedSkill;
+		private ItemInstance m_selectedItemInstance;
 		private static final int SELECT_ACTION = 0;
 		private static final int SELECT_TARGET = 1;
+		
+		private void useSkill(){
+			m_selectedSkill.applyEffect( m_allies.getCurrentHighlighted(), m_targetParty, m_combatLog );
+			
+			if(m_selectedItemInstance != null)
+				Player.getInstance().getInventory().removeItem(m_selectedItemInstance);
+			
+			m_enemies.updateGroup();
+		}
+		
 		
 		private void handleSelectAction(KeyEvent e){	
 			m_actionMenu.handleInput(e);
 			
 			if(m_actionMenu.hasSelected()){
-				m_enemies.setRenderTarget(true);
-				m_mode = SELECT_TARGET;
+				Skill sel;
+				ItemInstance ii = null;
+				ActionMenu.Option op = m_actionMenu.getSelectedOption();
+				
+				if(op == ActionMenu.Option.SELECT_ATTACK){
+					sel = m_actionMenu.getSelectedBasicAttack();
+				}else if(op == ActionMenu.Option.SELECT_SKILL)
+					sel = m_actionMenu.getSelectedSkill();
+				else /*if(op == ActionMenu.Option.SELECT_ITEM)*/{
+					ii = m_actionMenu.getSelectedItemInstance();
+					sel = ii.getUseInfo().getSkill();
+				}
+				
+				m_selectedItemInstance = ii;
+				m_selectedSkill = sel;
+				
+				switch(sel.getTargetType()){
+				
+				case ENEMY_SINGLE:
+					m_targetParty = m_enemies;
+					m_targetParty.setRenderTarget(true);
+					m_mode = SELECT_TARGET;
+					break;
+					
+				case ENEMY_MULTI:
+					m_targetParty = m_enemies;
+					useSkill();
+					m_messageTurn.prepare(NextTurn.ALLY);
+					m_messageTurn.onEnter();
+					break;
+				
+				case ALLY_SINGLE:
+					m_targetParty = m_allies;
+					m_targetParty.setRenderTarget(true);
+					m_mode = SELECT_TARGET;
+					break;
+					
+				case ALLY_MULTI:
+					m_targetParty = m_allies;
+					useSkill();
+					m_messageTurn.prepare(NextTurn.ALLY);
+					m_messageTurn.onEnter();
+					break;
+					
+				case SELF:
+					m_targetParty = m_allies;
+					useSkill();
+					m_messageTurn.prepare(NextTurn.ALLY);
+					m_messageTurn.onEnter();
+					break;
+					
+				default:
+					System.out.println("TargetType not yet implemented");
+					break;
+					
+				}
+			
 			}
 		}
 
@@ -203,20 +274,15 @@ public class GSCombat implements IGameState, StdIO.IKeyListener {
 			switch( e.getKeyCode() ){
 			case KeyEvent.VK_LEFT:
 			case KeyEvent.VK_A:
-				m_enemies.targetPrev(); break;
+				m_targetParty.targetPrev(); break;
 			case KeyEvent.VK_RIGHT:
 			case KeyEvent.VK_D:
-				m_enemies.targetNext(); break;
+				m_targetParty.targetNext(); break;
 			case KeyEvent.VK_ENTER:
 				
-				message = m_actionMenu.getSelectedSkill().applyEffect( m_allies.getCurrentHighlighted(), m_enemies.getCurrentTargeted() );
-				m_enemies.updateGroup();
-				
-				GlobalAnimQueue.playAnimation(  new FadeAnim(210, 210, "data/cut.png", 30) );
-				
-				m_messageTurn.prepare(MessageTurn.ALLY);
+				useSkill();
+				m_messageTurn.prepare(NextTurn.ALLY);
 				m_messageTurn.onEnter();
-				
 				
 				
 				break;
@@ -258,11 +324,11 @@ public class GSCombat implements IGameState, StdIO.IKeyListener {
 	
 	
 	private MessageTurn m_messageTurn = new MessageTurn();
+	public enum NextTurn{ALLY, ENEMY};
 	private class MessageTurn{
-		private int m_which;
-		public static final int ALLY = 0;
-		public static final int ENEMY = 1;
-		public void prepare(int which){
+		private NextTurn m_which;
+				
+		public void prepare(NextTurn which){
 			m_which = which;
 		}
 	
@@ -273,14 +339,21 @@ public class GSCombat implements IGameState, StdIO.IKeyListener {
 		
 		}
 		public void onKey(KeyEvent e){
-			if(e.getKeyCode() == KeyEvent.VK_ENTER){
+			if(e.getKeyCode() != KeyEvent.VK_ENTER)
+				return;
 				
-				if(m_which==1){
-					m_enemyTurn.onStep();
-				}else{
-					m_allyTurn.onStep();
-				}
+			m_combatLog.next();
+				
+			if( !m_combatLog.isEmpty()  ){
+				return;
 			}
+				
+			if(m_which==NextTurn.ENEMY){
+				m_enemyTurn.onStep();
+			}else{
+				m_allyTurn.onStep();
+			}
+			
 		}
 	}
 
@@ -294,9 +367,12 @@ public class GSCombat implements IGameState, StdIO.IKeyListener {
 
 	private void exitCombatPlayerVictory(){
 		m_encounterPool.removeMonster(m_encounter);
-		FadeAnim anim = new FadeAnim(m_encounter.getX(),m_encounter.getY(), m_encounter.mPath);
+		FadeAnim anim = new FadeAnim(m_encounter.getX(),m_encounter.getY(), m_encounter.mIcon);
 		GlobalAnimQueue.playAnimation( anim );
 		GlobalGameState.setActiveGameState(GameStates.GAME);
+		
+		//DEBUG
+		Player.getInstance().addGold(100);
 	}
 
 	@Override

@@ -8,5 +8,6 @@ public enum GameStates{
 	DIALOG, //?
 	INVENTORY,
 	DEFEAT,
-	TRANSITION
+	TRANSITION,
+	INTERACT
 }

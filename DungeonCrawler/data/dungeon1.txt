@@ -19,19 +19,19 @@ FIH0IA0I0I0IIG01
 
 # Events
 
-5 4 0
-10 5 0
-13 10 0
-3 9 0
-8 7 0
+7 1 4
+8 1 4
 
 # Teleporters
 
 7 15 "data/dungeon2.txt" 7 0
-7 0 "data/outside.txt" 7 13
-8 0 "data/outside.txt" 8 13
+7 0 "data/outside3.txt" 7 13
+8 0 "data/outside3.txt" 8 13
 
-# Monsters
+# MonsterGroups
 
-7 3 "data/monsters/shining_eye.png"
-8 13 "data/monsters/shining_eye.png"
+7 3 "data/monsters/shining_eye.png" ShiningEye && UnseenHorror && ShiningEye
+8 13 "data/monsters/shining_eye.png" ShiningEye && UnseenHorror && ShiningEye
+
+# Pickups
+11 9 RedCloak

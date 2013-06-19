@@ -1,0 +1,27 @@
+# Map
+
+=ON=ONO:6ON==NKL
+ONON7ML:67N;NM=;
+O7MLJKL:6K7NN;OK
+NJJ=J;;:6OMM;ON7
+=J;=LJM:67JJL;=;
+O;L=SLL:6KLJ7MNN
+N=MJONM:6=K;MNNO
+OOKOJNN:6OLOJ=OM
+ONM7K==:6MJNO=NN
+=;N;L=J:6OMOL7KK
+=;;LKNL:6K;KN7==
+OLJLM=O:6OLMM;=N
+=MLLM=N:6OJ==7O;
+ONJL;7=:6OL;O7N=
+N=O==O=:6ONNNL=7
+==NN=N;:67NOO=O=
+
+# Events
+
+4 5 2
+
+# Teleporters
+
+8 15 "data/outside2.txt" 8 0
+7 15 "data/outside2.txt" 7 0

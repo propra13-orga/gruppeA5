@@ -1,0 +1,47 @@
+// ============================= //
+// ========== ITEMS ============ //
+// ============================= //
+
+# SelfHealSkill HealthPotion
+name = "Health Potion"
+description = "Restores 100 health"
+amount = 100
+sfx = "data/items/ruby.png" 
+
+# SelfManaSkill ManaPotion
+name = "Mana Potion"
+description = "Restores 100 mana"
+amount = 100
+sfx = "data/items/brilliant_blue.png"
+
+// ============================= //
+// ===== COMPANION SKILLS ====== //
+// ============================= //
+
+# SingleTargetDmgSkill Strike
+name = "Strike"
+description = "A powerful strike\nwhich deals 70 damage\nto a single target."
+amount = 70
+cost = 20
+sfx = "data/cut.png"
+
+# MultiTargetDmgSkill Fireball
+name = "Fireball"
+description = "Conjures a rain of fire\nthat hits all enemies\nfor 50 damage."
+amount = 50
+cost = 40
+sfx = "data/fireball.png"
+
+# SingleTargetDmgSkill Smite
+name = "Smite"
+description = "Sends a powerful bolt\nof magic at an enemy,\ndealing 70 damage."
+amount = 70
+cost = 20
+sfx = "data/bolt04.png"
+
+# SingleTargetHealSkill LayOnHands
+name = "Lay on Hands"
+description = "Heals an ally for\n50 health."
+amount = 50
+cost = 25
+sfx = "data/hand2.png"

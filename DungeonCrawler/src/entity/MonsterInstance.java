@@ -1,6 +1,6 @@
 package entity;
 
-import game.player.Skill;
+import game.skill.Skill;
 import monster.MonsterType;
 import std.StdDraw;
 
@@ -24,6 +24,13 @@ public class MonsterInstance implements IEntity {
 		m_stats.mCurrHealth = Math.max(m_stats.mCurrHealth - dmg, 0);
 		return dmg;
 	}
+	
+	@Override
+	public int doHeal(int heal) {
+		m_stats.mCurrHealth = Math.min(m_stats.mCurrHealth + heal, m_stats.mMaxHealth);
+		return heal;
+	}
+	
 	public MonsterType getType(){
 		return m_type;
 	}
