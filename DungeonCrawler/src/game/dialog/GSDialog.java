@@ -37,10 +37,6 @@ public class GSDialog implements IGameState, StdIO.IKeyListener {
 		System.out.println("enter");
 		StdIO.addKeyListener(this, KeyEventType.KeyPressed);
 		sphinxRiddle = readDialog(sphinxRiddle, "data/dialog/riddle1.txt");
-		
-		for(String s : sphinxRiddle ){
-			System.out.println(s);
-		}
 	}
 
 	@Override
@@ -83,8 +79,8 @@ public class GSDialog implements IGameState, StdIO.IKeyListener {
 			list = lineList;
 			br.close();
 		}
-		catch (FileNotFoundException e){ System.out.println("errorro"); }
-		catch (IOException e){ System.out.println("errorro2"); }	
+		catch (FileNotFoundException e){ }
+		catch (IOException e){  }	
 		return list;
 	}
 	
