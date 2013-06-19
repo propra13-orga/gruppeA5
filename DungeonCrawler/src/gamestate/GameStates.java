@@ -9,5 +9,6 @@ public enum GameStates{
 	INVENTORY,
 	DEFEAT,
 	TRANSITION,
-	INTERACT
+	INTERACT,
+	CREDITS
 }

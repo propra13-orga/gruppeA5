@@ -17,7 +17,6 @@ import game.checkpoint.Checkpoint;
 import game.item.ItemInstance;
 import game.player.Player;
 import game.skill.Skill;
-import game.skill.TargetType;
 import gamestate.GameStates;
 import gamestate.GlobalGameState;
 import gamestate.IGameState;

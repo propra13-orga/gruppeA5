@@ -1,5 +1,8 @@
 package game.dialog;
 import java.awt.event.KeyEvent;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 import std.StdDraw;
 import std.StdIO;
@@ -11,32 +14,87 @@ import gamestate.IGameState;
 
 public class GSDialog implements IGameState, StdIO.IKeyListener {
 
+	private ArrayList<String> sphinxRiddle = new ArrayList<String>();
+	private double rectY = 348;
+	
 	@Override
 	public void render() {
-		StdDraw.text(400,300, "TALKING HERE");
+		StdDraw.setPenColor(StdDraw.WHITE);
+		
+		double y = 100;
+		for (int i=0;i<sphinxRiddle.size();i++){
+			StdDraw.text(400, y, sphinxRiddle.get(i));	
+			y += 20;
+		}
+		StdDraw.rectangle(325,rectY,150,20);
 	}
 
 	@Override
-	public void update() {
-		// TODO Auto-generated method stub
+	public void update(){}
+	
+	@Override
+	public void onEnter() {
+		System.out.println("enter");
+		StdIO.addKeyListener(this, KeyEventType.KeyPressed);
+		sphinxRiddle = readDialog(sphinxRiddle, "data/dialog/riddle1.txt");
+		
+		for(String s : sphinxRiddle ){
+			System.out.println(s);
+		}
+	}
 
+	@Override
+	public void onExit() {
+		StdIO.removeKeyListener(this, KeyEventType.KeyPressed);
 	}
 
 	@Override
 	public void receiveEvent(KeyEvent e) {
 		if( e.getKeyCode() == KeyEvent.VK_ENTER ){
-			GlobalGameState.setActiveGameState( GameStates.GAME );
+			if (rectY == 428){
+				GlobalGameState.setActiveGameState( GameStates.GAME );
+			}
+			/*
+			if ( getSolution("data/dialog/solution.txt") ){
+				//korrekte Antwort
+			}
+			else{
+				//falsche Antwort
+			}
+			*/
+		}
+		if( e.getKeyCode() == KeyEvent.VK_W || e.getKeyCode() == KeyEvent.VK_UP && rectY>348 ){
+			rectY -= 20;
+		}
+		if( e.getKeyCode() == KeyEvent.VK_S || e.getKeyCode() == KeyEvent.VK_DOWN && rectY<428){
+			rectY += 20;
 		}
 	}
 	
-	@Override
-	public void onEnter() {
-		StdIO.addKeyListener(this, KeyEventType.KeyReleased);
+	public ArrayList<String> readDialog (ArrayList<String> list, String path){
+		try {
+			FileReader fr = new FileReader(path);
+			BufferedReader br = new BufferedReader(fr);
+			String line;
+			ArrayList<String> lineList = new ArrayList<String>();
+			while ((line = br.readLine()) != null){
+				lineList.add(line);
+			}
+			list = lineList;
+			br.close();
+		}
+		catch (FileNotFoundException e){ System.out.println("errorro"); }
+		catch (IOException e){ System.out.println("errorro2"); }	
+		return list;
 	}
-
-	@Override
-	public void onExit() {
-		StdIO.removeKeyListener(this, KeyEventType.KeyReleased);
+	
+	//noch nicht gebraucht
+	public boolean getSolution(String path){
+		Scanner scanner = new Scanner(path);
+		int solution = scanner.nextInt();
+		scanner.close();
+		if (solution == rectY){return true;}
+		else return false;
 	}
-
+	
 }

@@ -21,6 +21,12 @@ public class GSInventory implements IGameState, StdIO.IKeyListener {
 	
 	private int m_selX = 0;
 	private int m_selY = 0;
+	
+	private int m_selCompanion = 0;
+	private int m_maxCompanions;
+	
+	private enum State{INVENTORY, COMPANION};
+	private State m_state;
 
 	private void renderInventory(double baseX, double baseY){
 		for(int y = 0; y < 4; y++){
@@ -40,7 +46,6 @@ public class GSInventory implements IGameState, StdIO.IKeyListener {
 		ItemInstance ii = m_inv.getItem(m_selY*4 + m_selX);
 		
 		if(ii == null) return;
-		
 		
 		StdDraw.setPenColor(StdDraw.BLACK);
 		StdDraw.rectangle(baseX-5, baseY-12, 250, 200);
@@ -72,8 +77,18 @@ public class GSInventory implements IGameState, StdIO.IKeyListener {
 			StdDraw.picture(x, y, ii.getIcon());
 	}
 	
-	private void renderCompanion(double baseX, double baseY, Companion c){
-		StdDraw.setPenColor( StdDraw.WHITE  );
+	private void renderCompanion(double baseX, double baseY, Companion c, boolean selected){
+		
+		
+		if(selected && m_state == State.COMPANION){
+			StdDraw.setPenColor( StdDraw.RED  );
+			
+			StdDraw.setAlpha(0.05f);
+			StdDraw.filledRectangle(baseX-2, baseY-12, 260, 125 );
+			StdDraw.setAlpha(1.0f);
+			
+			StdDraw.rectangle(baseX-2, baseY-12, 260, 125 );
+		}
 		
 		Equipment eq = c.getEquipment();
 
@@ -88,6 +103,8 @@ public class GSInventory implements IGameState, StdIO.IKeyListener {
 		renderEquipmentSlot(baseX + 136, baseY + 72, eq, EquipSlot.BOOTS);
 		renderEquipmentSlot(baseX + 172, baseY + 72, eq, EquipSlot.LEGS);
 		
+		
+		StdDraw.setPenColor( StdDraw.WHITE  );
 		
 		StdDraw.textLeft(baseX, baseY, c.getName());
 		c.render(baseX, baseY + 10);
@@ -110,8 +127,12 @@ public class GSInventory implements IGameState, StdIO.IKeyListener {
 	}
 	private void renderCompanions(double baseX, double baseY){
 		double y = 0;
+		int i = 0;
 		for(Companion c : m_comp){
-			renderCompanion(baseX, baseY + y, c);
+		
+			renderCompanion(baseX, baseY + y, c, i == m_selCompanion);
+			
+			i += 1;
 			y += 200;
 		}
 	}
@@ -140,37 +161,73 @@ public class GSInventory implements IGameState, StdIO.IKeyListener {
 		return r;
 	}
 
-	@Override
-	public void receiveEvent(KeyEvent e) {
+	public void processEventCompanion(KeyEvent e){
 		switch(e.getKeyCode()){ 
-		case KeyEvent.VK_DOWN: m_selY 	= mod(m_selY+1, m_inv.getHeight() ); break;
-		case KeyEvent.VK_UP: m_selY  	= mod(m_selY-1, m_inv.getHeight() ); break;
-		case KeyEvent.VK_RIGHT: m_selX  = mod(m_selX+1, m_inv.getWidth()  ); break;
-		case KeyEvent.VK_LEFT: m_selX  	= mod(m_selX-1, m_inv.getWidth()  ); break;
+		case KeyEvent.VK_DOWN: m_selCompanion 	= mod(m_selCompanion+1, m_maxCompanions ); break;
+		case KeyEvent.VK_UP: m_selCompanion  	= mod(m_selCompanion-1, m_maxCompanions ); break;
+		case KeyEvent.VK_ESCAPE:
+			m_state = State.INVENTORY;
+			break;
+		case KeyEvent.VK_I:
+			GlobalGameState.setActiveGameState( GameStates.GAME );
+			break;
 		}
 	
-		if( e.getKeyCode() == KeyEvent.VK_ESCAPE || e.getKeyCode() == KeyEvent.VK_I ){
-			GlobalGameState.setActiveGameState( GameStates.GAME );
-		}
 		if( e.getKeyCode() == KeyEvent.VK_ENTER ){
-		
-			Companion c = m_comp.get(0);
+			
+			Companion c = m_comp.get(m_selCompanion);
 			
 			ItemInstance it = m_inv.getItem(m_selX, m_selY);
-			
-			if(it == null || it.isEquipable() == false) return;
+			//if(it == null || it.isEquipable() == false) return;
 			
 			ItemInstance i = c.getEquipment().equipItem( it, it.getEquipInfo().getEquipSlot() );
 			m_inv.removeItem(m_selX, m_selY);
 			if(i != null) m_inv.addItem(i);
 		
+			m_state = State.INVENTORY;
+		
 		}
+	}
+
+	public void processEventInventory(KeyEvent e) {
+		switch(e.getKeyCode()){ 
+		case KeyEvent.VK_DOWN: m_selY 	= mod(m_selY+1, m_inv.getHeight() ); break;
+		case KeyEvent.VK_UP: m_selY  	= mod(m_selY-1, m_inv.getHeight() ); break;
+		case KeyEvent.VK_RIGHT: m_selX  = mod(m_selX+1, m_inv.getWidth()  ); break;
+		case KeyEvent.VK_LEFT: m_selX  	= mod(m_selX-1, m_inv.getWidth()  ); break;
+		case KeyEvent.VK_ESCAPE:
+		case KeyEvent.VK_I:
+			GlobalGameState.setActiveGameState( GameStates.GAME );
+			break;
+			
+		case KeyEvent.VK_ENTER:
+			ItemInstance it = m_inv.getItem(m_selX, m_selY);
+			if(it == null || it.isEquipable() == false) 
+			return;
+		
+			m_state = State.COMPANION; 
+			
+			break;
+		}
+	
+	}
+	
+	@Override
+	public void receiveEvent(KeyEvent e) {
+		if(m_state == State.INVENTORY)
+			processEventInventory(e);
+		else
+			processEventCompanion(e);
 	}
 	
 	@Override
 	public void onEnter() {
 		m_inv = Player.getInstance().getInventory();
 		m_comp = Player.getInstance().getCompanions();
+		m_state = State.INVENTORY;
+		
+		m_selCompanion = 0;
+		m_maxCompanions = m_comp.size();
 	
 		StdIO.addKeyListener(this, KeyEventType.KeyReleased);
 	}

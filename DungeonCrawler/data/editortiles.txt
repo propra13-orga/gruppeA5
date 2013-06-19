@@ -29,7 +29,7 @@
 # Set "Grassland"
 	# Subset "Pathables"
 		35 0 "Shop Icon" "data/unseen_item.png"
-		36 0 "Talk Icon" "data/unseen_monster.png"
+		36 0 "Talk Icon" "data/sphinx_grass.png"
 		6 0 "Grass East" "data/grass/grass_e.png"
 		8 0 "Grass South-East" "data/grass/grass_se.png"
 		9 0 "Grass South-West" "data/grass/grass_sw.png"

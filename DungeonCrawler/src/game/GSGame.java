@@ -36,6 +36,11 @@ public class GSGame implements IGameState, StdIO.IKeyListener {
 		m_map.render();
 		m_player.render();
 		m_ui.render();
+		
+		StdDraw.setPenColor(StdDraw.BLACK);
+		StdDraw.setPenRadius(2.f);
+		StdDraw.rectangle(44, 44, 512, 512);
+		StdDraw.setPenRadius(1.f);
 	}
 
 	@Override

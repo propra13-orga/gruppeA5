@@ -1,4 +1,5 @@
 import game.Constants;
+import game.GSCredits;
 import game.GSDefeat;
 import game.GSGame;
 import game.GSMainMenu;
@@ -42,6 +43,7 @@ public class Main {
 		GlobalGameState.associateGameState( GameStates.DIALOG,	  new GSDialog()	 );
 		GlobalGameState.associateGameState( GameStates.DEFEAT,	  new GSDefeat()	 );
 		GlobalGameState.associateGameState( GameStates.INTERACT,  new GSInteraction());
+		GlobalGameState.associateGameState( GameStates.CREDITS,	  new GSCredits()	 );
 		
 		GlobalGameState.initiateGlobalGameState( GameStates.MAIN_MENU );
 
