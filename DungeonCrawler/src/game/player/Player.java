@@ -129,7 +129,7 @@ public class Player {
 				GlobalGameState.setActiveGameState( GameStates.SHOP );
 			}
 			if(ti.mEventID == 3){
-				GlobalGameState.setActiveGameState( GameStates.DIALOG );
+				GlobalGameState.setActiveGameState( GameStates.QUEST );
 			}
 			if(ti.mEventID == 4){
 				Checkpoint.save();

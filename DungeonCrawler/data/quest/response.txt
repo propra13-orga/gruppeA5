@@ -1,0 +1,54 @@
+Well Done!
+
+Here is your Reward of 100 gold.
+
+
+Come back later for another task!
+
+
+
+
+
+Press Enter to return to the Map!
+
+
+
+
+
+
+You Failed!
+
+This means I can not reward you.
+
+Next time try not to disappoint me again!
+
+
+
+
+
+
+Press Enter to return to the Map!
+
+
+
+
+
+
+Thats it!
+
+
+
+
+This was the last Task I had to offer!
+
+
+
+
+
+Press Enter to return to the Map!
+
+
+
+
+
+ 
