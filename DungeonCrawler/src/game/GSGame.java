@@ -83,16 +83,16 @@ public class GSGame implements IGameState, StdIO.IKeyListener {
 		//Erstellt die Map an der Position 144,44 (von oben links gesehen).
 		//Die Zahlen sind so gewählt, dass die Map genau in der Mitte des Fensters ist.
 		m_map = new Map(44,44, "data/tiles.txt");
-		m_map.loadLevel("data/mplayer.txt");
+		m_map.loadLevel("data/mplayer2.txt");
 				
 		EnemyPlayer p = new EnemyPlayer( 0, 0, "data/player/deep_elf_m.png" ); //m_map.getCanvasX(5), m_map.getCanvasY(5)
 
 		if(isHost){
-			m_player.setPosition( m_map.getCanvasX(5), m_map.getCanvasY(4) );
-			p.setPosition( m_map.getCanvasX(5), m_map.getCanvasY(8) );
+			m_player.setPosition( m_map.getCanvasX(7), m_map.getCanvasY(1) );
+			p.setPosition( m_map.getCanvasX(7), m_map.getCanvasY(14) );
 		}else{
-			p.setPosition( m_map.getCanvasX(5), m_map.getCanvasY(4) );
-			m_player.setPosition( m_map.getCanvasX(5), m_map.getCanvasY(8) );
+			p.setPosition( m_map.getCanvasX(7), m_map.getCanvasY(1) );
+			m_player.setPosition( m_map.getCanvasX(7), m_map.getCanvasY(14) );
 		}
 		
 		if( isHost)
@@ -101,7 +101,7 @@ public class GSGame implements IGameState, StdIO.IKeyListener {
 		NetworkManager.setEnemyPlayer( p );
 		m_map.getMonsterPool().addMonster( p );
 		
-		Player.getInstance().getInventory().addItem( new ItemInstance(ItemType.getItemType("leatherarmor") ) );
+		Player.getInstance().addGold(1000);
 		Checkpoint.save();
 	}
 	
