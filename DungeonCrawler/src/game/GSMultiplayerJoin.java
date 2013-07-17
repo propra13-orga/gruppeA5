@@ -18,7 +18,7 @@ public class GSMultiplayerJoin implements IGameState {
 		System.out.println("CLIENT");
 	
 		m_client = new NetworkClient();
-		m_client.connectTo("127.0.0.1", 4444);
+		m_client.connectTo("176.198.16.52", 4444);
 	}
 
 	@Override

@@ -61,6 +61,8 @@ public class NetworkClient {
             return false;
         } catch (IOException e) {
             System.err.println("NetworkClient:  I/O error occured when creating the socket to: " + ip);
+            System.err.println(e);
+            System.err.println(e.getStackTrace() );
             return false;
         }
 		
