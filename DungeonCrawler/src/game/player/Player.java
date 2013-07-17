@@ -30,7 +30,7 @@ public class Player {
 	private boolean standsOnEvent = false;
 	
 	private double playerX, playerY; //Die Koordinaten des Spielers 
-	//Hitbox
+	
 	private double xMin = 6; 
 	private double xMax = 23;
 	private double yMin = 2;
@@ -63,8 +63,6 @@ public class Player {
 	}
 	
 	
-	//Der Spieler lebt solange er mindestens ein Leben hat
-	//Wird der Spieler verwundet wird ein Leben abgezogen
 	public boolean isAlive(){ 
 		//TODO: NYI
 		return true;
@@ -91,16 +89,17 @@ public class Player {
 		s_player = this;
 	}
 	
-	
-	//Beim Betreten eines Teleporterfelds wird die nächste Map geladen
-	//Der Spieler nimmt die in der MapDatei gespeicherte Position ein
+	/**
+	 * if the player collides with a TeleporterField the next map is loaded<br>
+	 * if the player is already on a TeleporterField the teleporter is ignored
+	 * 
+	 * @param map the map the player is currently on
+	 */
 	public void enterTeleporter(Map map){
 		CellInfo ti = map.getCellInfo(map.getGridX(playerX+16),map.getGridY(playerY+16));
 		
 		if (ti != null && ti.mHasTeleporter){
 		
-			//Falls der Spieler gerade auf einem Teleporter steht, wird er nicht teleportiert.
-			//Ansonsten würde man die ganze Zeit hin-und-her teleportiert werden wenn man einen Teleporter betritt.
 			if(standsOnTeleporter == true)
 				return;
 		
@@ -116,6 +115,15 @@ public class Player {
 		}
 	}
 	
+	/**
+	 * checks if the player collides with an EventField<br>
+	 * if he does the game enters one of the following gameStates:<br>
+	 * - SHOP<br>
+	 * - QUEST<br>
+	 * - MENU
+	 * 
+	 * @param map the map the player is currently on
+	 */
 	private void lookForEvents(Map map){
 		CellInfo ti = map.getCellInfo(map.getGridX(playerX+16),map.getGridY(playerY+16));
 		
@@ -143,6 +151,12 @@ public class Player {
 		}
 	}
 	
+	/**
+	 * checks if the player collides with an Enemy<br>
+	 * if he does the game enters the COMBAT-gameState
+	 * 
+	 * @param map the map the player is currently on
+	 */
 	private void lookForEnemy(Map map) {
 	
 		MonsterPool mp = map.getMonsterPool();
@@ -182,6 +196,12 @@ public class Player {
 	
 	//Bei Tasteneingabe wird überprüft, ob das angestrebte Feld mit der Hitbox kollidiert
 	//Wenn nicht wird der Spieler auf das angestrebte Feld bewegt
+	/**
+	 * if a key is pressed, the method checks if the field the player heads toward is pathable<br>
+	 * if it is the player moves to that field
+	 * 
+	 * @param map the map the player is currently on
+	 */
 	public void update(Map map){
 		
 		//TODO: Use HitBox for that
@@ -217,7 +237,9 @@ public class Player {
 	}
 	
 	
-	//Zeichnet den Spieler an die Stelle im Koordinatensystem
+	/**
+	 * Draws the player 
+	 */
 	public void render(){
 		Companion c = m_companions.get(0);
 		

@@ -10,15 +10,24 @@ import gamestate.GameStates;
 import gamestate.GlobalGameState;
 import gamestate.IGameState;
 
-
+/**
+ * 
+ * @author 
+ *
+ */
 public class GSQuest implements IGameState, StdIO.IKeyListener {
-
+	
 	private ArrayList<String> sphinxRiddle = new ArrayList<String>();
 	private ArrayList<String> solutions = new ArrayList<String>();
 	private ArrayList<String> response = new ArrayList<String>();
 	private double rectY = 428;
 	private int questCount = 0, questState;
 	
+	/**
+	 * draws texts from the ArrayLists sphinxRiddle/response on the screen 
+	 * depending on the active questState<br>
+	 * when in questState 3 it draws a rectangle for selecting an answer
+	 */
 	@Override
 	public void render() {
 		StdDraw.setPenColor(StdDraw.WHITE);
@@ -56,12 +65,16 @@ public class GSQuest implements IGameState, StdIO.IKeyListener {
 			break;
 		}
 	}
-
+	
 	@Override
+	public void update(){}
 	
-	public void update(){
-	}
-	
+	/**
+	 * when entering the QUEST-gameState<br>
+	 * - the keyListener is added<br>
+	 * - the default questState is initialized<br>
+	 * - the required txt.files are stored in ArrayLists
+	 */
 	@Override
 	public void onEnter() {
 		System.out.println("enter");
@@ -75,12 +88,25 @@ public class GSQuest implements IGameState, StdIO.IKeyListener {
 		solutions = readDialog(solutions, "data/quest/solution.txt");
 		response = readDialog(response, "data/quest/response.txt");
 	}
-
+	
+	/**
+	 * when leaving the QUEST-gameState:<br>
+	 * - the keyListener is removed
+	 */
 	@Override
 	public void onExit() {
 		StdIO.removeKeyListener(this, KeyEventType.KeyPressed);
 	}
 	 
+	/**
+	 * waits for a keyboard input by the user <br>
+	 * allows the following keys:<br>
+	 * "Enter", "W", "S", "UP", "DOWN"
+	 * depending on the pressed key one of the following options kicks in:<br>
+	 * - the QUEST-gameState is left<br>
+	 * - the rectangle is moved vertically<br>
+	 * - the selcted answer is checked for correctness
+	 */
 	@Override
 	public void receiveEvent(KeyEvent e) {
 		if( e.getKeyCode() == KeyEvent.VK_ENTER ){
@@ -112,7 +138,12 @@ public class GSQuest implements IGameState, StdIO.IKeyListener {
 		}
 	}
 	
-	// reads .txt-file into ArrayList
+	/**
+	 * reads out a txt.file line by line and stores the lines as Strings in an ArrayList 
+	 * @param list the name of the ArrayList in which the Strings are saved
+	 * @param path the path where the txt.file lies
+	 * @return
+	 */
 	public ArrayList<String> readDialog (ArrayList<String> list, String path){
 		try {
 			FileReader fr = new FileReader(path);
@@ -130,7 +161,14 @@ public class GSQuest implements IGameState, StdIO.IKeyListener {
 		return list;
 	}
 	
-	// checks file for the required value for rectY
+	/**
+	 * takes an IntegerElement from the ArrayList solutions and checks if it
+	 * equals to the y.coordinate of the rectangle<br>
+	 * if it does, the method returns "true"
+	 * else it returns "false"
+	 * @param solutions the ArrayList in which the solutions for the riddles are saved
+	 * @return
+	 */
 	public boolean getSolution(ArrayList<String> solutions){
 		int solution = Integer.parseInt(solutions.get(questCount));
 		if (solution == rectY){return true;}
