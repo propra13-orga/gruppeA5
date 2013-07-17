@@ -14,11 +14,19 @@ public class ChatWindow {
 	private static String s_currMsg = "";
 	private static int s_x, s_y;
 	
+	/**
+	 * Sets the window's position
+	 * @param x
+	 * @param y
+	 */
 	public static void setPosition(int x, int y){
 		s_x = x;
 		s_y = y;
 	}
 	
+	/**
+	 * Renders the window to the screen
+	 */
 	public static void render(){
 	
 		if( !NetworkManager.isMultiplayer() )
@@ -37,6 +45,10 @@ public class ChatWindow {
 		StdDraw.rectangle(s_x, s_y, 235, 100);
 	}
 	
+	/**
+	 * Adds a new chat message to the window
+	 * @param msg	Message to be added
+	 */
 	public static void addMessage(String msg){
 	
 		if( s_chat.size() >= 4 ){
@@ -45,6 +57,11 @@ public class ChatWindow {
 		s_chat.add(msg);
 	}
 	
+	/**
+	 * Processes a KeyEvent. This method is called when the player is writing a message.
+	 * @param evt	KeyEvent that happened
+	 * @return		true if message is complete and control can be returned to other KeyListeners
+	 */
 	public static boolean processKey(KeyEvent evt){
 		if( evt.getKeyCode() == KeyEvent.VK_ENTER ){
 			

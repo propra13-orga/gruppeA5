@@ -18,11 +18,19 @@ public class HitBox {
 	private double m_x = 0.;
 	private double m_y = 0.;
 	
+	/**
+	 * Debug method to render the hitbox to the screen
+	 */
 	public void render(){
 		StdDraw.setPenColor(StdDraw.RED);
 		StdDraw.rectangle(m_x, m_y, 2*m_halfWidth, 2*m_halfHeight);
 	}
 	
+	/**
+	 * Sets the hitbox's position
+	 * @param x
+	 * @param y
+	 */
 	public void setPosition(double x, double y){
 		//If I ever need a getPosition, this one here might be a bad idea. Maybe better to have a 
 		//private getActualPosition() and use it in collidesWith().
@@ -30,6 +38,11 @@ public class HitBox {
 		m_y = y + m_minY;
 	}
 	
+	/**
+	 * Checks whether two hitboxes collide
+	 * @param b		box to collide with
+	 * @return		true if collision happened
+	 */
 	public boolean collidesWith(HitBox b){
 		if ( Math.abs(m_x - b.m_x) > m_halfWidth + b.m_halfWidth ) return false;
 	    if ( Math.abs(m_y - b.m_y) > m_halfHeight + b.m_halfHeight ) return false;
@@ -37,6 +50,12 @@ public class HitBox {
 	    return true;
 	}
 	
+	/**
+	 * Checks whether two hitboxes collide
+	 * @param a		first hitbox
+	 * @param b		second hitbox
+	 * @return		true if collision happened
+	 */
 	public static boolean collidesWith(HitBox a, HitBox b){
 		return a.collidesWith(b);
 	}

@@ -7,8 +7,6 @@ import std.StdDraw;
 import std.StdIO;
 import std.StdIO.KeyEventType;
 import game.checkpoint.Checkpoint;
-import game.item.ItemInstance;
-import game.item.ItemType;
 import game.player.Player;
 import gamestate.GameStates;
 import gamestate.GlobalGameState;
@@ -26,6 +24,10 @@ public class GSGame implements IGameState, StdIO.IKeyListener {
 	
 	boolean s_shutdown = false;
 
+	/**
+	 * Returns the single global instance of GSGame
+	 * @return
+	 */
 	public static GSGame getInstance(){
 		return s_this;
 	}
@@ -59,10 +61,6 @@ public class GSGame implements IGameState, StdIO.IKeyListener {
 		Map.getInstance().getMonsterPool().updateAll();
 		Map.getInstance().getMonsterPool().issueRandomWanderOrders();
 		
-		if(m_player.isAlive() == false){
-			System.out.println("Error! Player alive check not passed in GSGame.");
-		}
-		
 	}
 
 	private void resetPlayer(){
@@ -76,6 +74,10 @@ public class GSGame implements IGameState, StdIO.IKeyListener {
 		
 	}
 	
+	/**
+	 * Call to start a multiplayer game.
+	 * @param isHost	Whether the local player is acting as a host.
+	 */
 	public void startGameMulti(boolean isHost){
 		m_ui = new GameInterface();
 		m_player = new Player();
@@ -105,6 +107,9 @@ public class GSGame implements IGameState, StdIO.IKeyListener {
 		Checkpoint.save();
 	}
 	
+	/**
+	 * Start a single player game.
+	 */
 	public void startGameSingle(){
 		m_ui = new GameInterface();
 		m_player = new Player();

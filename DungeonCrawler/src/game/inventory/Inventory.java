@@ -11,13 +11,27 @@ public class Inventory {
 	private ArrayList<ItemInstance> m_items = new ArrayList<>(MAX_SIZE);
 	private int m_currentNumOfItems = 0;
 	
+	/**
+	 * Returns Inventory height
+	 * @return
+	 */
 	public int getHeight(){
 		return SIZE_Y;
 	}
+	
+	/**
+	 * Returns inventory width
+	 * @return
+	 */
 	public int getWidth(){
 		return SIZE_X;
 	}
 	
+	/**
+	 * Adds the supplied item to the inventory.
+	 * If the inventory is full, nothing will happen.
+	 * @param it	if null, nothing will happen
+	 */
 	public void addItem(ItemInstance it){
 		if(it == null)
 			return;
@@ -31,14 +45,27 @@ public class Inventory {
 		}
 	}
 	
+	/**
+	 * Returns whether the inventory is full
+	 * @return	true if full
+	 */
 	public boolean isFull(){
 		return m_currentNumOfItems >= MAX_SIZE;
 	}
 	
+	/**
+	 * Returns item at slot.
+	 * @param slot	Supplied slot. All slots are numbered 0 through X
+	 * @return
+	 */
 	public ItemInstance getItem(int slot){
 		return m_items.get(slot);
 	}
 	
+	/**
+	 * Removes item in slot
+	 * @param slot	Supplied slot. All slots are numbered 0 through X
+	 */
 	public void removeItem(int slot){
 		if(m_items.get(slot) != null){
 			m_currentNumOfItems -= 1;
@@ -46,6 +73,10 @@ public class Inventory {
 		}
 	}
 	
+	/**
+	 * Looks for ItemInstance and removes it from the inventory
+	 * @param item	Item to be removed, nothing happens if not found
+	 */
 	public void removeItem(ItemInstance item) {
 		for(int i=0; i<m_items.size(); i++){
 			if( item == m_items.get(i) ){
@@ -55,14 +86,30 @@ public class Inventory {
 		}
 	}
 	
+	
+	/**
+	 * Returns an item from the inventory. Slots are labeled as a 2D array
+	 * @param x
+	 * @param y
+	 * @return
+	 */
 	public ItemInstance getItem(int x, int y){
 		return getItem(y * SIZE_Y + x);
 	}
 	
+	/**
+	 * Removes an item from the inventory. Slots are labeled as a 2D array.
+	 * @param x
+	 * @param y
+	 */
 	public void removeItem(int x, int y){
 		removeItem(y * SIZE_Y + x);
 	} 
 	
+	/**
+	 * Get a list of all items
+	 * @return
+	 */
 	public List<ItemInstance> getItemList(){
 		return m_items;
 	}

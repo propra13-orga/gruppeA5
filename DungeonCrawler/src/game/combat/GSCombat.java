@@ -344,9 +344,11 @@ public class GSCombat implements IGameState, StdIO.IKeyListener {
 		public void onEnter(){
 			m_currState = State.MESSAGE;
 		}
+		/*
 		public void onStep(){
 		
 		}
+		*/
 		public void onKey(KeyEvent e){
 			if(e.getKeyCode() != KeyEvent.VK_ENTER)
 				return;

@@ -15,6 +15,10 @@ public class GSInteraction implements IGameState, StdIO.IKeyListener {
 	private static String s_text = "Error";
 	private int m_charactersDisplayed;
 	
+	/**
+	 * Sets the text to be displayed on screen
+	 * @param text
+	 */
 	public static void setText(String text){
 		s_text = text;
 	}

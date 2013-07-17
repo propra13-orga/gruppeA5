@@ -5,6 +5,8 @@ import game.combat.CombatLog;
 import game.combat.Party;
 
 public class SelfHealSkill extends Skill {
+	private static final long serialVersionUID = 4689728166444861539L;
+	
 	private int m_healAmount;
 	
 	@Override
@@ -23,6 +25,13 @@ public class SelfHealSkill extends Skill {
 		return m_healAmount;
 	}
 	
+	/**
+	 * Constructor. Self-target heal skill.
+	 * @param name	Name of skill
+	 * @param desc	Description
+	 * @param heal	Health restored
+	 * @param manaCost	Mana cost
+	 */
 	public SelfHealSkill(String name, String desc, int heal, int manaCost){
 		m_targetType = TargetType.SELF;
 		m_name = name;	//TODO: Put into superclass constructor, since every skill has a name

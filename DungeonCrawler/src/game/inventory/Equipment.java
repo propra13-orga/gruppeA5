@@ -11,6 +11,12 @@ public class Equipment implements java.io.Serializable {
 	private EnumMap<EquipSlot, ItemInstance> m_equip = new EnumMap<>(EquipSlot.class);
 	private Companion m_owner;
 	
+	/**
+	 * Adds the supplied item to the supplied EquipSlow
+	 * @param item
+	 * @param slot
+	 * @return		the ItemInstance previously in @slot, null if empty.
+	 */
 	public ItemInstance equipItem(ItemInstance item, EquipSlot slot){
 		ItemInstance last = m_equip.get(slot);
 		m_equip.put(slot, item);
@@ -23,9 +29,19 @@ public class Equipment implements java.io.Serializable {
 		return last;
 	}
 	
+	/**
+	 * Returns the ItemInstance currently equipped in the supplied slot
+	 * @param slot	slot to be looked at
+	 * @return	null if slot is empty, otherwise a valid ItemInstance
+	 */
 	public ItemInstance getEquippedItem(EquipSlot slot){
 		return m_equip.get(slot);
 	}
+	
+	/**
+	 * Constructs the object for a supplied Companion
+	 * @param owner
+	 */
 	public Equipment(Companion owner){
 		m_owner = owner;
 	}

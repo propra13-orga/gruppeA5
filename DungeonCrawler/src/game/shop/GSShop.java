@@ -23,6 +23,9 @@ public class GSShop implements IGameState, StdIO.IKeyListener {
 
 	private ArrayList<ItemType> m_purchasables = new ArrayList<>();
 
+	/**
+	 * Creates a shop object. Immediately adds all existing items for sale.
+	 */
 	public GSShop(){
 		Set<Entry<String, ItemType>> k = ItemType.getItemTypeList();
 		

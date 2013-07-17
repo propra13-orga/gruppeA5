@@ -10,11 +10,18 @@ public class UnitStats implements java.io.Serializable {
 	public int mMaxMana = 0;
 	public int mCurrHealth = 0;
 	public int mCurrMana = 0;
-
+	
+	/**
+	 * Default constructor
+	 */
 	public UnitStats(){
 	
 	}
 
+	/**
+	 * Copy constructor
+	 * @param copy
+	 */
 	public UnitStats(UnitStats copy){
 		mArmor = copy.mArmor;
 		mFireResist = copy.mFireResist;

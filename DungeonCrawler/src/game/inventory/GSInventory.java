@@ -163,6 +163,10 @@ public class GSInventory implements IGameState, StdIO.IKeyListener {
 		return r;
 	}
 
+	/**
+	 * Listener method that is called during Companion selection when equipping items
+	 * @param e		KeyEvent to be looked at
+	 */
 	public void processEventCompanion(KeyEvent e){
 		switch(e.getKeyCode()){ 
 		case KeyEvent.VK_DOWN: m_selCompanion 	= mod(m_selCompanion+1, m_maxCompanions ); break;
@@ -191,6 +195,10 @@ public class GSInventory implements IGameState, StdIO.IKeyListener {
 		}
 	}
 
+	/**
+	 * Key listener method that is called during inventory browsing
+	 * @param e
+	 */
 	public void processEventInventory(KeyEvent e) {
 		switch(e.getKeyCode()){ 
 		case KeyEvent.VK_DOWN: m_selY 	= mod(m_selY+1, m_inv.getHeight() ); break;

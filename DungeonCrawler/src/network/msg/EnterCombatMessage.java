@@ -8,6 +8,8 @@ import network.PackageType;
 
 
 public class EnterCombatMessage implements INetworkPackage {
+	private static final long serialVersionUID = 7496409387367200193L;
+	
 	private ArrayList<IEntity> m_entities;
 	
 	@Override

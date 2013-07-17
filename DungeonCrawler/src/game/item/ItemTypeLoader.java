@@ -129,6 +129,11 @@ public class ItemTypeLoader {
 		return m_itemTypes;
 	}
 
+	/**
+	 * Loads all item types from a textfile
+	 * @param fileName	Relative path of text file.
+	 * @return
+	 */
 	public boolean load(String fileName){
 		boolean status = true;
 		

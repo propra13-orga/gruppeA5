@@ -50,6 +50,10 @@ public class GSTransition implements IGameState {
 		
 	}
 
+	/**
+	 * Supplies the next state that should be activated after the transition is done
+	 * @param nextGS	next GameState
+	 */
 	public void prepareTransition( GameStates nextGS ){
 		m_nextGameState = nextGS;
 		
@@ -59,6 +63,10 @@ public class GSTransition implements IGameState {
 			System.out.println("Error! No suitable animation for this transition found.");
 	}
 
+	/**
+	 * Returns the single global instance of GSTransition
+	 * @return
+	 */
 	public static GSTransition getInstace(){
 		return s_instance;
 	}

@@ -80,14 +80,13 @@ public class GSQuest implements IGameState, StdIO.IKeyListener {
 		System.out.println("enter");
 		StdIO.addKeyListener(this, KeyEventType.KeyPressed);
 
-		sphinxRiddle = readDialog(sphinxRiddle, "data/quest/riddle.txt");
-		solutions = readDialog(solutions, "data/quest/solution.txt");
-		response = readDialog(response, "data/quest/response.txt");
-
-		if (questCount == sphinxRiddle.size()/21){
+		if (questCount == 3){
 			questState = 2;
 		}
 		else questState = 3;
+		sphinxRiddle = readDialog(sphinxRiddle, "data/quest/riddle.txt");
+		solutions = readDialog(solutions, "data/quest/solution.txt");
+		response = readDialog(response, "data/quest/response.txt");
 	}
 	
 	/**

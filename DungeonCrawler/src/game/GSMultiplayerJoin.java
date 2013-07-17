@@ -1,5 +1,7 @@
 package game;
 
+import javax.swing.JOptionPane;
+
 import network.NetworkClient;
 import network.NetworkManager;
 import network.NetworkSocket;
@@ -17,8 +19,20 @@ public class GSMultiplayerJoin implements IGameState {
 	public void onEnter() {
 		System.out.println("CLIENT");
 	
+		String s = (String)JOptionPane.showInputDialog(
+                null,
+                "Enter IP address to connect to:\n",
+                "Input IP address",
+                JOptionPane.PLAIN_MESSAGE,
+                null, null, "");
+	
+		if ( (s == null) || (s.length() == 0) ) {
+			GlobalGameState.setActiveGameState(GameStates.MAIN_MENU);
+		    return;
+		}
+	
 		m_client = new NetworkClient();
-		m_client.connectTo("176.198.16.52", 4444);
+		m_client.connectTo(s, 4444);
 	}
 
 	@Override

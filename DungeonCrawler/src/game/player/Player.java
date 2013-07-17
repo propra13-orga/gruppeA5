@@ -49,6 +49,10 @@ public class Player {
 	
 	private boolean m_isMovable = true;
 	
+	/**
+	 * Enables/disables the players ability to move.
+	 * @param movable	True to enable movement, false to disable.
+	 */
 	public void setMovable(boolean movable){
 		m_isMovable = movable;
 	}
@@ -56,67 +60,108 @@ public class Player {
 	//TODO: Get rid of those two default methods ... eventually..
 	private List<Companion> m_companions = Companion.getDefaultCompanionList();
 	
+	/**
+	 * Returns a list of all Companions of this player.
+	 * @return
+	 */
 	public List<Companion> getCompanions(){
 		return m_companions;
 	}
 	
 	private Inventory m_inventory = new Inventory();
+	
+	/**
+	 * Returns the player's inventory.
+	 * @return
+	 */
 	public Inventory getInventory(){
 		return m_inventory;
 	}
 	
 	private int m_gold = 600;
 	
+	/**
+	 * Returns how much gold the player has.
+	 * @return
+	 */
 	public int getGold(){
 		return m_gold;
 	}
+	
+	/** 
+	 *	Adds a specific amount of gold to the player
+	 * @param gold	Only use positive values or 0.
+	 */
 	public void addGold(int gold){
 		m_gold += gold;
 	}
+	
+	/**
+	 * Removes a specific amount of gold from the player.
+	 * Cannot go below 0 gold.
+	 * @param gold
+	 */
 	public void removeGold(int gold){
 		m_gold = Math.max(0, m_gold-gold);
 	}
-	
-	
-	//Der Spieler lebt solange er mindestens ein Leben hat
-	//Wird der Spieler verwundet wird ein Leben abgezogen
-	public boolean isAlive(){ 
-		//TODO: NYI
-		return true;
-	}
-	
+
+	/**
+	 * Sets the player avatar's position on the map (in screen space)
+	 * @param x
+	 * @param y
+	 */
 	public void setPosition(double x, double y){
 		playerX = x;
 		playerY = y;
 	}
+	
+	/**
+	 * 	Returns the players x coordinate in screen space
+	 *  @return
+	 */
 	public double getX(){
 		return playerX;
 	}
+	
+	/**
+	 * Returns the player's y coordinate in screen space
+	 * @return
+	 */
 	public double getY(){
 		return playerY;
 	}
 	
 	private static Player s_player = null;
 	
+	/**
+	 * Returns the single global instance of Player
+	 * @return
+	 */
 	public static Player getInstance(){
 		return s_player;
 	}
 	
+	/**
+	 * Creates the player. Stores this Player in a global variable for access.
+	 * Use getInstance to access.
+	 */
 	public Player(){
 		s_player = this;
 	}
 	
+	
 	/**
-	 * if the player collides with a TeleporterField the next map is loaded<br>
-	 * if the player is already on a TeleporterField the map wont be loaded
-	 * 
-	 * @param map the map the player is currently on
+	 * Attempts to use a teleporter at the player avatar's location.
+	 * If none is found, this function does nothing.
+	 * @param map	Current map
 	 */
 	public void enterTeleporter(Map map){
 		CellInfo ti = map.getCellInfo(map.getGridX(playerX+16),map.getGridY(playerY+16));
 		
 		if (ti != null && ti.mHasTeleporter){
 		
+			//Falls der Spieler gerade auf einem Teleporter steht, wird er nicht teleportiert.
+			//Ansonsten würde man die ganze Zeit hin-und-her teleportiert werden wenn man einen Teleporter betritt.
 			if(standsOnTeleporter == true)
 				return;
 		
@@ -131,15 +176,11 @@ public class Player {
 			standsOnTeleporter = false;
 		}
 	}
-	
 	/**
-	 * checks if the player collides with an EventField<br>
-	 * if he does the game enters one of the following gameStates:<br>
-	 * - SHOP<br>
-	 * - QUEST<br>
-	 * - MENU
-	 * 
-	 * @param map the map the player is currently on
+	 * Searches for event tiles at the player's location.
+	 * Does nothing if no event tiles are found.
+	 * Activates the event if one is found.
+	 * @param map	Current map
 	 */
 	private void lookForEvents(Map map){
 		CellInfo ti = map.getCellInfo(map.getGridX(playerX+16),map.getGridY(playerY+16));
@@ -169,10 +210,9 @@ public class Player {
 	}
 	
 	/**
-	 * checks if the player collides with an Enemy<br>
-	 * if he does the game enters the COMBAT-gameState
-	 * 
-	 * @param map the map the player is currently on
+	 * Looks for enemies in the player's hitbox. Initiates combat if one if found.
+	 * Else, this method does nothing
+	 * @param map	Current map
 	 */
 	private void lookForEnemy(Map map) {
 	
@@ -204,6 +244,11 @@ public class Player {
 		GlobalGameState.setActiveGameState(GameStates.TRANSITION);
 	}
 	
+	/**
+	 * This method is called if the player presses the Interaction Key (enter).
+	 * Attempts to pick up a collectible item if one is nearby.
+	 * Does nothing, otherwise.
+	 */
 	public void attempInteraction(){
 		Map map = Map.getInstance();
 		PickupPool pp = map.getPickupPool();
@@ -227,10 +272,9 @@ public class Player {
 	}
 	
 	/**
-	 * if a key is pressed, the method checks if the field the player heads toward is pathable<br>
-	 * if it is the player moves to that field
-	 * 
-	 * @param map the map the player is currently on
+	 * Updates the player position and hitbox according to the user input.
+	 * Attemps to find/use teleporters/events/enemies nearby.
+	 * @param map
 	 */
 	public void update(Map map){
 		
@@ -282,7 +326,7 @@ public class Player {
 	
 	
 	/**
-	 * Draws the player at playerX,playerY
+	 * Renders the player to the screen.
 	 */
 	public void render(){
 		Companion c = m_companions.get(0);

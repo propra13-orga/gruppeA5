@@ -5,6 +5,8 @@ import game.combat.CombatLog;
 import game.combat.Party;
 
 public class SingleTargetHealSkill extends Skill {
+	private static final long serialVersionUID = -8017394044969124032L;
+	
 	private int m_healAmount;
 	
 	@Override

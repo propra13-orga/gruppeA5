@@ -5,6 +5,8 @@ import game.combat.CombatLog;
 import game.combat.Party;
 
 public class MultiTargetDmgSkill extends Skill {
+	private static final long serialVersionUID = 4931605622816327303L;
+	
 	private int m_damageAmount;
 	private DamageType m_damageType;
 	
@@ -25,6 +27,14 @@ public class MultiTargetDmgSkill extends Skill {
 		return m_damageAmount;
 	}
 	
+	/**
+	 * Constructor of multi-target dmg skill
+	 * @param name	name of skill
+	 * @param desc	description of skill
+	 * @param damage	amount of damage
+	 * @param type		damage type
+	 * @param manaCost	mana cost
+	 */
 	public MultiTargetDmgSkill(String name, String desc, int damage, DamageType type, int manaCost){
 		m_targetType = TargetType.ENEMY_MULTI;
 		m_name = name;	//TODO: Put into superclass constructor, since every skill has a name

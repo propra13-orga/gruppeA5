@@ -6,6 +6,8 @@ import game.combat.CombatLog;
 import game.combat.Party;
 
 public class SelfManaSkill extends Skill {
+	private static final long serialVersionUID = 1515569063165534342L;
+	
 	private int m_manaAmount;
 	
 	@Override
@@ -26,6 +28,13 @@ public class SelfManaSkill extends Skill {
 		return m_manaAmount;
 	}
 	
+	/**
+	 * Constructor, self-target mana restoration
+	 * @param name	name
+	 * @param desc	description
+	 * @param mana	amount of mana restored
+	 * @param manaCost	mana cost
+	 */
 	public SelfManaSkill(String name, String desc, int mana, int manaCost){
 		m_targetType = TargetType.SELF;
 		m_name = name;	//TODO: Put into superclass constructor, since every skill has a name

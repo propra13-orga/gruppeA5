@@ -13,7 +13,7 @@ public class GameInterface {
         protected List<? extends IEntity> m_entities;
         protected double m_y;
      
- 
+        
         private void renderIcon(double x, double y, IEntity c){
                 final UnitStats s = c.getStats();
  
@@ -47,12 +47,13 @@ public class GameInterface {
                 c.render(x,y+8);
         }
  
+        /**
+         * Renders the entire interface
+         */
         public void render(){
                 List<Companion> companions = Player.getInstance().getCompanions();  //Liste aller Helden
                 double y = 0;
                 for( Companion c : companions ){ //Loop durch alle Helden in der Liste durch
-
-	                UnitStats stats = c.getStats(); //Hole die UnitStats des Helden, in dem sich alle Infos befinden.
 
 	                y = y+60;
 	                StdDraw.setPenColor(StdDraw.RED);

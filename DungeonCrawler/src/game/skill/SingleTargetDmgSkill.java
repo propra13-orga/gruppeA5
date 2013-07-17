@@ -5,6 +5,8 @@ import game.combat.CombatLog;
 import game.combat.Party;
 
 public class SingleTargetDmgSkill extends Skill {
+	private static final long serialVersionUID = -5023986331364181395L;
+	
 	private int m_damageAmount;
 	private DamageType m_damageType;
 	
