@@ -20,8 +20,8 @@ public class GSMainMenu implements IGameState, StdIO.IKeyListener {
 	public void render() {
 		StdDraw.setPenColor( StdDraw.WHITE );
 		StdDraw.picture(350,225, "data/ui/MenuNewGame.png");
-		StdDraw.picture(330,250, "data/ui/HostMultiplayerBtn.png");
-		StdDraw.picture(330,275, "data/ui/JoinMultiplayerBtn.png");
+		StdDraw.picture(325,250, "data/ui/HostMultiplayerBtn.png");
+		StdDraw.picture(325,275, "data/ui/JoinMultiplayerBtn.png");
 		StdDraw.picture(350,300, "data/ui/MenuSettings.png");
 		StdDraw.picture(350,325, "data/ui/MenuCredits.png");
 		StdDraw.picture(350,350, "data/ui/MenuQuit.png");

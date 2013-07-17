@@ -39,7 +39,7 @@ mana = 50
 
 # MonsterType GreenDragon
 icon = "data/monsters/swamp_dragon.png"
-name = "Green Dragon"
+name = "Eberhard"
 damage = 45 fire
 health = 260
 mana = 0

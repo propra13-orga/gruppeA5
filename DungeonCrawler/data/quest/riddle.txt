@@ -61,3 +61,45 @@ back
  
  
  
+Your Discovery is quite alarming!
+ 
+It seems the sorcerers force has increased a lot
+over the last months.
+We have to act fast. 
+I need you to enter the Dungeon!
+
+Go to the first Room of the Dungeon and pick up the items you see.
+Afterwards come back to me and tell me how many there were.
+ 
+
+ 
+ 
+two 
+three
+four
+five
+back 
+ 
+ 
+ 
+Now go deeper into the dungeon! 
+ 
+On your way to the sorcerer 
+you will encounter one of his more powerful minions!
+Slay the dragon and tell me his true name!
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Hugo
+Eberhard
+Raimund 
+Orang-Utan Klaus
+back
+ 
+ 
+ 
