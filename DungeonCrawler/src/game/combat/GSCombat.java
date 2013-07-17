@@ -14,6 +14,7 @@ import std.StdIO;
 import std.StdIO.KeyEventType;
 import std.anim.GlobalAnimQueue;
 import std.anim.FadeAnim;
+import game.ChatWindow;
 import game.GSTransition;
 import game.checkpoint.Checkpoint;
 import game.item.ItemInstance;
@@ -29,6 +30,8 @@ public class GSCombat implements IGameState, StdIO.IKeyListener {
 	private MonsterGroup m_encounter = null;
 
 	private static GSCombat s_instance = null;
+	
+	private boolean m_isTyping = false;
 	
 	public static GSCombat getInstance(){
 		return s_instance;
@@ -64,6 +67,7 @@ public class GSCombat implements IGameState, StdIO.IKeyListener {
 	
 		m_enemies.render();
 		m_allies.render();
+		ChatWindow.render();
 		
 		if(m_currState == State.PLAYER_ACTION )
 			m_actionMenu.render();
@@ -90,6 +94,8 @@ public class GSCombat implements IGameState, StdIO.IKeyListener {
 		m_actionMenu.setCompanion( (Companion) m_allies.getCurrentHighlighted() );
 		m_currState = State.PLAYER_ACTION;
 		StdIO.addKeyListener(this, KeyEventType.KeyReleased);
+		
+		ChatWindow.setPosition(560, 20);
 	}
 	
 	@Override
@@ -380,6 +386,21 @@ public class GSCombat implements IGameState, StdIO.IKeyListener {
 
 	@Override
 	public void receiveEvent(KeyEvent e) {
+	
+		if( NetworkManager.isMultiplayer()){
+			if(m_isTyping){
+				
+				if( ChatWindow.processKey(e) ){
+					m_isTyping = false;
+				}
+				return;
+			}
+		
+			if(e.getKeyCode() == KeyEvent.VK_Z){
+				m_isTyping = true;
+				return;
+			}
+		}
 	
 		if(m_currState == State.ENEMY_ACTION)
 			m_enemyTurn.onKey(e);

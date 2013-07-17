@@ -22,6 +22,7 @@ public class GSGame implements IGameState, StdIO.IKeyListener {
 	private Map m_map;
 	private GameInterface m_ui;
 	private static GSGame s_this;
+	private boolean m_isTyping = false;
 	
 	boolean s_shutdown = false;
 
@@ -41,6 +42,7 @@ public class GSGame implements IGameState, StdIO.IKeyListener {
 		m_map.render();
 		m_player.render();
 		m_ui.render();
+		ChatWindow.render();
 		
 		StdDraw.setPenColor(StdDraw.BLACK);
 		StdDraw.setPenRadius(2.f);
@@ -123,6 +125,8 @@ public class GSGame implements IGameState, StdIO.IKeyListener {
 	@Override
 	public void onEnter() {
 		StdIO.addKeyListener(this, KeyEventType.KeyReleased);
+		
+		ChatWindow.setPosition(560, 455);
 	}
 
 	@Override
@@ -132,6 +136,24 @@ public class GSGame implements IGameState, StdIO.IKeyListener {
 
 	@Override
 	public void receiveEvent(KeyEvent e) {
+	
+		if( NetworkManager.isMultiplayer()){
+			if(m_isTyping){
+				
+				if( ChatWindow.processKey(e) ){
+					m_isTyping = false;
+					Player.getInstance().setMovable(true);
+				}
+				return;
+			}
+		
+			if(e.getKeyCode() == KeyEvent.VK_Z){
+				m_isTyping = true;
+				Player.getInstance().setMovable(false);
+				return;
+			}
+		}
+	
 		if(e.getKeyCode() == KeyEvent.VK_I){
 			GlobalGameState.setActiveGameState(GameStates.INVENTORY);
 		}else if(e.getKeyCode() == KeyEvent.VK_ENTER){

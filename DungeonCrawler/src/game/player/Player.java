@@ -47,6 +47,12 @@ public class Player {
 	
 	private int m_updateCounter = 0;
 	
+	private boolean m_isMovable = true;
+	
+	public void setMovable(boolean movable){
+		m_isMovable = movable;
+	}
+	
 	//TODO: Get rid of those two default methods ... eventually..
 	private List<Companion> m_companions = Companion.getDefaultCompanionList();
 	
@@ -208,31 +214,35 @@ public class Player {
 	//Wenn nicht wird der Spieler auf das angestrebte Feld bewegt
 	public void update(Map map){
 		
-		//TODO: Use HitBox for that
-		if( StdIO.isKeyPressed(KeyEvent.VK_W) || StdIO.isKeyPressed(KeyEvent.VK_UP)) {
-			if (map.isPathable(map.getGridX(playerX + xMin),map.getGridY(playerY-3 + yMin)) 
-					&& map.isPathable(map.getGridX(playerX + xMax), map.getGridY(playerY-3 + yMin))){
-				playerY-=3;
+		if( m_isMovable ){
+		
+			//TODO: Use HitBox for that
+			if( StdIO.isKeyPressed(KeyEvent.VK_W) || StdIO.isKeyPressed(KeyEvent.VK_UP)) {
+				if (map.isPathable(map.getGridX(playerX + xMin),map.getGridY(playerY-3 + yMin)) 
+						&& map.isPathable(map.getGridX(playerX + xMax), map.getGridY(playerY-3 + yMin))){
+					playerY-=3;
+				}
 			}
+			else if( StdIO.isKeyPressed(KeyEvent.VK_S) || StdIO.isKeyPressed(KeyEvent.VK_DOWN)) {
+				if (map.isPathable(map.getGridX(playerX + xMin),map.getGridY(playerY+3 + yMax)) 
+						&& map.isPathable(map.getGridX(playerX + xMax), map.getGridY(playerY+3 + yMax))){
+					playerY +=3;
+				}
+			}
+			if( StdIO.isKeyPressed(KeyEvent.VK_A) || StdIO.isKeyPressed(KeyEvent.VK_LEFT)) {
+				if (map.isPathable(map.getGridX(playerX-3 + xMin),map.getGridY(playerY + yMin)) 
+						&& map.isPathable(map.getGridX(playerX-3 + xMin),map.getGridY(playerY + yMax))){
+					playerX -=3;
+				}
+			}
+			else if( StdIO.isKeyPressed(KeyEvent.VK_D) || StdIO.isKeyPressed(KeyEvent.VK_RIGHT)) {
+				if (map.isPathable(map.getGridX(playerX+3 + xMax),map.getGridY(playerY + yMin)) 
+						&& map.isPathable(map.getGridX(playerX+3 + xMax),map.getGridY(playerY + yMax))){
+					playerX +=3;
+				}
+			}	
+		
 		}
-		else if( StdIO.isKeyPressed(KeyEvent.VK_S) || StdIO.isKeyPressed(KeyEvent.VK_DOWN)) {
-			if (map.isPathable(map.getGridX(playerX + xMin),map.getGridY(playerY+3 + yMax)) 
-					&& map.isPathable(map.getGridX(playerX + xMax), map.getGridY(playerY+3 + yMax))){
-				playerY +=3;
-			}
-		}
-		if( StdIO.isKeyPressed(KeyEvent.VK_A) || StdIO.isKeyPressed(KeyEvent.VK_LEFT)) {
-			if (map.isPathable(map.getGridX(playerX-3 + xMin),map.getGridY(playerY + yMin)) 
-					&& map.isPathable(map.getGridX(playerX-3 + xMin),map.getGridY(playerY + yMax))){
-				playerX -=3;
-			}
-		}
-		else if( StdIO.isKeyPressed(KeyEvent.VK_D) || StdIO.isKeyPressed(KeyEvent.VK_RIGHT)) {
-			if (map.isPathable(map.getGridX(playerX+3 + xMax),map.getGridY(playerY + yMin)) 
-					&& map.isPathable(map.getGridX(playerX+3 + xMax),map.getGridY(playerY + yMax))){
-				playerX +=3;
-			}
-		}	
 		
 		m_updateCounter++;
 		

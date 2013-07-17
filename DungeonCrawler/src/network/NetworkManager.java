@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import entity.Companion;
 import entity.IEntity;
+import game.ChatWindow;
 import game.GSTransition;
 import game.combat.GSCombat;
 import game.player.Player;
@@ -42,6 +43,7 @@ public class NetworkManager {
 		//System.out.println("Msg: " + msg.getType().toString() );
 		
 		if( msg.getType() == PackageType.CHAT_MESSAGE ){
+			ChatWindow.addMessage( ((ChatMessage)msg).getMessage() );
 			System.out.println( "Server received: " + ((ChatMessage)msg).getMessage() );
 		}else if( msg.getType() == PackageType.MOVE ){
 			MoveMessage pm = (MoveMessage) msg;
