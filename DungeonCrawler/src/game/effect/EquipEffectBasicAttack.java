@@ -1,9 +1,12 @@
 package game.effect;
 
 import entity.Companion;
+import game.skill.DamageType;
 import game.skill.SingleTargetDmgSkill;
 
 public class EquipEffectBasicAttack implements IEquipEffect {
+	private static final long serialVersionUID = 5390572911367141154L;
+	
 	private SingleTargetDmgSkill m_damageSkill;
 
 	@Override
@@ -16,8 +19,8 @@ public class EquipEffectBasicAttack implements IEquipEffect {
 		c.setBasicAttack(null);
 	}
 
-	public EquipEffectBasicAttack(int damage){
-		m_damageSkill = new SingleTargetDmgSkill("Attack", "", damage, 0);
+	public EquipEffectBasicAttack(int damage, DamageType type){
+		m_damageSkill = new SingleTargetDmgSkill("Attack", "", damage, type, 0);
 	}
 
 	@Override

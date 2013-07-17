@@ -1,11 +1,12 @@
 package entity;
 
 import game.skill.Skill;
+import game.skill.DamageType;
 
-public interface IEntity {
+public interface IEntity extends java.io.Serializable {
 	void render(double x, double y);
 	
-	int doDamage(int dmg);
+	int doDamage(int dmg, DamageType type);
 	int doHeal(int heal);
 	
 	boolean isDead();

@@ -5,10 +5,8 @@ import game.item.ItemInstance;
 import entity.Companion;
 import entity.UnitStats;
 import std.StdDraw;
-import game.shop.*;
 import game.player.*;
 import entity.IEntity;
-import entity.UnitStats;
  
 public class GameInterface {
        

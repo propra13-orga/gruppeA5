@@ -110,7 +110,9 @@ public class GSInventory implements IGameState, StdIO.IKeyListener {
 		c.render(baseX, baseY + 10);
 		StdDraw.textLeft(baseX, baseY + 55, "Human male");
 		StdDraw.textLeft(baseX, baseY + 75, "Level 1");
-		StdDraw.textLeft(baseX, baseY + 95, "Armor: " + c.getStats().mArmor);
+		StdDraw.textLeft(baseX, baseY + 95, "Physical: " + c.getStats().mArmor);
+		StdDraw.textLeft(baseX, baseY + 115, "Fire: " + c.getStats().mFireResist);
+		StdDraw.textLeft(baseX, baseY + 135, "Ice: " + c.getStats().mIceResist);
 
 
 		//Draw health bar

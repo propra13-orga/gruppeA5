@@ -46,6 +46,7 @@ public class SkillLoader {
 		String sfx = null; //important
 		String desc = "";
 		int amount = 0;
+		DamageType dmgType = DamageType.PHYSICAL;
 		
 		String[] words = m_line.split(" ");
 		if(words.length != 3)
@@ -73,6 +74,7 @@ public class SkillLoader {
 			case "amount": amount = Integer.parseInt(list.get(2)); break;
 			case "cost": manaCost = Integer.parseInt(list.get(2)); break;
 			case "sfx": sfx = list.get(2).replace("\"", ""); break;
+			case "damageType": dmgType = DamageType.valueOf( list.get(2).toUpperCase() ); break;
 			default: return false;
 			}
 		}
@@ -81,12 +83,12 @@ public class SkillLoader {
 		
 		switch(type){
 		case "SingleTargetDmgSkill": 
-			sk = new SingleTargetDmgSkill(name, desc, amount,manaCost); 
+			sk = new SingleTargetDmgSkill(name, desc, amount, dmgType, manaCost); 
 			if(sfx != null) sk.setSfx(sfx);
 			break;
 			
 		case "MultiTargetDmgSkill": 
-			sk = new MultiTargetDmgSkill(name, desc, amount,manaCost); 
+			sk = new MultiTargetDmgSkill(name, desc, amount, dmgType,manaCost); 
 			if(sfx != null) sk.setSfx(sfx);
 			break;
 			
@@ -106,7 +108,7 @@ public class SkillLoader {
 			break;
 			
 		default:
-			System.out.println("Error. Unrecognized skill type.");
+			System.out.println("SkillLoader.java: Error. Unrecognized skill type.");
 			return false;
 			
 		}
@@ -132,7 +134,7 @@ public class SkillLoader {
 	        	if( m_line.startsWith("#") ){
 		        	status = status && loadSkill();
 		        } else {
-		        	System.out.println("Error, unrecognized line: " + m_line);
+		        	System.out.println("SkillLoader.java: Error, unrecognized line: " + m_line);
 		        	break;
 		        }
 		        

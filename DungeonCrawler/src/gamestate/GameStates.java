@@ -10,5 +10,7 @@ public enum GameStates{
 	DEFEAT,
 	TRANSITION,
 	INTERACT,
-	CREDITS
+	CREDITS,
+	MULTI_JOIN,
+	MULTI_HOST
 }

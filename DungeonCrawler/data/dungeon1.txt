@@ -19,8 +19,8 @@ FIH0IA0I0I0IIG01
 
 # Events
 
-7 1 4
 8 1 4
+7 1 4
 
 # Teleporters
 
@@ -30,8 +30,11 @@ FIH0IA0I0I0IIG01
 
 # MonsterGroups
 
-7 3 "data/monsters/shining_eye.png" ShiningEye && UnseenHorror && ShiningEye
-8 13 "data/monsters/shining_eye.png" ShiningEye && UnseenHorror && ShiningEye
+8 13 "data/monsters/shining_eye.png" ShiningEye && UnseenHorror && ShiningEye 
+7 3 "data/monsters/shining_eye.png" ShiningEye && UnseenHorror && ShiningEye 
+9 2 "data/monsters/shining_eye.png" ShiningEye
 
 # Pickups
+
 11 9 RedCloak
+8 12 HealthPotion

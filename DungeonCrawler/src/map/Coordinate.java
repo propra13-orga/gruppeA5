@@ -14,6 +14,8 @@ public class Coordinate{
 	}
 	
 	public boolean equals(Object o){
+		if(o==null) return false;
+	
 		Coordinate rhs = (Coordinate) o;
 		
 		return mX == rhs.mX && mY == rhs.mY;

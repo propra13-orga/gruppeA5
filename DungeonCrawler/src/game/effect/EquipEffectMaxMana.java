@@ -3,6 +3,8 @@ package game.effect;
 import entity.Companion;
 
 public class EquipEffectMaxMana implements IEquipEffect {
+	private static final long serialVersionUID = -7430235253620930055L;
+	
 	private int m_manaBonus;
 
 	@Override

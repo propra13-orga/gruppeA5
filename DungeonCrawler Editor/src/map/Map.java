@@ -1,8 +1,8 @@
 package map;
 import java.util.HashMap;
 
-import map.TileList;
 
+import map.TileList;
 import std.StdDraw;
 
 
@@ -19,10 +19,18 @@ public class Map {
 		
 	//Holds all the levels already loaded
 	protected HashMap<String, Level> m_levels = new HashMap<String, Level>();
+	
+	protected static Map s_this = null;
+
 	//Currently selected level
 	protected Level m_currentLevel;
+	protected String m_currentLevelName;
 	
 	protected TileList m_tileList;
+	
+	public static Map getInstance(){
+		return s_this;
+	}
 	
 	/**
 	 * Loads (and displays) a level from a text file with the name levelName. Returns true if successful.
@@ -40,9 +48,14 @@ public class Map {
 			}
 			m_levels.put(levelName, lvl);
 			m_currentLevel = lvl;
+			m_currentLevelName = levelName;
 		}
 		
 		return true;
+	}
+	
+	public String getCurrentLevelname(){
+		return m_currentLevelName;
 	}
 	
 	/**
@@ -61,6 +74,16 @@ public class Map {
 	 */
 	public CellInfo getCellInfo(int x, int y){
 		return m_currentLevel.getCellInfo(x,y);
+	}
+	
+	public Monster getMonsterInfo(int x, int y){
+		Coordinate c = new Coordinate(x,y);
+		return m_currentLevel.getAllMonsterInfo().get(c);
+	}
+	
+	public Item getItemInfo(int x, int y){
+		Coordinate c = new Coordinate(x,y);
+		return m_currentLevel.getAllItemInfo().get(c);
 	}
 	
 	 /**
@@ -115,12 +138,15 @@ public class Map {
 				StdDraw.picture(m_x + x*SIZE, m_y + y*SIZE, m_tileList.get(m_currentLevel.getCellType(x,y)).mFilePath, 32, 32);
 			}
 		}
+
 	}
 	
 	/**
 	 * Constructs a map at position (x,y) and loads the corresponding TileList from tileListPath
 	 */
 	public Map(double x, double y, String tileListPath){
+		s_this = this;
+	
 		m_tileList = new TileList();
 		
 		//TODO: Check if loading successful.

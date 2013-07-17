@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 /**
  * This class' sole purpose is to serve as a factory for Level objects.
  * The loading from a text file is a non-trivial task, so it has been outsourced
@@ -24,6 +25,11 @@ class LevelLoader {
 	private char[][] m_grid;
 	
 	private HashMap<Coordinate, CellInfo> m_tileInfo;
+	private HashMap<Coordinate, Monster> m_monsterInfo;
+	private HashMap<Coordinate, Item> m_itemInfo;
+	
+	
+	private final Pattern m_argumentSplit = Pattern.compile("([^\"]\\S*|\".+?\")\\s*");
 	
 	/**
 	 * Returns the char[][] that holds the grid data.
@@ -38,6 +44,12 @@ class LevelLoader {
 	public HashMap<Coordinate, CellInfo> getCellData(){
 		return m_tileInfo;
 	}
+	public HashMap<Coordinate, Monster> getMonsterData(){
+		return m_monsterInfo;
+	}
+	public HashMap<Coordinate, Item> getItemInfo() {
+		return m_itemInfo;
+	}	
 	
 	private void nextLine(){
 		try {
@@ -49,7 +61,58 @@ class LevelLoader {
 			e.printStackTrace();
 		}
 	}
+	
+	private ArrayList<String> splitArguments(String line){
+		ArrayList<String> list = new ArrayList<String>();
+		Matcher m = m_argumentSplit.matcher(line);
 
+		while (m.find())
+		    list.add(m.group(1));
+		   
+		return list;
+	}
+
+	private boolean loadMonsterData(){
+
+		while(true){
+			nextLine();
+	
+			if(m_line == null ||m_line.startsWith("#"))
+				break;
+			
+			ArrayList<String> list = splitArguments(m_line);
+			
+			if(list.size() < 4){
+				System.out.println("Error, bad monster line: " + m_line);
+				return false;
+			}
+			try{
+					
+				int x = Integer.parseInt(list.get(0));
+				int y = Integer.parseInt(list.get(1));
+				Coordinate c = new Coordinate(x,y);
+
+				Monster m = new Monster();
+				m.mIcon = list.get(2).replace("\"", "");
+				
+				String accum = "";
+				for(int i = 3; i < list.size(); i++){
+					accum += list.get(i) + " ";
+				}
+				
+				m.mMonsters = accum;
+
+				m_monsterInfo.put(c, m);
+				
+			} catch(NumberFormatException e) {
+				System.out.println(e);
+				return false;
+			}
+		}
+
+		return true;
+	}
+	
 	private boolean loadMapData(){
 		int counter = 0;
 	
@@ -83,6 +146,39 @@ class LevelLoader {
 		return true;
 	}
 
+	private boolean loadPickups(){
+		while(true){
+			nextLine();
+			
+			if(m_line == null ||m_line.startsWith("#"))
+				break;
+			
+			String[] ar = m_line.split(" ");
+			
+			if(ar.length != 3){
+				System.out.println("Error, bad event line: " + m_line);
+				return false;
+			}
+			
+			try{
+				int x = Integer.parseInt(ar[0]);
+				int y = Integer.parseInt(ar[1]);
+				
+				Coordinate c = new Coordinate(x,y);
+				Item i = new Item();
+				i.mType = ar[2];
+				
+				m_itemInfo.put(c, i);
+				
+			} catch(NumberFormatException e) {
+				System.out.println(e);
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	private boolean loadEvents(){
 		while(true){
 			nextLine();
@@ -102,18 +198,17 @@ class LevelLoader {
 				c.mX = Integer.parseInt(ar[0]);
 				c.mY = Integer.parseInt(ar[1]);
 				
-				CellInfo ti;
+				CellInfo ci = m_tileInfo.get(c);
+				boolean found = ci != null;
 			
-				if(m_tileInfo.containsKey(c)){
-					ti = m_tileInfo.get(c);
-					ti.mHasEvent = true;
-					ti.mEventID = Integer.parseInt(ar[2]);
-				}else{
-					ti = new CellInfo();
-					ti.mHasEvent = true;
-					ti.mEventID = Integer.parseInt(ar[2]);
-					m_tileInfo.put(c, ti);
-				}
+				if(!found)
+					ci = new CellInfo();
+			
+				ci.mHasEvent = true;
+				ci.mEventID = Integer.parseInt(ar[2]);
+				
+				if(!found)
+					m_tileInfo.put(c, ci);
 				
 			} catch(NumberFormatException e) {
 				System.out.println(e);
@@ -125,19 +220,14 @@ class LevelLoader {
 	}
 	
 	private boolean loadTeleporters(){
-		Pattern regex = Pattern.compile("([^\"]\\S*|\".*?\")\\s*");
-		
+
 		while(true){
 			nextLine();
 			
 			if(m_line == null || m_line.startsWith("#"))
 				break;
-			
-			ArrayList<String> list = new ArrayList<String>();
-			Matcher m = regex.matcher(m_line);
-			
-			while (m.find())
-			    list.add(m.group(1));
+
+			ArrayList<String> list = splitArguments(m_line);
 			
 			if(list.size() != 5){
 				System.out.println("Error, bad teleporter line: " + m_line);
@@ -149,24 +239,21 @@ class LevelLoader {
 				c.mX = Integer.parseInt(list.get(0));
 				c.mY = Integer.parseInt(list.get(1));
 				
-				CellInfo ti;
-			
-				if(m_tileInfo.containsKey(c)){
-					ti = m_tileInfo.get(c);
-					ti.mHasTeleporter = true;
-					ti.mNewMap = list.get(2).replace("\"", "");
-					ti.mNewPosition = new Coordinate();
-					ti.mNewPosition.mX = Integer.parseInt(list.get(3));
-					ti.mNewPosition.mY = Integer.parseInt(list.get(4));
-				}else{
-					ti = new CellInfo();
-					ti.mHasTeleporter = true;
-					ti.mNewMap = list.get(2).replace("\"", "");
-					ti.mNewPosition = new Coordinate();
-					ti.mNewPosition.mX = Integer.parseInt(list.get(3));
-					ti.mNewPosition.mY = Integer.parseInt(list.get(4));
-					m_tileInfo.put(c, ti);
-				}
+				CellInfo ci = m_tileInfo.get(c);
+				boolean found = ci != null;
+				
+				if(!found)
+					ci = new CellInfo();
+					
+				ci.mHasTeleporter = true;
+				ci.mNewMap = list.get(2).replace("\"", "");
+				ci.mNewPosition = new Coordinate();
+				ci.mNewPosition.mX = Integer.parseInt(list.get(3));
+				ci.mNewPosition.mY = Integer.parseInt(list.get(4));
+				
+				if(!found)
+					m_tileInfo.put(c, ci);
+				
 			} catch(NumberFormatException e) {
 				System.out.println(e);
 				return false;
@@ -182,7 +269,10 @@ class LevelLoader {
 	 */
 	public boolean load(String fileName){
 		m_grid = new char[MAP_LENGTH][MAP_HEIGHT];
-		m_tileInfo = new HashMap<Coordinate, CellInfo>();
+		m_tileInfo = new HashMap<>();
+		m_monsterInfo = new HashMap<>();
+		m_itemInfo = new HashMap<>();
+		
 		boolean status = true;
 		
 		try{
@@ -197,9 +287,13 @@ class LevelLoader {
 		        	status = status && loadEvents();
 		        } else if( m_line.equals("# Teleporters") ){
 		        	status = status && loadTeleporters();
+		        } else if( m_line.equals("# MonsterGroups") ){
+		        	status = status && loadMonsterData();
+		        } else if( m_line.equals("# Pickups") ){
+		        	status = status && loadPickups();
 		        } else {
 		        	System.out.println("Error, unrecognized line: " + m_line);
-		        	return false;
+		        	break;
 		        }
 		        
 	        }

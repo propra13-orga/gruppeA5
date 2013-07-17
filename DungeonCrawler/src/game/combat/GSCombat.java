@@ -2,6 +2,8 @@ package game.combat;
 
 import java.awt.event.KeyEvent;
 
+import network.NetworkManager;
+
 import entity.Companion;
 
 import monster.MonsterGroup;
@@ -48,7 +50,7 @@ public class GSCombat implements IGameState, StdIO.IKeyListener {
 	private Party m_enemies;
 	private Party m_allies;
 	private ActionMenu m_actionMenu = new ActionMenu();
-	private CombatLog m_combatLog = new CombatLog(); //recreated in onEnter()?
+	private CombatLog m_combatLog = new CombatLog(); //recreate in onEnter()?
 
 	@Override
 	public void render() {
@@ -74,12 +76,14 @@ public class GSCombat implements IGameState, StdIO.IKeyListener {
 
 	@Override
 	public void update() {
-
+		NetworkManager.update();
 	}
 
 	@Override
 	public void onEnter() {
-		m_enemies = EnemyParty.fromMonsterGroup(130, m_encounter);
+		NetworkManager.update();
+	
+		m_enemies = m_encounter.createParty(130);
 		m_allies = new AllyParty( 300, Player.getInstance().getCompanions() );
 			
 		m_allyTurn.onEnter();

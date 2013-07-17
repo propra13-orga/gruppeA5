@@ -10,7 +10,9 @@ import game.Point;
 import game.combat.CombatLog;
 import game.combat.Party;
 
-public class Skill {
+public class Skill implements java.io.Serializable {
+	private static final long serialVersionUID = 8009178236086931644L;
+	
 	protected String m_name;
 	protected TargetType m_targetType;
 	protected String m_desc;
@@ -38,7 +40,7 @@ public class Skill {
 	}
 	
 	protected void playAnimation(Point p){
-		if(m_sfx != ""){
+		if(!m_sfx.equals("")){
 			GlobalAnimQueue.playAnimation(  new FadeAnim(p.x, p.y, m_sfx, 50) );
 		}
 	}

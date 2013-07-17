@@ -3,7 +3,9 @@ package game.item;
 import game.item.ItemType.EquipInfo;
 import game.item.ItemType.UseInfo;
 
-public class ItemInstance {
+public class ItemInstance implements java.io.Serializable {
+	private static final long serialVersionUID = 540969812021061091L;
+	
 	private ItemType m_type;
 	
 	public boolean isUsable(){

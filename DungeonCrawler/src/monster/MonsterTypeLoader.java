@@ -1,5 +1,7 @@
 package monster;
 
+import entity.UnitStats;
+import game.skill.DamageType;
 import game.skill.SingleTargetDmgSkill;
 
 import java.io.BufferedReader;
@@ -42,11 +44,13 @@ public class MonsterTypeLoader {
 	
 	private boolean loadMonsterType(){
 		String identifier = "";
-		int hp = 1;
-		int mana = 0;
 		String icon = "";
 		String name = "";
 		int damage = 0;
+		DamageType dmgType = DamageType.PHYSICAL;
+		
+		UnitStats stats = new UnitStats();
+		stats.mMaxHealth = 1;
 		
 		String[] words = m_line.split(" ");
 		if(words.length != 3)
@@ -61,7 +65,7 @@ public class MonsterTypeLoader {
 		
 			ArrayList<String> list = splitArguments(m_line);
 			
-			if( list.size() != 3 || !list.get(1).equals("=") ){
+			if( !list.get(1).equals("=") ){
 				System.out.println("Error, MonsterType line: " + m_line);
 				return false;
 			}
@@ -69,16 +73,21 @@ public class MonsterTypeLoader {
 			switch(list.get(0)){
 			case "icon": icon = list.get(2).replace("\"", ""); break;
 			case "name": name = list.get(2).replace("\"", ""); break;
-			case "damage": damage = Integer.parseInt(list.get(2)); break;
-			case "health": hp = Integer.parseInt(list.get(2)); break;
-			case "mana": mana = Integer.parseInt(list.get(2)); break;
+			case "damage": 
+				damage = Integer.parseInt(list.get(2)); 
+				dmgType = DamageType.valueOf(list.get(3).toUpperCase());
+				break;
+			case "health": stats.mMaxHealth = Integer.parseInt(list.get(2)); break;
+			case "mana": stats.mMaxMana = Integer.parseInt(list.get(2)); break;
+			case "phyDef": stats.mArmor = Integer.parseInt(list.get(2)); break;
+			case "iceDef": stats.mIceResist = Integer.parseInt(list.get(2)); break;
+			case "fireDef": stats.mFireResist = Integer.parseInt(list.get(2)); break;
 			default: return false;
 			}
 			
-			
 		}
 		
-		MonsterType m = new MonsterType(hp, mana, icon, name, new SingleTargetDmgSkill("Attack", "", damage, 0));
+		MonsterType m = new MonsterType(stats, icon, name, new SingleTargetDmgSkill("Attack", "", damage, dmgType, 0));
 		m_monsterTypes.put(identifier, m);
 		return true;
 

@@ -5,7 +5,9 @@ import game.item.ItemInstance;
 
 import java.util.EnumMap;
 
-public class Equipment {
+public class Equipment implements java.io.Serializable {
+	private static final long serialVersionUID = -4709473431771469464L;
+	
 	private EnumMap<EquipSlot, ItemInstance> m_equip = new EnumMap<>(EquipSlot.class);
 	private Companion m_owner;
 	

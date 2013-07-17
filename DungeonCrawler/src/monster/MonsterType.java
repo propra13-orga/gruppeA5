@@ -6,14 +6,13 @@ import game.skill.Skill;
 import java.util.HashMap;
 
 public class MonsterType {
-	private int m_maxHealth;
-	private int m_maxMana;
 	private String m_path;
 	private String m_name;
 	private Skill m_basicAttack;
-	
+	private UnitStats m_stats;
+		
 	public int getMaxHealth() {
-		return m_maxHealth;
+		return m_stats.mMaxHealth;
 	}
 
 	public String getPath() {
@@ -29,17 +28,14 @@ public class MonsterType {
 	}
 	
 	public UnitStats getFreshMonsterStats(){
-		UnitStats s = new UnitStats();
-		s.mMaxHealth = m_maxHealth;
-		s.mCurrHealth = m_maxHealth;
-		s.mMaxMana = m_maxMana;
-		s.mCurrMana = m_maxMana;
-		return s;
+		return new UnitStats(m_stats);
 	}
 	
-	MonsterType(int maxHP, int maxMana, String path, String name, Skill basicAttack){
-		m_maxHealth = maxHP;
-		m_maxMana = maxMana;
+	MonsterType(UnitStats stats, String path, String name, Skill basicAttack){
+		m_stats = stats;
+		m_stats.mCurrHealth = m_stats.mMaxHealth;
+		m_stats.mCurrMana = m_stats.mMaxMana;
+		
 		m_path = path;
 		m_name = name;
 		m_basicAttack = basicAttack;

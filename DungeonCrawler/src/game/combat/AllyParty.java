@@ -5,22 +5,6 @@ import java.util.List;
 import entity.IEntity;
 
 public class AllyParty extends Party {
-
-	public void attackSelected(int dmg){	
-		IEntity e = m_entities.get(m_currTargeted);
-		
-		if(e.isDead()){
-			targetNext();
-			attackSelected(dmg);
-			return;
-		}
-		
-		e.doDamage(dmg);
-	
-		if( e.isDead() ){
-			m_currTargeted = 0;
-		}
-	}
 	
 	public boolean isDefeated(){
 		for( IEntity e : m_entities)

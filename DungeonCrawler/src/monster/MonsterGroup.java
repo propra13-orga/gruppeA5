@@ -3,8 +3,13 @@ package monster;
 import java.util.ArrayList;
 import java.util.List;
 
+import entity.IEntity;
+import entity.MonsterInstance;
+
 
 import game.HitBox;
+import game.combat.EnemyParty;
+import game.combat.Party;
 import std.StdDraw;
 
 public class MonsterGroup {
@@ -15,7 +20,8 @@ public class MonsterGroup {
 	
 	private ArrayList<MonsterType> m_monsters = new ArrayList<>();
 	
-	private static final double MOVE_SPEED = 0.5;
+	protected double MOVE_SPEED = 0.5;
+	
 	public static class MonsterOrder{
 		public enum OrderType{STOP, MOVE}
 		OrderType m_currentOrder = OrderType.STOP;
@@ -45,6 +51,10 @@ public class MonsterGroup {
 	
 	public double getY(){
 		return m_y;
+	}
+	
+	public boolean isAIControlled(){
+		return true;
 	}
 	
 	public void update(){
@@ -100,6 +110,16 @@ public class MonsterGroup {
 	public MonsterGroup(double x, double y, String path){
 		setPosition(x,y);
 		mIcon = path;
+	}
+	
+	public Party createParty( double y ){
+		List<IEntity> entities = new ArrayList<>();
+
+		for( MonsterType m : getMonsters() ){
+			entities.add( new MonsterInstance( m ) );
+		}
+
+		return new EnemyParty(y, entities);
 	}
 	
 }

@@ -57,6 +57,10 @@ public class EditorMap extends Map {
 				m_toolbar.getEventsPanel().setEventData( x, y, getCellInfo(x,y) );
 			}else if( t == LayerType.Teleporters ){
 				m_toolbar.getTeleportersPanel().setTeleporterData(x, y, getCellInfo(x,y) );
+			}else if( t == LayerType.Monsters ){
+				m_toolbar.getMonstersPanel().setMonsterData(x, y, getMonsterInfo(x,y));
+			}else if( t == LayerType.Items ){
+				m_toolbar.getItemsPanel().setItemData(x, y, getItemInfo(x,y));
 			}
 		}
 	}
@@ -116,12 +120,20 @@ public class EditorMap extends Map {
 		HashMap<Coordinate, CellInfo> m = m_currentLevel.getAllCellInfo();
 		
 		final double CIRCLE_SIZE = 8;
+		
 		final double EVT_X = 0;
 		final double EVT_Y = SIZE - CIRCLE_SIZE;
+		
 		final double TP_X = SIZE - CIRCLE_SIZE;
 		final double TP_Y = SIZE - CIRCLE_SIZE;
 		
-		if(	m_toolbar.isLayerVisible(Toolbar.LayerType.Teleporters) )
+		final double MN_X = 0;
+		final double MN_Y = CIRCLE_SIZE;
+		
+		final double IT_X = SIZE - CIRCLE_SIZE;
+		final double IT_Y = CIRCLE_SIZE;
+		
+		if(	m_toolbar.isLayerVisible(Toolbar.LayerType.Teleporters) ){
 			for (java.util.Map.Entry<Coordinate, CellInfo> entry : m.entrySet()) {
 			    Coordinate c = entry.getKey();
 			    CellInfo ce = entry.getValue();
@@ -132,8 +144,8 @@ public class EditorMap extends Map {
 		        }
 			    
 			}
-		
-		if( m_toolbar.isLayerVisible(Toolbar.LayerType.Events) )
+		}
+		if( m_toolbar.isLayerVisible(Toolbar.LayerType.Events) ){
 			for (java.util.Map.Entry<Coordinate, CellInfo> entry : m.entrySet()) {
 			    Coordinate c = entry.getKey();
 			    CellInfo ce = entry.getValue();
@@ -144,6 +156,37 @@ public class EditorMap extends Map {
 		        }
 			    
 			}
+		}
+		if( m_toolbar.isLayerVisible(Toolbar.LayerType.Monsters) ){
+			for (java.util.Map.Entry<Coordinate, Monster> entry : m_currentLevel.getAllMonsterInfo().entrySet()) {
+			    Coordinate c = entry.getKey();
+			    Monster ce = entry.getValue();
+			    
+			    if(ce != null){
+		        	StdDraw.setPenColor(StdDraw.RED);
+		        	
+		        	if( ce.mIcon != null && ce.mIcon != "" )
+		        		StdDraw.picture(m_x + c.mX*SIZE, m_y + c.mY*SIZE, ce.mIcon);
+		        	else
+		        		StdDraw.filledCircle(m_x + c.mX*SIZE + MN_X, m_y + c.mY*SIZE + MN_Y, CIRCLE_SIZE);
+		        	
+		        	
+		        }
+			    
+			}
+		}
+		if( m_toolbar.isLayerVisible(Toolbar.LayerType.Items) ){
+			for (java.util.Map.Entry<Coordinate, Item> entry : m_currentLevel.getAllItemInfo().entrySet()) {
+			    Coordinate c = entry.getKey();
+			    Item ce = entry.getValue();
+			    
+			    if(ce != null){
+		        	StdDraw.setPenColor(StdDraw.GREEN);
+		        	StdDraw.filledCircle(m_x + c.mX*SIZE + IT_X, m_y + c.mY*SIZE + IT_Y, CIRCLE_SIZE);
+		        }
+			    
+			}
+		}
 		
 		if( isInsideMap(m_currentX, m_currentY) ){
 			StdDraw.setPenColor(StdDraw.RED);

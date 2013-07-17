@@ -19,6 +19,8 @@ public class Toolbar {
 	private TilesPanel m_tilesPanel;
 	private EventsPanel m_eventsPanel;
 	private TeleportersPanel m_teleportersPanel;
+	private MonstersPanel m_monstersPanel;
+	private ItemsPanel m_itemsPanel;
 	
 	private LayerType m_currentActiveLayer;
 	
@@ -27,7 +29,7 @@ public class Toolbar {
 		Events,
 		Teleporters,
 		Items,
-		Characters
+		Monsters
 	}
 	private static final int NUM_OF_LAYERS = 5;
 	private JCheckBox m_layerBoxes[] = new JCheckBox[NUM_OF_LAYERS];
@@ -46,6 +48,14 @@ public class Toolbar {
 	
 	public TeleportersPanel getTeleportersPanel(){
 		return m_teleportersPanel;
+	}
+	
+	public ItemsPanel getItemsPanel(){
+		return m_itemsPanel;
+	}
+	
+	public MonstersPanel getMonstersPanel(){
+		return m_monstersPanel;
 	}
 
 	public boolean isLayerVisible(LayerType type){
@@ -70,14 +80,13 @@ public class Toolbar {
 		check3.setBounds(145, 30, 100, 20);
 		m_frame.add(check3);
 		
-		
 		JCheckBox check4 = new JCheckBox("Items");
 		m_layerBoxes[LayerType.Items.ordinal()] = check4;
 		check4.setBounds(5, 50, 70, 20);
 		m_frame.add(check4);
 		
-		JCheckBox check5 = new JCheckBox("Characters");
-		m_layerBoxes[LayerType.Characters.ordinal()] = check5;
+		JCheckBox check5 = new JCheckBox("Monsters");
+		m_layerBoxes[LayerType.Monsters.ordinal()] = check5;
 		check5.setBounds(75, 50, 90, 20);
 		m_frame.add(check5);
 	}
@@ -99,15 +108,21 @@ public class Toolbar {
 		m_tilesPanel = new TilesPanel(m_panel, 0, 80, 300, 500);
 		m_eventsPanel = new EventsPanel(m_panel, 0, 80, 300, 500);
 		m_teleportersPanel = new TeleportersPanel(m_panel, 0, 80, 300, 500);
+		m_itemsPanel = new ItemsPanel(m_panel, 0, 80, 300, 500);
+		m_monstersPanel = new MonstersPanel(m_panel, 0, 80, 300, 500);
 		
 		m_tilesPanel.setVisible(true);
 		m_eventsPanel.setVisible(false);
 		m_teleportersPanel.setVisible(false);
+		m_itemsPanel.setVisible(false);
+		m_monstersPanel.setVisible(false);
 
 		JComboBox<String> cb = new JComboBox<String>();
 		cb.addItem("Tiles");
 		cb.addItem("Events");
 		cb.addItem("Teleporters");
+		cb.addItem("Items");
+		cb.addItem("Monsters");
 		cb.setBounds(5,5,150,20);
 		
 		cb.addActionListener(new ActionListener() {
@@ -120,10 +135,14 @@ public class Toolbar {
 		    	  boolean tiles = name.equals("Tiles") ? true : false;
 		    	  boolean events = name.equals("Events") ? true : false;
 		    	  boolean teles = name.equals("Teleporters") ? true : false;
+		    	  boolean itms = name.equals("Items") ? true : false;
+		    	  boolean mons = name.equals("Monsters") ? true : false;
 		    	  
 		    	  m_tilesPanel.setVisible(tiles);
 		    	  m_eventsPanel.setVisible(events);
 		    	  m_teleportersPanel.setVisible(teles);
+		    	  m_itemsPanel.setVisible(itms);
+		    	  m_monstersPanel.setVisible(mons);
 		    	  
 		    	  m_currentActiveLayer = LayerType.valueOf(name);
 		    	  m_layerBoxes[m_currentActiveLayer.ordinal()].setSelected(true);
@@ -144,6 +163,8 @@ public class Toolbar {
 	public void supplyMap(EditorMap map) {
 		m_eventsPanel.setMap(map);
 		m_teleportersPanel.setMap(map);
+		m_itemsPanel.setMap(map);
+		m_monstersPanel.setMap(map);
 	}
 
 }

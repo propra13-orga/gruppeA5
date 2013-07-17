@@ -1,13 +1,30 @@
 package map;
 import java.util.HashMap;
 
+
 public class Level {
 
 	private char [][] m_grid;
-	private HashMap<Coordinate, CellInfo> m_cellInfo;
+	private HashMap<Coordinate, CellInfo> m_tileInfo;
+	private HashMap<Coordinate, Monster> m_monsterInfo;
+	private HashMap<Coordinate, Item> m_itemInfo;
+	
 	
 	public HashMap<Coordinate, CellInfo> getAllCellInfo(){
-		return m_cellInfo;
+		return m_tileInfo;
+	}
+	
+	public HashMap<Coordinate, Monster> getAllMonsterInfo(){
+		return m_monsterInfo;
+	}
+	
+	public HashMap<Coordinate, Item> getAllItemInfo(){
+		return m_itemInfo;
+	}
+	
+	public void saveToFile(String levelName){
+		map.LevelSaver ls = new map.LevelSaver();
+		ls.saveToFile(levelName, m_grid, this);
 	}
 	
 	/**
@@ -23,14 +40,13 @@ public class Level {
 	public void setCell(int x, int y, char c){
 		m_grid[x][y] = c;
 	}
-	
+
 	/**
 	 * Returns the TileInfo of the cell at (x,y)
 	 */
 	public CellInfo getCellInfo(int x, int y){
 		Coordinate c = new Coordinate(x,y);
-		
-		return m_cellInfo.get(c);
+		return m_tileInfo.get(c);
 	}
 	
 	/**
@@ -44,14 +60,11 @@ public class Level {
 			return false;
 			
 		m_grid = lvl.getGrid();
-		m_cellInfo = lvl.getCellData();
+		m_tileInfo = lvl.getCellData();
+		m_monsterInfo = lvl.getMonsterData();
+		m_itemInfo = lvl.getItemInfo();
 	
 		return true;
-	}
-	
-	public void saveToFile(String levelName){
-		map.LevelSaver ls = new map.LevelSaver();
-		ls.saveToFile(levelName, m_grid, m_cellInfo);
 	}
 
 	/**

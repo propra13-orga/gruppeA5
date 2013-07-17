@@ -5,14 +5,13 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import game.effect.EquipEffectArmor;
-import game.effect.EquipEffectBasicAttack;
-import game.effect.EquipEffectMaxMana;
 import game.effect.IEquipEffect;
 import game.inventory.EquipSlot;
 import game.skill.Skill;
 
-public class ItemType {
+public class ItemType implements java.io.Serializable {
+	private static final long serialVersionUID = -673460721227801548L;
+	
 	protected String m_icon;
 	protected String m_name;
 	protected String m_description;
@@ -33,7 +32,9 @@ public class ItemType {
 		return m_price;
 	}
 	
-	public class EquipInfo{
+	public class EquipInfo implements java.io.Serializable {
+		private static final long serialVersionUID = 658777784124385071L;
+		
 		private IEquipEffect m_equipEffect;
 		private EquipSlot m_equipSlot;
 		private String m_appearance;
@@ -49,7 +50,9 @@ public class ItemType {
 		}
 	}
 	
-	public class UseInfo{
+	public class UseInfo implements java.io.Serializable{
+		private static final long serialVersionUID = 3863172458429174517L;
+		
 		private Skill m_skill;
 		
 		public Skill getSkill(){
@@ -98,45 +101,9 @@ public class ItemType {
 	}
 	
 	private static void loadItemTypes(){
-		
-		ItemType a = new ItemType("data/items/ruby.png", "Health Potion", "A common magical potion\n used toheal wounds.", 50)
-		.makeUsable( Skill.getSkill("HealthPotion") );
-		
-		ItemType b = new ItemType("data/items/brilliant_blue.png", "Mana Potion", "The brilliant blue potion can be\nused to restore magical\nenergy.", 50)
-				.makeUsable( Skill.getSkill("ManaPotion") );
-		
-		ItemType c = new ItemType("data/items/ankus.png", "Staff", "A simple staff.", 170)
-				.makeEquipable(EquipSlot.HAND, "data/player/sceptre.png", new EquipEffectBasicAttack(60) );
-		
-		ItemType d = new ItemType("data/items/leather_armour2.png", "Leather Armor", "A sturdy leather armor.", 300)
-				.makeEquipable(EquipSlot.TORSO, "data/player/leather2.png", new EquipEffectArmor(15) ); 
-		
-		ItemType e = new ItemType("data/items/boots2_jackboots.png", "Leather Boots", "A pair of boots.", 120)
-				.makeEquipable(EquipSlot.BOOTS, "data/player/middle_brown.png", new EquipEffectArmor(5) ); 
-		
-		ItemType f = new ItemType("data/items/buckler1.png", "Buckler", "A common small shield.", 150)
-				.makeEquipable(EquipSlot.OFFHAND, "data/player/boromir.png", new EquipEffectArmor(10) ); 
-		
-		ItemType g = new ItemType("data/items/cloak4.png", "Red cloak", "A normal cloak.", 80)
-				.makeEquipable(EquipSlot.COAT, "data/player/red.png", new EquipEffectArmor(5) ); 
-		
-		ItemType h = new ItemType("data/items/helmet2_etched.png", "Iron helmet", "A soldier's helmet.", 100)
-				.makeEquipable(EquipSlot.HEAD, "data/player/cap_black1.png", new EquipEffectArmor(10) ); 
-		
-		ItemType i = new ItemType("data/items/dark_blue.png", "Mystic Book", "An old tome that holds magic.", 100)
-		.makeEquipable(EquipSlot.OFFHAND, "data/player/book_blue.png", new EquipEffectMaxMana(40) ); 
-		
-		
-		
-		s_itemTypes.put("HealthPotion".toLowerCase(), a);
-		s_itemTypes.put("ManaPotion".toLowerCase(), b);
-		s_itemTypes.put("Staff".toLowerCase(), c);
-		s_itemTypes.put("LeatherArmor".toLowerCase(), d);
-		s_itemTypes.put("LeatherBoots".toLowerCase(), e);
-		s_itemTypes.put("Buckler".toLowerCase(), f);
-		s_itemTypes.put("RedCloak".toLowerCase(), g);
-		s_itemTypes.put("IronHelmet".toLowerCase(), h);
-		s_itemTypes.put("MysticBook".toLowerCase(), i);
+		ItemTypeLoader itl = new ItemTypeLoader();
+		itl.load("data/itemtypes.txt");
+		s_itemTypes = itl.getItemTypeList();
 		
 		s_entrySet = Collections.unmodifiableSet(s_itemTypes.entrySet());
 	}

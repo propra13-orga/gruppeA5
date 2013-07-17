@@ -3,7 +3,8 @@ package map;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.Set;
 
 public class LevelSaver {
 	static final int MAP_HEIGHT = 16;
@@ -36,7 +37,7 @@ public class LevelSaver {
 		}
 	}
 
-	public void saveToFile(String filePath, char [][] grid, HashMap<Coordinate, CellInfo> cellInfo){
+	public void saveToFile(String filePath, char [][] grid, Level level){
 
 		try {
 			BufferedWriter br = new BufferedWriter(new FileWriter(filePath));
@@ -55,7 +56,9 @@ public class LevelSaver {
 			
 			br.write("\n# Events\n\n");
 			
-			for (java.util.Map.Entry<Coordinate, CellInfo> entry : cellInfo.entrySet()) {
+			Set<Entry<Coordinate, CellInfo>> cellSet = level.getAllCellInfo().entrySet();
+			
+			for (java.util.Map.Entry<Coordinate, CellInfo> entry : cellSet) {
 			    Coordinate c = entry.getKey();
 			    CellInfo ce = entry.getValue();
 			    
@@ -65,13 +68,34 @@ public class LevelSaver {
 			
 			br.write("\n# Teleporters\n\n");
 			
-			for (java.util.Map.Entry<Coordinate, CellInfo> entry : cellInfo.entrySet()) {
+			for (java.util.Map.Entry<Coordinate, CellInfo> entry : cellSet) {
 			    Coordinate c = entry.getKey();
 			    CellInfo ce = entry.getValue();
 			    
 			    if(ce.mHasTeleporter)
 		        	br.write(c.mX + " " + c.mY + " \"" + ce.mNewMap + "\" " + ce.mNewPosition.mX + " " + ce.mNewPosition.mY + "\n");
 			}
+			
+			br.write("\n# MonsterGroups\n\n");
+			
+			for (java.util.Map.Entry<Coordinate, Monster> entry : level.getAllMonsterInfo().entrySet()) {
+			    Coordinate c = entry.getKey();
+			    Monster ce = entry.getValue();
+			    
+			    if( !ce.mIcon.equals("") && !ce.mMonsters.equals("") )
+			    	br.write(c.mX + " " + c.mY + " \"" + ce.mIcon + "\" " + ce.mMonsters + "\n");
+			}
+			
+			br.write("\n# Pickups\n\n");
+			
+			for (java.util.Map.Entry<Coordinate, Item> entry : level.getAllItemInfo().entrySet()) {
+			    Coordinate c = entry.getKey();
+			    Item ce = entry.getValue();
+			    
+			    if( !ce.mType.equals("") )
+			    	br.write(c.mX + " " + c.mY + " " + ce.mType + "\n");
+			}
+			
 			
 			br.close();
 			

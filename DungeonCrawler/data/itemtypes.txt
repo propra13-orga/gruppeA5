@@ -1,0 +1,69 @@
+# ItemType HealthPotion
+icon = "data/items/ruby.png"
+name = "Health Potion"
+description = "A common magical potion\n used toheal wounds."
+cost = 50
+makeUsable HealthPotion
+
+# ItemType ManaPotion
+icon = "data/items/brilliant_blue.png"
+name = "Mana Potion"
+description = "The brilliant blue potion can be\nused to restore magical\nenergy."
+cost = 50
+makeUsable ManaPotion
+
+# ItemType Staff
+icon = "data/items/ankus.png"
+name = "Staff"
+description = "A simple staff."
+cost = 170
+makeEquipable HAND "data/player/sceptre.png" EquipEffectBasicAttack 60 physical
+
+# ItemType IceBlade
+icon = "data/items/urand_plutonium.png"
+name = "Icy Blade"
+description = "A simple sword. The blade\nis cold to the touch."
+cost = 70
+makeEquipable HAND "data/player/plutonium_sword.png" EquipEffectBasicAttack 20 ice
+
+# ItemType LeatherArmor
+icon = "data/items/leather_armour2.png"
+name = "Leather Armor"
+description = "A sturdy leather armor."
+cost = 300
+makeEquipable TORSO "data/player/leather2.png" EquipEffectArmor 15 physical
+
+# ItemType LeatherBoots
+icon = "data/items/boots2_jackboots.png"
+name = "Leather Boots."
+description = "A pair of boots."
+cost = 120
+makeEquipable BOOTS "data/player/middle_brown.png" EquipEffectArmor 5 physical
+
+# ItemType Buckler
+icon = "data/items/buckler1.png"
+name = "Buckler"
+description = "A common small shield."
+cost = 150
+makeEquipable OFFHAND "data/player/boromir.png" EquipEffectArmor 10 physical
+
+# ItemType RedCloak
+icon = "data/items/cloak4.png"
+name = "Red cloak"
+description = "A fire-proof cloak."
+cost = 80
+makeEquipable COAT "data/player/red.png" EquipEffectArmor 50 fire
+
+# ItemType IronHelmet
+icon = "data/items/helmet2_etched.png"
+name = "Iron helmet"
+description = "A soldier's helmet."
+cost = 100
+makeEquipable HEAD "data/player/cap_black1.png" EquipEffectArmor 10 physical
+
+# ItemType MysticBook
+icon = "data/items/dark_blue.png"
+name = "Mystic Book"
+description = "An old tome that holds magic."
+cost = 100
+makeEquipable OFFHAND "data/player/book_blue.png" EquipEffectMaxMana 40

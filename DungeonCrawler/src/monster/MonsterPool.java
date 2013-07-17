@@ -27,7 +27,7 @@ public class MonsterPool {
 		Map map = Map.getInstance();
 	
 		for( MonsterGroup m : m_monsters ){
-			if( m_rand.nextInt(100) > 97 && m.getCurrentOrder() != MonsterGroup.MonsterOrder.OrderType.MOVE ){
+			if( m.isAIControlled() && m_rand.nextInt(100) > 97 && m.getCurrentOrder() != MonsterGroup.MonsterOrder.OrderType.MOVE ){
 				int x = map.getGridX(m.getX()+5);
 				int y = map.getGridY(m.getY()+5);
 				int r = m_rand.nextInt(4);

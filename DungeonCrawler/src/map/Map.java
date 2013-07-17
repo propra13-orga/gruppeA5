@@ -24,7 +24,7 @@ public class Map {
 	//Holds all the levels already loaded
 	private HashMap<String, Level> m_levels = new HashMap<String, Level>();
 	
-	private static Map m_this = null;
+	private static Map s_this = null;
 
 	//Currently selected level
 	private Level m_currentLevel;
@@ -33,7 +33,7 @@ public class Map {
 	private TileList m_tileList;
 	
 	public static Map getInstance(){
-		return m_this;
+		return s_this;
 	}
 	
 	/**
@@ -149,7 +149,7 @@ public class Map {
 	 * Constructs a map at position (x,y) and loads the corresponding TileList from tileListPath
 	 */
 	public Map(double x, double y, String tileListPath){
-		m_this = this;
+		s_this = this;
 	
 		m_tileList = new TileList();
 		

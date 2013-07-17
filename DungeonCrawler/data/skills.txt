@@ -29,13 +29,15 @@ sfx = "data/cut.png"
 name = "Fireball"
 description = "Conjures a rain of fire\nthat hits all enemies\nfor 50 damage."
 amount = 50
+damageType = fire
 cost = 40
 sfx = "data/fireball.png"
 
 # SingleTargetDmgSkill Smite
 name = "Smite"
-description = "Sends a powerful bolt\nof magic at an enemy,\ndealing 70 damage."
+description = "Sends a powerful bolt\nof fire at an enemy,\ndealing 70 damage."
 amount = 70
+damageType = fire
 cost = 20
 sfx = "data/bolt04.png"
 

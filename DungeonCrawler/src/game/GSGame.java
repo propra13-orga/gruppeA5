@@ -1,27 +1,32 @@
 package game;
 import java.awt.event.KeyEvent;
 
+import network.NetworkManager;
+
 import std.StdDraw;
 import std.StdIO;
 import std.StdIO.KeyEventType;
 import game.checkpoint.Checkpoint;
+import game.item.ItemInstance;
+import game.item.ItemType;
 import game.player.Player;
 import gamestate.GameStates;
 import gamestate.GlobalGameState;
 import gamestate.IGameState;
 import map.Map;
+import monster.EnemyPlayer;
 
 
 public class GSGame implements IGameState, StdIO.IKeyListener {
 	private Player m_player;
 	private Map m_map;
 	private GameInterface m_ui;
-	private static GSGame m_this;
+	private static GSGame s_this;
 	
 	boolean s_shutdown = false;
 
 	public static GSGame getInstance(){
-		return m_this;
+		return s_this;
 	}
 
 	@Override
@@ -45,6 +50,7 @@ public class GSGame implements IGameState, StdIO.IKeyListener {
 
 	@Override
 	public void update() {
+		NetworkManager.update();
 		
 		m_player.update(m_map);
 		
@@ -68,7 +74,36 @@ public class GSGame implements IGameState, StdIO.IKeyListener {
 		
 	}
 	
-	public void startGame(){
+	public void startGameMulti(boolean isHost){
+		m_ui = new GameInterface();
+		m_player = new Player();
+		
+		//Erstellt die Map an der Position 144,44 (von oben links gesehen).
+		//Die Zahlen sind so gewählt, dass die Map genau in der Mitte des Fensters ist.
+		m_map = new Map(44,44, "data/tiles.txt");
+		m_map.loadLevel("data/mplayer.txt");
+				
+		EnemyPlayer p = new EnemyPlayer( 0, 0, "data/player/deep_elf_m.png" ); //m_map.getCanvasX(5), m_map.getCanvasY(5)
+
+		if(isHost){
+			m_player.setPosition( m_map.getCanvasX(5), m_map.getCanvasY(4) );
+			p.setPosition( m_map.getCanvasX(5), m_map.getCanvasY(8) );
+		}else{
+			p.setPosition( m_map.getCanvasX(5), m_map.getCanvasY(4) );
+			m_player.setPosition( m_map.getCanvasX(5), m_map.getCanvasY(8) );
+		}
+		
+		if( isHost)
+			NetworkManager.declareHost();
+			
+		NetworkManager.setEnemyPlayer( p );
+		m_map.getMonsterPool().addMonster( p );
+		
+		Player.getInstance().getInventory().addItem( new ItemInstance(ItemType.getItemType("leatherarmor") ) );
+		Checkpoint.save();
+	}
+	
+	public void startGameSingle(){
 		m_ui = new GameInterface();
 		m_player = new Player();
 		
@@ -81,7 +116,7 @@ public class GSGame implements IGameState, StdIO.IKeyListener {
 	}
 
 	public GSGame(){
-		m_this = this;
+		s_this = this;
 	}
 
 

@@ -3,6 +3,7 @@ package entity;
 import game.inventory.EquipSlot;
 import game.inventory.Equipment;
 import game.item.ItemInstance;
+import game.skill.DamageType;
 import game.skill.SingleTargetDmgSkill;
 import game.skill.Skill;
 
@@ -12,11 +13,13 @@ import java.util.List;
 import std.StdDraw;
 
 public class Companion implements IEntity {
+	private static final long serialVersionUID = 6630624532692618980L;
+	
 	private String m_name;
 	private String m_baseAppearance;
 	
 	private Skill m_attackSkill;
-	private static final Skill m_defaultAttackSkill = new SingleTargetDmgSkill("Punch", "", 25, 0);
+	private static final Skill m_defaultAttackSkill = new SingleTargetDmgSkill("Punch", "", 25, DamageType.PHYSICAL, 0);
 	
 	private ArrayList<Skill> m_skillNames = new ArrayList<>();
 	private Equipment m_equipment = new Equipment(this);
@@ -78,7 +81,7 @@ public class Companion implements IEntity {
 		c = new Companion();
 		c.m_name = "John";
 		c.m_baseAppearance = "data/player/deep_elf_m.png";
-		c.m_attackSkill = new SingleTargetDmgSkill("Attack", "", 35, 0);
+		c.m_attackSkill = new SingleTargetDmgSkill("Attack", "", 35, DamageType.PHYSICAL, 0);
 		
 		c.m_skillNames.add( Skill.getSkill("Strike") );
 		c.m_skillNames.add( Skill.getSkill("Fireball") );
@@ -91,7 +94,7 @@ public class Companion implements IEntity {
 		c = new Companion();
 		c.m_name = "Bob";
 		c.m_baseAppearance = "data/player/dwarf_m.png";
-		c.m_attackSkill = new SingleTargetDmgSkill("Attack", "", 35, 0);
+		c.m_attackSkill = new SingleTargetDmgSkill("Attack", "", 35, DamageType.PHYSICAL, 0);
 		
 		c.m_skillNames.add( Skill.getSkill("Smite") );
 		c.m_skillNames.add( Skill.getSkill("LayOnHands") );
@@ -110,8 +113,15 @@ public class Companion implements IEntity {
 	}
 
 	@Override
-	public int doDamage(int dmg) {
-		int armor = m_stats.mArmor;
+	public int doDamage(int dmg, DamageType dmgType) {
+		int armor = 0;
+	
+		switch(dmgType){
+		case FIRE: 		armor = m_stats.mFireResist; break;
+		case ICE:		armor = m_stats.mIceResist;  break;
+		case PHYSICAL:	armor = m_stats.mArmor; 	 break;
+		}
+		
 		//A single armor point adds 1% effective hp.
 		int adjustedDmg = (int) Math.max(  dmg / (1 + (armor*0.01) ) , 1   );
 		

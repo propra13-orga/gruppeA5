@@ -1,8 +1,15 @@
 package game.player;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.List;
 
+import network.NetworkManager;
+import network.msg.EnterCombatMessage;
+import network.msg.MoveMessage;
+import network.msg.PositionMessage;
+
 import entity.Companion;
+import entity.IEntity;
 import game.GSTransition;
 import game.HitBox;
 import game.checkpoint.Checkpoint;
@@ -30,13 +37,15 @@ public class Player {
 	private boolean standsOnEvent = false;
 	
 	private double playerX, playerY; //Die Koordinaten des Spielers 
-	
+	//Hitbox
 	private double xMin = 6; 
 	private double xMax = 23;
 	private double yMin = 2;
 	private double yMax = 30;
 	
 	private HitBox m_hitBox = new HitBox(4, 2, 26, 31);
+	
+	private int m_updateCounter = 0;
 	
 	//TODO: Get rid of those two default methods ... eventually..
 	private List<Companion> m_companions = Companion.getDefaultCompanionList();
@@ -63,6 +72,8 @@ public class Player {
 	}
 	
 	
+	//Der Spieler lebt solange er mindestens ein Leben hat
+	//Wird der Spieler verwundet wird ein Leben abgezogen
 	public boolean isAlive(){ 
 		//TODO: NYI
 		return true;
@@ -89,17 +100,16 @@ public class Player {
 		s_player = this;
 	}
 	
-	/**
-	 * if the player collides with a TeleporterField the next map is loaded<br>
-	 * if the player is already on a TeleporterField the teleporter is ignored
-	 * 
-	 * @param map the map the player is currently on
-	 */
+	
+	//Beim Betreten eines Teleporterfelds wird die nächste Map geladen
+	//Der Spieler nimmt die in der MapDatei gespeicherte Position ein
 	public void enterTeleporter(Map map){
 		CellInfo ti = map.getCellInfo(map.getGridX(playerX+16),map.getGridY(playerY+16));
 		
 		if (ti != null && ti.mHasTeleporter){
 		
+			//Falls der Spieler gerade auf einem Teleporter steht, wird er nicht teleportiert.
+			//Ansonsten würde man die ganze Zeit hin-und-her teleportiert werden wenn man einen Teleporter betritt.
 			if(standsOnTeleporter == true)
 				return;
 		
@@ -115,15 +125,6 @@ public class Player {
 		}
 	}
 	
-	/**
-	 * checks if the player collides with an EventField<br>
-	 * if he does the game enters one of the following gameStates:<br>
-	 * - SHOP<br>
-	 * - QUEST<br>
-	 * - MENU
-	 * 
-	 * @param map the map the player is currently on
-	 */
 	private void lookForEvents(Map map){
 		CellInfo ti = map.getCellInfo(map.getGridX(playerX+16),map.getGridY(playerY+16));
 		
@@ -151,12 +152,6 @@ public class Player {
 		}
 	}
 	
-	/**
-	 * checks if the player collides with an Enemy<br>
-	 * if he does the game enters the COMBAT-gameState
-	 * 
-	 * @param map the map the player is currently on
-	 */
 	private void lookForEnemy(Map map) {
 	
 		MonsterPool mp = map.getMonsterPool();
@@ -166,6 +161,21 @@ public class Player {
 		
 		if(m == null)
 			return;
+			
+		//Init multiplayer data transfer
+		if( NetworkManager.isMultiplayer() ){
+		
+			if( !NetworkManager.isHost() ){
+				return; //Do not want to initiate fights when not host.
+			}
+		
+			ArrayList<IEntity> entityList = new ArrayList<>();
+			for( Companion c : m_companions )
+				entityList.add(c);
+			
+			System.out.println("Sending CombatMessage with " + entityList.size() + " entities.");
+			NetworkManager.send( new EnterCombatMessage(entityList) );
+		}
 		
 		GSCombat.getInstance().prepareEncounter(mp, m);
 		GSTransition.getInstace().prepareTransition( GameStates.COMBAT );
@@ -196,12 +206,6 @@ public class Player {
 	
 	//Bei Tasteneingabe wird überprüft, ob das angestrebte Feld mit der Hitbox kollidiert
 	//Wenn nicht wird der Spieler auf das angestrebte Feld bewegt
-	/**
-	 * if a key is pressed, the method checks if the field the player heads toward is pathable<br>
-	 * if it is the player moves to that field
-	 * 
-	 * @param map the map the player is currently on
-	 */
 	public void update(Map map){
 		
 		//TODO: Use HitBox for that
@@ -230,6 +234,16 @@ public class Player {
 			}
 		}	
 		
+		m_updateCounter++;
+		
+		if(m_updateCounter > 20){
+			m_updateCounter = 0;
+			NetworkManager.send( new PositionMessage(playerX, playerY) );
+		}else if(m_updateCounter % 4 == 0){
+			NetworkManager.send( new MoveMessage(playerX, playerY) );
+		}
+		
+		
 		//Suche nach einem Teleporter auf dem momentanen Feld.
 		enterTeleporter(map);
 		lookForEnemy(map);
@@ -237,9 +251,7 @@ public class Player {
 	}
 	
 	
-	/**
-	 * Draws the player 
-	 */
+	//Zeichnet den Spieler an die Stelle im Koordinatensystem
 	public void render(){
 		Companion c = m_companions.get(0);
 		
